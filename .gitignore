@@ -1,0 +1,24 @@
+# Секреты и окружение — НИКОГДА не коммитить (см. PROJECT_BRAIN/RAILWAY_DEPLOYMENT_PLAN.md)
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+.venv/
+venv/
+
+# Локальное хранилище (JSON/SQLite) — не продовые данные
+*.db
+*.sqlite3
+carwash_sessions.json
+carwash.db
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/

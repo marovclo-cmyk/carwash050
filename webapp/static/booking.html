@@ -1,0 +1,2467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarWash Cloud — запись</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="/static/css/theme-plata.css">
+<style>
+  /* ---------- панель шире дефолтной .main (нужна ширина под сетку боксов) --- */
+  .main{max-width:1440px}
+
+  /* ---------- toolbar: дата + фильтр по боксу ---------- */
+  .toolbar{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px;flex-wrap:wrap}
+  .toolbar-left{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .date-nav{display:flex;align-items:center;gap:2px;background:var(--paper);border:1.5px solid var(--line);border-radius:999px;padding:4px}
+  .date-nav button{width:34px;height:34px;border-radius:50%;border:none;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px}
+  .date-nav button:hover{background:var(--paper-2);color:var(--ink)}
+  .date-nav .date-label{padding:0 14px;font-size:13.5px;font-weight:600;font-family:var(--font-display);white-space:nowrap;text-transform:capitalize}
+  .today-btn{height:34px;padding:0 14px;border-radius:999px;border:1.5px solid var(--line-strong);background:var(--paper);font-size:12.5px;font-weight:700;color:var(--ink);cursor:pointer}
+  .today-btn:hover{border-color:var(--orange);color:var(--orange)}
+  .filter-select{height:42px;border-radius:999px;border:1.5px solid var(--line-strong);background:var(--paper);padding:0 16px;font-size:13px;font-weight:600;color:var(--ink);font-family:var(--font-body);cursor:pointer}
+  .filter-select:focus{outline:none;border-color:var(--orange)}
+
+  /* ---------- иконки-кнопки тулбара в стиле YCLIENTS: гамбургер/шестерёнка/
+     слайдеры/добавить сотрудника — круглые, без подписи, только иконка ---------- */
+  .tb-icon-btn{width:38px;height:38px;border-radius:50%;border:none;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;flex-shrink:0;transition:.12s}
+  .tb-icon-btn:hover{background:var(--paper-2);color:var(--ink)}
+  .tb-sep{width:1px;height:22px;background:var(--line);margin:0 2px;flex-shrink:0}
+  /* «+» — круглая акцентная кнопка быстрой продажи, как жёлтый «+» в YCLIENTS */
+  .tb-plus-btn{width:38px;height:38px;border-radius:50%;border:none;background:var(--orange-grad);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;flex-shrink:0;box-shadow:0 4px 12px rgba(255,80,0,.3);transition:transform .12s}
+  .tb-plus-btn:hover{transform:scale(1.06)}
+  /* денежная пилюля «Итоги дня» — сумма прямо в кнопке, как «0 ₽» у них */
+  .tb-money-btn{height:38px;border-radius:999px;border:1.5px solid var(--line-strong);background:var(--paper);padding:0 14px;font-size:12.5px;font-weight:700;color:var(--ink);font-family:var(--font-display);cursor:pointer;display:flex;align-items:center;gap:6px}
+  .tb-money-btn:hover{border-color:var(--orange)}
+  .tb-money-btn i{font-size:13px;color:var(--muted)}
+  /* аватар текущего пользователя справа — тот же визуальный язык, что .rail-avatar */
+  .tb-avatar{width:38px;height:38px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;font-family:var(--font-display);flex-shrink:0;cursor:default}
+  .add-menu-item{display:flex;align-items:center;gap:10px;padding:10px 11px;border-radius:var(--r-sm);font-size:13px;font-weight:600;color:var(--ink);cursor:pointer;transition:.12s}
+  .add-menu-item:hover{background:var(--paper-2)}
+  .add-menu-item i{font-size:16px;color:var(--muted);width:18px;text-align:center}
+
+  /* ---------- toolbar-right: попапы «Итоги дня» и «Боксы» ---------- */
+  .toolbar-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .popover-wrap{position:relative}
+  .popover-btn{display:flex;align-items:center;gap:7px}
+  .popover-btn i{font-size:15px;color:var(--muted)}
+  .popover-btn .pb-badge{background:var(--orange);color:#fff;font-size:10.5px;font-weight:700;border-radius:999px;padding:1px 7px;margin-left:2px}
+  .popover-panel{position:absolute;right:0;top:calc(100% + 8px);z-index:30;background:var(--surface-0);border:1.5px solid var(--line);border-radius:var(--r-lg);box-shadow:0 14px 34px rgba(13,13,13,.14);padding:16px;display:none}
+  .popover-panel.open{display:block}
+  .popover-panel.wide{width:340px}
+  .popover-panel.left0{left:0;right:auto}
+
+  /* попап «Боксы» */
+  .bf-quick{display:flex;gap:6px;margin-bottom:10px}
+  .bf-quick-btn{flex:1;height:32px;border-radius:999px;border:1.5px solid var(--line-strong);background:var(--paper);font-size:11.5px;font-weight:700;color:var(--ink);cursor:pointer;font-family:var(--font-body)}
+  .bf-quick-btn:hover{border-color:var(--orange);color:var(--orange)}
+  .bf-quick-btn.active{background:var(--ink);border-color:var(--ink);color:#fff}
+  .bf-list{display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto}
+  .bf-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r-sm);background:var(--paper-2);border:1.5px solid var(--line);font-size:12.5px;cursor:pointer;transition:.12s}
+  .bf-item.checked{border-color:var(--orange);background:var(--orange-tint)}
+  .bf-item input{width:auto;accent-color:var(--orange)}
+  .bf-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+  .bf-name{flex:1;font-weight:600;color:var(--ink)}
+  .bf-off{font-size:10px;color:var(--muted-2);font-weight:700;background:var(--paper-3);padding:2px 7px;border-radius:999px}
+
+  /* попап «Масштаб» — вертикальный список опций высоты слота, тот же паттерн, что bf-item */
+  .zoom-list{display:flex;flex-direction:column;gap:6px}
+  .zoom-opt{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border-radius:var(--r-sm);background:var(--paper-2);border:1.5px solid var(--line);font-size:12.5px;font-weight:600;cursor:pointer;transition:.12s}
+  .zoom-opt:hover{border-color:var(--orange)}
+  .zoom-opt.active{border-color:var(--orange);background:var(--orange-tint);color:var(--ink)}
+  .zoom-opt .zo-check{font-size:14px;color:var(--orange);opacity:0;visibility:hidden}
+  .zoom-opt.active .zo-check{opacity:1;visibility:visible}
+
+  /* ---------- Booking Preview Drawer — быстрый просмотр записи по клику
+     на карточку (см. openBookingPreview). Полная форма редактирования
+     (#modalBg) теперь открывается только по явному действию "Редактировать",
+     а не по каждому клику — как задано в UX_TARGET_V4 (click booking → Drawer). ---------- */
+  .bpv-status{margin-bottom:16px}
+  .bpv-row{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--line)}
+  .bpv-row:last-child{border-bottom:none}
+  .bpv-row i{font-size:16px;color:var(--muted);width:18px;text-align:center;flex-shrink:0;margin-top:1px}
+  .bpv-row-lg .bpv-name{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--ink)}
+  .bpv-sub{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .bpv-comment{color:var(--muted);font-size:13px;line-height:1.5}
+  .bpv-actions{display:flex;flex-direction:column;gap:8px;margin-top:20px}
+  .bpv-actions .btn{width:100%;justify-content:center;display:flex;align-items:center;gap:7px}
+
+  /* карточка записи, у которой статус «Клиент не пришёл» — приглушаем, как в YCLIENTS */
+  .appt.no-show{opacity:.5}
+  .appt.no-show .appt-name{text-decoration:line-through;text-decoration-color:var(--muted-2)}
+
+  /* ---------- статус-пилюля записи (редизайн) ----------
+     Было: заливка всей карточки пастельным цветом бокса + верхняя полоска
+     статуса — два сигнала (чей бокс / какой статус) конкурировали друг
+     с другом на одной поверхности.
+     Стало: карточка всегда белая, цвет бокса — тонкая полоска слева
+     (задаётся инлайн через borderLeftColor в JS), а статус — отдельная
+     пилюля с иконкой и подписью справа сверху (подпись скрывается в
+     compact-режиме для коротких записей). Два сигнала читаются раздельно. */
+  .appt-status-dot{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 8px 3px 6px;border-radius:999px;flex-shrink:0}
+  .appt-status-dot i{font-size:10px}
+  .appt-status-dot.wait{background:var(--paper-3);color:var(--muted)}
+  .appt-status-dot.confirm{background:var(--purple-tint);color:var(--purple)}
+  .appt-status-dot.arrived{background:var(--green-tint);color:var(--green)}
+  .appt-status-dot.progress{background:var(--orange-tint);color:var(--orange)}
+  .appt-status-dot.done{background:var(--green);color:#fff}
+  .appt-status-dot.noshow{background:var(--red-tint);color:var(--red)}
+  .appt-top-right{display:flex;align-items:center;gap:5px;flex-shrink:0}
+  .appt-cash-flag{width:18px;height:18px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+  .appt-price{position:absolute;right:11px;bottom:8px;font-size:11px;font-weight:700;font-family:var(--font-display);color:var(--ink)}
+  .appt.compact .appt-service,.appt.compact .appt-price{display:none}
+  .appt.compact .appt-name{margin-top:3px}
+
+  /* попап «Итоги дня» */
+  .ds-title{font-family:var(--font-display);font-size:15px;font-weight:600}
+  .ds-sub{font-size:11.5px;color:var(--muted);font-weight:600;margin-top:1px;margin-bottom:12px}
+  .ds-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ds-grid .mini-stat{text-align:left}
+  .ds-note{font-size:11px;color:var(--muted-2);margin-top:10px;line-height:1.4}
+  .ds-links{display:flex;gap:8px;margin-top:12px}
+  .ds-links a{flex:1;height:34px;border-radius:999px;border:1.5px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:var(--ink);text-decoration:none}
+  .ds-links a:hover{border-color:var(--orange);color:var(--orange)}
+  .ds-links a.disabled{opacity:.4;pointer-events:none}
+
+  /* не на смене сегодня — колонка бокса приглушена, но не скрыта */
+  .gh-col.off-duty{opacity:.6}
+  .gh-col.off-duty .gh-role::after{content:" · не на смене"}
+  /* колонка сотрудника не на смене — диагональная штриховка на всю высоту,
+     как «нерабочее время» в журнале YCLIENTS, вместо плоского затемнения */
+  .gb-col.off-duty{
+    background-image:repeating-linear-gradient(135deg,var(--paper-2) 0 8px,var(--paper) 8px 16px);
+    cursor:not-allowed;
+  }
+  .gb-col.off-duty .empty-slot-hint{display:none}
+
+  /* ---------- drag & drop записи (зажать и потянуть — перенос по времени/боксу) ---------- */
+  .appt.dragging{opacity:.35}
+  .appt-ghost{position:fixed;top:0;left:0;pointer-events:none;z-index:50;border-radius:var(--r-sm);padding:8px 10px;box-shadow:0 14px 30px rgba(13,13,13,.22);border-left-width:3px;border-style:solid;font-size:12px;font-weight:700;opacity:.96;will-change:transform}
+  .gb-col.drop-target{background:var(--orange-tint)}
+  /* перенос упирается в занятый слот — подсвечиваем красным ещё ДО отпускания,
+     а не только после ответа сервера (см. processDragMove/updateApptGhost) */
+  .gb-col.drop-target.conflict{background:var(--red-tint)}
+  .appt-ghost.conflict{border-left-color:var(--red) !important;background:var(--red-tint) !important;color:var(--red)}
+
+  /* ---------- изменение длительности (тянуть за нижний край карточки) ---------- */
+  .appt-resize-handle{position:absolute;left:0;right:0;bottom:0;height:10px;cursor:ns-resize;z-index:3;touch-action:none}
+  .appt-resize-handle::after{content:"";position:absolute;left:50%;bottom:3px;width:26px;height:3px;border-radius:2px;background:rgba(13,13,13,.20);transform:translateX(-50%);opacity:0;transition:opacity .12s}
+  .appt:hover .appt-resize-handle::after{opacity:1}
+  .appt.resizing{z-index:6;box-shadow:0 10px 24px rgba(13,13,13,.16)}
+  .appt.resizing .appt-resize-handle::after{opacity:1;background:var(--orange)}
+  .appt.resize-conflict{border-color:var(--red) !important}
+  .appt.resize-conflict .appt-resize-handle::after{background:var(--red)}
+
+  /* ---------- легенда ---------- */
+  .legend{display:flex;gap:16px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted);font-weight:600}
+  .legend-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+
+  /* ---------- сетка записи ---------- */
+  .grid-scroll{overflow-x:auto}
+  .booking-grid{display:grid;grid-template-columns:64px repeat(var(--cols,1),minmax(220px,1fr));min-width:100%}
+
+  .gh-corner{border-bottom:1.5px solid var(--line)}
+  .gh-col{border-bottom:1.5px solid var(--line);border-left:1px solid var(--line);padding:14px 16px;display:flex;align-items:center;gap:10px}
+  .gh-avatar{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+  .gh-name{font-size:13.5px;font-weight:700}
+  .gh-role{font-size:11px;color:var(--muted);font-weight:600}
+  .gh-count{margin-left:auto;font-size:11px;color:var(--muted-2);font-weight:700;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px 9px;flex-shrink:0}
+
+  .gt-col{position:relative}
+  .gt-slot{height:var(--slot-px,34px);border-top:1px solid var(--line);position:relative}
+  .gt-slot:first-child{border-top:none}
+  .gt-slot .gt-label{position:absolute;top:-8px;right:10px;font-size:11px;color:var(--muted-2);font-weight:700;background:var(--paper);padding:0 2px}
+  .gt-slot.hour .gt-label{color:var(--muted)}
+
+  .gb-col{position:relative;border-left:1px solid var(--line);cursor:pointer}
+  .gb-slot{height:var(--slot-px,34px);border-top:1px solid var(--line)}
+  .gb-slot:first-child{border-top:none}
+  .gb-slot.hour{border-top:1px solid var(--line-strong)}
+
+  .now-line{position:absolute;left:0;right:0;height:0;border-top:2px solid var(--orange);z-index:5;pointer-events:none}
+  .now-line::before{content:"Сейчас · " attr(data-time);position:absolute;left:0;top:-9px;background:var(--orange);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;white-space:nowrap}
+  .now-line.no-label::before{content:""}
+  .now-line::after{content:"";position:absolute;right:-3px;top:-3.5px;width:7px;height:7px;border-radius:50%;background:var(--orange)}
+
+  .appt{position:absolute;left:4px;right:4px;border-radius:var(--r-sm);padding:9px 11px 8px;overflow:hidden;cursor:pointer;border:1px solid var(--line);border-left-width:3px;background:var(--paper);box-shadow:0 1px 2px rgba(13,13,13,.05);transition:box-shadow .14s,transform .14s,border-color .14s;z-index:2;touch-action:none}
+  .appt:hover{box-shadow:0 10px 22px rgba(13,13,13,.10);transform:translateY(-1px);border-color:var(--line-strong)}
+  .appt-top{display:flex;justify-content:space-between;align-items:center;gap:6px}
+  .appt-time{font-size:10.5px;font-weight:700;color:var(--muted);letter-spacing:.01em}
+  .appt-name{font-size:13px;font-weight:700;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .appt-phone{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);font-weight:600;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .appt-phone i{font-size:10px;color:var(--muted-2);flex-shrink:0}
+  .appt-service{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+
+  .empty-slot-hint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .12s;pointer-events:none}
+  .gb-col:hover .empty-slot-hint{opacity:1}
+  .empty-slot-hint i{color:var(--muted-2);font-size:15px}
+
+  /* ---------- клиент: поиск/карточка (как на странице «Машины») ---------- */
+  .client-dropdown{position:absolute;left:0;right:0;top:100%;z-index:20;background:var(--surface-0);border:1.5px solid var(--line);border-radius:var(--r-sm);box-shadow:0 8px 24px rgba(13,13,13,0.10);margin-top:4px;max-height:220px;overflow-y:auto;display:none}
+  .client-dropdown.open{display:block}
+  .client-dropdown-item{padding:10px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid var(--line)}
+  .client-dropdown-item:last-child{border-bottom:none}
+  .client-dropdown-item:hover{background:var(--paper-2)}
+  .cdi-name{font-size:13px;font-weight:600;color:var(--text)}
+  .cdi-phone{font-size:12px;color:var(--muted)}
+  .cdi-meta{font-size:11px;color:var(--muted);white-space:nowrap}
+
+  /* ---------- панель клиента v5 (по образцу YCLIENTS) ----------
+     Состояние A (clientStateA) — поиск + список последних клиентов сети,
+     показывается, пока клиент не выбран. Состояние B (clientStateB) —
+     карточка выбранного клиента (имя/телефон/бейдж визитов) + та же
+     сетка иконок История/Лояльность/Сообщения/Счета, что была раньше. */
+  .client-search-field{position:relative}
+  .client-search-field i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--muted-2);font-size:15px;pointer-events:none}
+  .client-search-field input{padding-left:42px !important}
+
+  .prev-clients-title{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin:18px 0 8px}
+  .prev-clients-list{display:flex;flex-direction:column;gap:2px;margin-bottom:6px}
+  .pc-item{display:flex;flex-direction:column;gap:2px;padding:9px 10px;border-radius:14px;cursor:pointer}
+  .pc-item:hover{background:var(--paper-2)}
+  .pc-name{font-size:13px;font-weight:700;color:var(--ink)}
+  .pc-phone{font-size:11.5px;color:var(--muted);font-weight:600}
+
+  .client-panel-back{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;margin-bottom:16px;background:none;border:none;padding:0;font-family:var(--font-body)}
+  .client-panel-back:hover{color:var(--orange)}
+  .client-panel-back i{font-size:15px}
+
+  .client-tabs{display:flex;gap:22px;border-bottom:1.5px solid var(--line);margin-bottom:18px}
+  .client-tab{padding:0 0 12px;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;border:none;background:none;font-family:var(--font-body);position:relative}
+  .client-tab.active{color:var(--ink)}
+  .client-tab.active::after{content:"";position:absolute;left:0;right:0;bottom:-1.5px;height:2px;background:var(--orange);border-radius:2px}
+  .client-tab.stub{color:var(--muted-2);cursor:default}
+
+  .client-head-name{font-size:15px;font-weight:700;font-family:var(--font-display);margin-bottom:6px}
+  .client-head-phone{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:14px}
+  .client-head-phone i{font-size:13px;color:var(--muted-2);cursor:pointer}
+  .client-head-phone i:hover{color:var(--orange)}
+
+  .badge-row{margin-bottom:18px}
+  .badge-returning{background:var(--green-tint);color:var(--green);font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;display:inline-block}
+  .badge-new{background:var(--purple-tint);color:var(--purple);font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;display:inline-block}
+
+
+  /* ---------- модалка записи: доп. элементы ---------- */
+  .field-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .booking-id-tag{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:2px}
+
+  /* ---------- модалка записи: широкая версия на 3 колонки (этап 4, приведено
+     к дизайну booking-create-modal-v4.html — мягкая заливка полей вместо
+     рамок, увеличенные скругления, тень вместо тонкой обводки контейнера).
+     Виджет-компоненты (svc-grid/svc-item, custom-svc-*, pay-grid/pay-btn,
+     split-*, switch, total-line) переиспользуют разметку/JS из темы
+     (1:1 с cars.html), но здесь, внутри .modal-lg, у них поверх — визуальный
+     скин v4: без рамок, скругления 14–16px, светло-серая заливка полей. */
+  .modal-lg{width:1180px;max-width:96vw;max-height:92vh;overflow-y:auto;background:var(--paper);border:none;border-radius:32px;padding:0;position:relative;box-shadow:0 40px 90px -24px rgba(13,13,13,.35);--status-accent:var(--muted-2)}
+  .modal-lg::-webkit-scrollbar{width:6px}
+  .modal-lg::-webkit-scrollbar-thumb{background:var(--paper-3);border-radius:3px}
+  /* цветная полоса статуса слева от окна записи — как заголовок карточки визита в YCLIENTS */
+  .modal-lg::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;border-radius:32px 0 0 32px;background:var(--status-accent);z-index:1}
+  .modal-status-pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px;margin-bottom:8px;color:#fff;background:var(--status-accent)}
+  .modal-close{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;border:none;background:var(--paper-2);color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:background .12s,color .12s}
+  .modal-close:hover{color:var(--ink);background:var(--paper-3)}
+
+  .modal-header{padding:32px 60px 6px 28px}
+  .modal-header #modalTitle{font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:-0.01em;margin:0}
+
+  .modal-cols{display:grid;grid-template-columns:270px 1fr 300px;gap:28px}
+  .modal-col{min-width:0;padding:6px 8px}
+  .modal-col:first-child{padding-left:28px}
+  .modal-col:last-child{padding-right:28px}
+  .modal-col .field{margin-bottom:16px}
+  .modal-col .field label{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:7px}
+  .modal-col .field input,.modal-col .field select,.modal-col .field textarea{width:100%}
+  .col-title{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:14px}
+
+  /* мягкая заливка всех полей внутри широкой модалки — вместо рамок темы */
+  .modal-lg .modal-col input,.modal-lg .modal-col select,.modal-lg .modal-col textarea{
+    height:46px;border-radius:16px;border:1.5px solid transparent;
+    background:var(--paper-2);color:var(--ink);
+    padding:0 15px;font-size:13.5px;font-family:var(--font-body);
+    transition:background .12s,border-color .12s,box-shadow .12s;
+  }
+  .modal-lg .modal-col input::placeholder,.modal-lg .modal-col textarea::placeholder{color:var(--muted-2)}
+  .modal-lg .modal-col select{cursor:pointer;appearance:none;-webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2383817D' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+  .modal-lg .modal-col textarea{height:auto;padding:13px 15px;resize:vertical;line-height:1.45}
+  .modal-lg .modal-col input:focus,.modal-lg .modal-col select:focus,.modal-lg .modal-col textarea:focus{
+    outline:none;background:var(--paper);border-color:var(--orange);box-shadow:0 0 0 3px var(--orange-tint)}
+
+  .status-tabs{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:16px}
+  .status-tab{display:flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:100px;border:none;background:var(--paper-2);color:var(--muted);font-size:12.5px;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:background .12s,color .12s}
+  .status-tab:hover{background:var(--paper-3)}
+  .status-tab i{font-size:14px}
+  .status-tab[data-kind="ok"] i,.status-tab[data-kind="done"] i{color:var(--green)}
+  .status-tab[data-kind="no"] i{color:var(--red)}
+  .status-tab[data-kind="confirm"] i{color:var(--purple)}
+  .status-tab[data-kind="progress"] i{color:var(--orange)}
+  .status-tab.active{background:var(--ink);color:#fff}
+  .status-tab.active i{color:#fff}
+
+  .subtabs{display:flex;gap:3px;margin:18px 0 12px;background:var(--paper-2);border-radius:16px;padding:4px}
+  .subtab{flex:1;height:38px;border-radius:12px;border:none;background:transparent;color:var(--muted);font-size:12.5px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-body);transition:background .15s,color .15s,box-shadow .15s}
+  .subtab.active{background:var(--paper);color:var(--ink);box-shadow:0 3px 10px -4px rgba(13,13,13,.2)}
+  .svc-pane{display:none}
+  .svc-pane.active{display:block}
+
+  /* svc-grid/svc-item, custom-add-btn, custom-svc-form/-row, pay-grid/pay-btn,
+     split-toggle-row/split-grid, total-line — сама разметка и JS общие с
+     cars.html (theme-plata.css), а вот внешний вид здесь переопределён под
+     мягкую заливку v4 (без рамок, скругления 14–16px). */
+  .modal-lg .svc-grid{grid-template-columns:1fr 1fr;gap:8px;max-height:220px}
+  .modal-lg .svc-item{border:1.5px solid transparent;border-radius:16px;padding:11px 13px;background:var(--paper-2)}
+  .modal-lg .svc-item:hover{background:var(--paper-3)}
+  .modal-lg .svc-item.checked{border-color:var(--orange);background:var(--orange-tint);color:var(--ink)}
+  .modal-lg .custom-add-btn{border:none;border-radius:14px;height:42px;padding:0 15px;background:var(--paper-2);justify-content:center}
+  .modal-lg .custom-add-btn:hover{background:var(--paper-3);color:var(--ink)}
+  .modal-lg .custom-svc-form{border:none;border-radius:16px;background:var(--paper-2)}
+  .modal-lg .custom-svc-form .csf-row input{border:1.5px solid transparent;border-radius:14px;background:var(--paper);height:42px}
+  .modal-lg .custom-svc-form .csf-row input:focus{border-color:var(--orange)}
+  .modal-lg .custom-svc-row{border:none;border-radius:14px}
+  .modal-lg .pay-grid{gap:8px}
+  .modal-lg .pay-btn{border:1.5px solid transparent;border-radius:14px;background:var(--paper-2);height:44px}
+  .modal-lg .pay-btn.active{background:var(--orange-tint);color:var(--orange-2);border-color:var(--orange)}
+  .modal-lg .split-toggle-row{border:none;border-radius:14px;background:var(--paper-2)}
+  .modal-lg .split-row input{border:1.5px solid transparent;border-radius:12px;background:var(--paper-2);height:38px}
+  .modal-lg .split-row input:focus{outline:none;border-color:var(--orange)}
+  .modal-lg .total-input-wrap input{border:1.5px solid transparent;border-radius:14px;background:var(--paper-2);height:46px}
+  .modal-lg .total-input-wrap input:focus{outline:none;border-color:var(--orange)}
+
+  .price-hint{font-size:11.5px;color:var(--muted);margin-top:4px}
+  .no-services-note{font-size:12px;color:var(--muted-2);padding:10px 2px}
+
+  /* ---------- нижняя панель модалки: отмена/удалить/сохранить ---------- */
+  .modal-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:16px 28px 26px;flex-wrap:wrap}
+  .modal-lg .modal-err{margin:0;flex:1 1 100%;order:-1}
+  .modal-lg .modal-actions{display:flex;gap:8px;margin-top:0;flex:1;justify-content:flex-end}
+  .modal-lg .modal-actions .btn{flex:none;justify-content:center;height:44px;padding:0 22px}
+  .modal-lg .modal-actions .btn.danger{background:transparent;color:var(--red);border:1.5px solid transparent;order:-1;margin-right:auto}
+  .modal-lg .modal-actions .btn.danger:hover{background:var(--red-tint)}
+
+  /* ---------- клиентская панель: История/Лояльность/Сообщения/Счета (этап 5) ----------
+     Компонент собран по образцу booking-create-modal-v4.html (client-icon-grid,
+     detail-view), но на реальных данных: История — visits из carwash_clients.json
+     (этап 2), Лояльность — реальные visit_count/total_spent + управление
+     discount_percent через уже рабочий API (этап 2), а не фейковый кэшбэк.
+     Сообщения/Счета — честная заглушка: этих сущностей в бэкенде нет вообще. */
+  .client-icon-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0}
+  .ci-tile{display:flex;flex-direction:column;align-items:center;gap:8px;padding:13px 6px;border-radius:16px;background:var(--paper-2);border:none;cursor:pointer;text-align:center;font-family:var(--font-body);transition:background .12s}
+  .ci-tile:hover{background:var(--paper-3)}
+  .ci-tile:disabled{opacity:.45;cursor:not-allowed}
+  .ci-tile i{font-size:17px;color:var(--muted)}
+  .ci-tile span{font-size:10.5px;font-weight:700;color:var(--ink);line-height:1.25}
+  .ci-tile.wide{grid-column:span 3;flex-direction:row;justify-content:flex-start;padding:12px 14px}
+  .ci-tile.wide i{margin-bottom:0}
+
+  .detail-view{display:none;padding:4px 28px 0}
+  .detail-view.open{display:block}
+  .detail-header{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+  .detail-title{font-family:var(--font-display);font-size:18px;font-weight:600}
+  .btn.small{height:34px;padding:0 13px;font-size:11.5px}
+  .detail-scroll{max-height:50vh;overflow-y:auto;padding-right:4px}
+
+  .visit-group{margin-bottom:2px}
+  .visit-date{font-size:11.5px;font-weight:700;color:var(--muted);padding:16px 0 10px;border-top:1px solid var(--line)}
+  .visit-group:first-child .visit-date{border-top:none;padding-top:0}
+  .visit-row{display:grid;grid-template-columns:1.3fr 26px 2fr 80px 80px;gap:10px;align-items:center;padding:11px 0;border-top:1px solid var(--line)}
+  .vr-box{font-size:12px;font-weight:700}
+  .vr-time{font-size:11px;color:var(--muted);font-weight:600}
+  .vr-status-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px}
+  .vr-status-dot.done{background:var(--green-tint);color:var(--green)}
+  .vr-status-dot.other{background:var(--paper-3);color:var(--muted)}
+  .vr-service{font-size:12px;color:var(--ink);line-height:1.4}
+  .vr-price{font-size:12.5px;font-weight:700;text-align:right}
+  .vr-paid{font-size:12.5px;color:var(--muted);font-weight:600;text-align:right}
+  .empty-note-sm{font-size:12.5px;color:var(--muted-2);padding:16px 2px}
+
+  .loyalty-card{background:var(--paper-2);border-radius:20px;padding:18px;margin-bottom:20px}
+  .loyalty-card-title{font-family:var(--font-display);font-size:15px;font-weight:600;margin-bottom:2px}
+  .loyalty-card-sub{font-size:11.5px;color:var(--muted);font-weight:600}
+  .loyalty-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+  .loyalty-metric{background:var(--paper);border-radius:14px;padding:12px}
+  .lm-label{font-size:10.5px;color:var(--muted);font-weight:700}
+  .lm-value{font-family:var(--font-display);font-size:16px;font-weight:600;margin-top:6px}
+
+  .section-label{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.02em;margin-top:16px;margin-bottom:8px}
+  .discount-block{background:var(--paper-2);border-radius:18px;padding:18px}
+  .discount-current{font-size:13px;font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .badge-active{background:var(--green-tint);color:var(--green);font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px}
+  .badge-inactive{background:var(--paper-3);color:var(--muted);font-size:11px;font-weight:700;padding:4px 11px;border-radius:999px}
+  .discount-form{display:flex;gap:8px;align-items:center}
+  .discount-form input{width:100px}
+  .discount-form span{font-size:13px;font-weight:700;color:var(--muted)}
+  .discount-remove{color:var(--red);font-size:12px;font-weight:700;background:none;border:none;cursor:pointer;margin-left:auto}
+  .discount-err{color:var(--red);font-size:11.5px;margin-top:8px;display:none}
+
+  .module-stub{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:56px 10px;color:var(--muted)}
+  .module-stub i{font-size:28px;color:var(--muted-2)}
+  .module-stub span{font-size:12.5px;font-weight:600;max-width:260px;line-height:1.4}
+
+  @media (max-width:860px){
+    .modal-cols{grid-template-columns:1fr}
+    .modal-col:first-child,.modal-col:last-child{padding-left:8px;padding-right:8px}
+    .modal-col{padding-left:20px;padding-right:20px}
+    .modal-header{padding-left:20px}
+    .modal-footer{padding-left:20px;padding-right:20px}
+  }
+
+  /* Тост теперь общий — см. .ui-toast* в css/theme-plata.css (ui-kit.js). */
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="rail" id="sidebarRoot"></div>
+
+  <div class="main">
+    <div class="err-banner" id="errBanner"></div>
+
+    <div class="toolbar">
+      <div class="toolbar-left">
+        <button class="tb-icon-btn" id="railHamburgerBtn" type="button" title="Свернуть/развернуть меню"><i class="ti ti-menu-2"></i></button>
+        <button class="today-btn" id="todayBtn">Сегодня</button>
+        <div class="date-nav">
+          <button id="datePrev"><i class="ti ti-chevron-left"></i></button>
+          <span class="date-label" id="dateLabel">—</span>
+          <button id="dateNext"><i class="ti ti-chevron-right"></i></button>
+        </div>
+        <div class="popover-wrap">
+          <button class="filter-select popover-btn" id="boxFilterBtn" type="button">Все боксы</button>
+          <div class="popover-panel" id="boxFilterPanel">
+            <div class="bf-quick">
+              <button type="button" class="bf-quick-btn" id="bfAllBtn">Все боксы</button>
+              <button type="button" class="bf-quick-btn" id="bfDutyBtn">На смене сегодня</button>
+            </div>
+            <div class="bf-list" id="bfList"></div>
+          </div>
+        </div>
+        <div class="tb-sep"></div>
+        <div class="popover-wrap">
+          <button class="tb-icon-btn" id="zoomBtn" type="button" title="Масштаб журнала"><i class="ti ti-settings"></i></button>
+          <div class="popover-panel left0" id="zoomPanel">
+            <div class="ds-title" style="margin-bottom:10px">Масштаб журнала</div>
+            <div class="zoom-list" id="zoomList"></div>
+          </div>
+        </div>
+        <div class="popover-wrap">
+          <button class="tb-icon-btn" id="statusFilterBtn" type="button" title="Фильтр по статусам"><i class="ti ti-adjustments-horizontal"></i></button>
+          <div class="popover-panel left0" id="statusFilterPanel">
+            <div class="bf-quick">
+              <button type="button" class="bf-quick-btn" id="sfAllBtn">Все статусы</button>
+            </div>
+            <div class="bf-list" id="sfList"></div>
+          </div>
+        </div>
+        <button class="tb-icon-btn" id="goWorkersBtn" type="button" title="Сотрудники и график работы"><i class="ti ti-user-plus"></i></button>
+        <div class="popover-wrap">
+          <button class="tb-icon-btn" id="clientSearchBtn" type="button" title="Поиск по клиентам"><i class="ti ti-search"></i></button>
+          <div class="popover-panel wide left0" id="clientSearchPanel">
+            <div class="ds-title" style="margin-bottom:10px">Поиск по клиентам</div>
+            <input type="text" id="gcsInput" placeholder="Телефон или имя" autocomplete="off" style="width:100%;height:42px;border-radius:12px;border:1.5px solid var(--line-strong);background:var(--paper);padding:0 14px;font-size:13px;font-family:var(--font-body)">
+            <div id="gcsResults" style="margin-top:10px;max-height:280px;overflow-y:auto"></div>
+          </div>
+        </div>
+        <button class="tb-icon-btn" id="refreshBtn" type="button" title="Обновить"><i class="ti ti-refresh"></i></button>
+      </div>
+      <div class="toolbar-right">
+        <div class="popover-wrap">
+          <button class="tb-plus-btn" id="addMenuBtn" type="button" title="Добавить"><i class="ti ti-plus"></i></button>
+          <div class="popover-panel" id="addMenuPanel" style="width:200px;padding:8px">
+            <div class="add-menu-item" id="newBookingBtn"><i class="ti ti-calendar-plus"></i>Новая запись</div>
+            <div class="add-menu-item" id="quickSaleBtn"><i class="ti ti-shopping-cart-plus"></i>Быстрая продажа</div>
+          </div>
+        </div>
+        <div class="popover-wrap">
+          <button class="tb-money-btn" id="daySummaryBtn" type="button"><i class="ti ti-report-money"></i><span id="daySummaryAmount">0 ₽</span></button>
+          <div class="popover-panel wide" id="daySummaryPanel">
+            <div class="ds-title">Итоги дня</div>
+            <div class="ds-sub" id="dsSub">—</div>
+            <div class="ds-grid" id="dsGrid"><div class="empty-note-sm">Загрузка…</div></div>
+            <div class="ds-note" id="dsNote"></div>
+            <div class="ds-links" id="dsLinks"></div>
+          </div>
+        </div>
+        <div class="tb-avatar" id="tbAvatar" title="—"></div>
+      </div>
+    </div>
+
+    <div class="legend" id="legend" style="display:none"></div>
+
+    <div class="panel">
+      <div class="grid-scroll">
+        <div class="booking-grid" id="bookingGrid" style="display:none">
+          <div class="gh-corner"></div>
+          <div class="gt-col" id="timeCol"></div>
+        </div>
+      </div>
+      <div id="gridEmpty" class="empty-note">Загрузка…</div>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка записи (создание/просмотр-редактирование). Этап 4: разметка
+     перенесена из booking-create-modal-v4.html (3 колонки), но услуги/
+     товары/оплата — реальные виджеты темы (svc-grid, pay-grid, split-*
+     и т.д. — те же классы, что использует cars.html), а не самодельная
+     копия макета. Клиентская панель (История/Лояльность/Сообщения/Счета)
+     — заглушка с честной подписью, это этап 5, см. 00-audit-i-plan.md. -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal-lg">
+    <div class="modal-close" id="modalCloseBtn"><i class="ti ti-x"></i></div>
+    <div class="modal-header">
+      <div class="booking-id-tag" id="bookingIdTag" style="display:none"></div>
+      <div class="modal-status-pill" id="modalStatusPill" style="display:none"></div>
+      <h2 id="modalTitle">Новая запись</h2>
+    </div>
+
+    <div class="modal-cols">
+      <!-- ============ ЛЕВАЯ КОЛОНКА: бокс / время / статус ============ -->
+      <div class="modal-col">
+        <div class="col-title">Бокс и время</div>
+
+        <div class="field">
+          <label>Бокс</label>
+          <select id="fBox"></select>
+        </div>
+
+        <div class="field-row-2">
+          <div class="field">
+            <label>Дата</label>
+            <input type="date" id="fDate">
+          </div>
+          <div class="field">
+            <label>Тип кузова</label>
+            <select id="fBodyType"></select>
+          </div>
+        </div>
+
+        <div class="field-row-2">
+          <div class="field">
+            <label>Начало</label>
+            <input type="time" id="fStart" step="600">
+          </div>
+          <div class="field">
+            <label>Окончание</label>
+            <input type="time" id="fEnd" step="600">
+          </div>
+        </div>
+
+        <div class="col-title" style="margin-top:20px">Статус</div>
+        <div class="status-tabs" id="statusTabs"></div>
+
+        <div class="field" style="margin-bottom:0">
+          <label>Комментарий (необязательно)</label>
+          <textarea rows="3" id="fComment" placeholder="Например, просил не мыть диски"></textarea>
+        </div>
+      </div>
+
+      <!-- ============ СРЕДНЯЯ КОЛОНКА: услуги / товары / оплата ============ -->
+      <div class="modal-col">
+        <div class="col-title">Услуги и товары</div>
+        <div class="subtabs">
+          <button type="button" class="subtab active" data-sub="services"><i class="ti ti-sparkles"></i>Услуги</button>
+          <button type="button" class="subtab" data-sub="products"><i class="ti ti-package"></i>Товары</button>
+        </div>
+
+        <div class="svc-pane active" id="servicesPane">
+          <div class="svc-grid" id="svcGrid"></div>
+          <div class="custom-svc-list" id="customSvcList"></div>
+          <div class="custom-add-btn" id="customAddBtn"><i class="ti ti-plus"></i>Другое (своя услуга)</div>
+          <div class="custom-svc-form" id="customSvcForm">
+            <div class="csf-row">
+              <input type="text" id="csName" placeholder="Название услуги">
+            </div>
+            <div class="csf-row csf-row-2">
+              <input type="number" id="csPrice" min="0" step="50" placeholder="Цена, ₽">
+              <input type="number" id="csPercent" min="0" max="100" step="1" placeholder="% мойщику">
+            </div>
+            <div class="csf-actions">
+              <button type="button" class="btn secondary" id="csCancel">Отмена</button>
+              <button type="button" class="btn accent" id="csAdd">Добавить</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="svc-pane" id="productsPane">
+          <div class="svc-grid" id="prodGrid"></div>
+          <div class="no-services-note" id="noProductsNote" style="display:none">В прайсе пока нет товаров — добавьте их в config.PRODUCTS.</div>
+        </div>
+
+        <div class="col-title" style="margin-top:18px">Оплата (необязательно — можно оставить на потом)</div>
+        <div class="pay-grid" id="payGrid"></div>
+        <div class="split-toggle-row">
+          <span>Раздельная оплата</span>
+          <label class="switch">
+            <input type="checkbox" id="fSplitToggle">
+            <span class="track"></span>
+          </label>
+        </div>
+        <div class="split-grid" id="splitGrid"></div>
+        <div class="split-hint" id="splitHint"></div>
+
+        <div class="total-line">
+          <span>Итого</span>
+          <div class="total-input-wrap">
+            <span class="total-reset" id="totalReset">Сбросить</span>
+            <input type="number" id="fTotal" min="0" step="50">
+          </div>
+        </div>
+        <div class="price-hint" id="discountHint" style="display:none"></div>
+      </div>
+
+      <!-- ============ ПРАВАЯ КОЛОНКА: клиент ============ -->
+      <div class="modal-col">
+        <div class="col-title">Клиент</div>
+
+        <div class="field client-search-field" style="position:relative;margin-bottom:0">
+          <i class="ti ti-search"></i>
+          <input type="text" id="fPhone" placeholder="Телефон или имя — поиск клиента" autocomplete="off">
+          <div id="clientDropdown" class="client-dropdown"></div>
+        </div>
+
+        <!-- Клиент — единое поле в формате «Имя-Номер» / «Имя-без номера»,
+             без отдельной строки под машину (см. запрос владельца). -->
+        <div class="field" style="margin-top:16px;margin-bottom:0">
+          <label>Клиент</label>
+          <input type="text" id="fClientName" placeholder="Максим-А123ВС или Максим-без номера">
+        </div>
+
+        <!-- состояние A: клиент ещё не выбран — последние клиенты сети -->
+        <div id="clientStateA">
+          <div class="prev-clients-title" id="prevClientsTitle" style="display:none">Предыдущие клиенты</div>
+          <div class="prev-clients-list" id="prevClientsList"></div>
+        </div>
+
+        <!-- состояние B: клиент выбран -->
+        <div id="clientStateB" style="display:none">
+          <button type="button" class="client-panel-back" id="clientBackBtn"><i class="ti ti-chevron-left"></i>Сменить клиента</button>
+
+          <div class="client-tabs">
+            <button type="button" class="client-tab active">Клиент</button>
+            <button type="button" class="client-tab stub" title="Пока не реализовано — нет подключённого канала связи с клиентом">Чат</button>
+          </div>
+
+          <div class="client-head-name" id="chName"></div>
+          <div class="client-head-phone"><span id="chPhone"></span><i class="ti ti-copy" id="chCopyBtn" title="Скопировать номер"></i></div>
+          <div class="badge-row"><span id="chBadge"></span></div>
+
+          <div class="client-icon-grid" id="clientIconGrid">
+            <button type="button" class="ci-tile" data-detail="history"><i class="ti ti-history"></i><span>История посещений</span></button>
+            <button type="button" class="ci-tile" data-detail="loyalty"><i class="ti ti-heart"></i><span>Лояльность</span></button>
+            <button type="button" class="ci-tile" data-detail="messages"><i class="ti ti-message-circle"></i><span>Сообщения и звонки</span></button>
+            <button type="button" class="ci-tile wide" data-detail="accounts"><i class="ti ti-wallet"></i><span>Счета клиента</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Детальная панель клиента (История/Лояльность/Сообщения/Счета) — этап 5.
+         Заменяет .modal-cols на время просмотра, чтобы не сжимать 3 колонки. -->
+    <div class="detail-view" id="detailView">
+      <div class="detail-header">
+        <button type="button" class="btn secondary small" id="detailBackBtn"><i class="ti ti-arrow-left"></i>Назад к записи</button>
+        <div class="detail-title" id="detailTitle"></div>
+      </div>
+      <div id="detailContent"></div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="modal-err" id="modalErr"></div>
+      <div class="modal-actions">
+        <button class="btn danger" id="deleteBtn" style="display:none">Удалить</button>
+        <button class="btn secondary" id="payOnlineBtn" style="display:none"><i class="ti ti-credit-card"></i> Оплатить онлайн</button>
+        <button class="btn secondary" id="cancelBtn">Отмена</button>
+        <button class="btn accent" id="saveBtn">Сохранить</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/site-common.js"></script>
+<script src="/static/js/ui-kit.js"></script>
+<script src="/static/js/payment-flow.js"></script>
+<script>
+if (CW.requireAuth()) {
+  CW.renderSidebar("booking");
+
+  // Сетка: 08:00–20:00, шаг 30 минут, 34px на слот (столько же, сколько
+  // в макете booking-preview.html) — синхронизировано с START_HOUR/END_HOUR ниже.
+  const START_HOUR = 8, END_HOUR = 20;
+  const ZOOM_LEVELS = [
+    { key: "compact", label: "Компактно", px: 22 },
+    { key: "normal", label: "Обычно", px: 34 },
+    { key: "large", label: "Крупно", px: 48 },
+  ];
+  let SLOT_PX = Number(localStorage.getItem("cw_booking_zoom")) || 34;
+  if (!ZOOM_LEVELS.some(z => z.px === SLOT_PX)) SLOT_PX = 34;
+  let PX_PER_MIN = SLOT_PX / 30;
+
+  const STATUS_LABELS = {
+    waiting: "Ожидание", confirmed: "Подтверждено", arrived: "Клиент приехал",
+    no_show: "Не пришёл", in_progress: "В работе", done: "Оплачено",
+  };
+  const STATUS_ORDER = ["waiting", "confirmed", "arrived", "no_show", "in_progress", "done"];
+  const STATUS_ICONS = {
+    waiting: "ti-clock", confirmed: "ti-shield-check", arrived: "ti-check",
+    no_show: "ti-x", in_progress: "ti-loader-2", done: "ti-cash",
+  };
+  // цвет иконки неактивной вкладки статуса (см. .status-tab[data-kind] в <style>) —
+  // визуальный акцент как в booking-create-modal-v4.html
+  const STATUS_KIND = {
+    waiting: "", confirmed: "confirm", arrived: "ok",
+    no_show: "no", in_progress: "progress", done: "done",
+  };
+
+  const BOX_COLORS = [
+    { c: "#FF5000", t: "rgba(255,80,0,0.10)" },
+    { c: "#7A5CFF", t: "rgba(122,92,255,0.12)" },
+    { c: "#1B8A57", t: "rgba(27,138,87,0.12)" },
+    { c: "#D63A2E", t: "rgba(214,58,46,0.12)" },
+    { c: "#0D0D0D", t: "rgba(13,13,13,0.08)" },
+    { c: "#FF711F", t: "rgba(255,113,31,0.12)" },
+  ];
+  function boxColor(box) { return BOX_COLORS[(box - 1) % BOX_COLORS.length]; }
+
+  // цвет по статусу визита (используется и в карточках записи в сетке, и в
+  // акцентной полосе/пилюле окна записи — как цветная шапка карточки в YCLIENTS)
+  const STATUS_ACCENT = {
+    waiting: "#83817D", confirmed: "#7A5CFF", arrived: "#1B8A57",
+    no_show: "#D63A2E", in_progress: "#FF5000", done: "#1B8A57",
+  };
+  // класс модификатора для пилюли статуса на карточке записи (.appt-status-dot)
+  const STATUS_DOT_CLASS = {
+    waiting: "wait", confirmed: "confirm", arrived: "arrived",
+    in_progress: "progress", done: "done", no_show: "noshow",
+  };
+  // легенда над сеткой: порядок и цвет точки под каждый статус
+  const LEGEND_ORDER = ["waiting", "confirmed", "arrived", "in_progress", "done", "no_show"];
+  const LEGEND_DOT_COLOR = {
+    waiting: "var(--muted-2)", confirmed: "var(--purple)", arrived: "var(--green)",
+    in_progress: "var(--orange)", done: "var(--ink)", no_show: "var(--red)",
+  };
+
+  const branch = CW.getActiveBranch();
+  const errEl = document.getElementById("errBanner");
+  function showErr(msg) { errEl.textContent = msg; errEl.style.display = "block"; }
+
+  // Дата журнала может прийти из мини-календаря сайдбара (клик по дню на
+  // другой странице → переход сюда с ?date=YYYY-MM-DD), иначе — сегодня.
+  const urlDateParam = new URLSearchParams(window.location.search).get("date");
+  // Phase 5.1 (GAP-DB1 item 3 — точная visit→booking связь): переход из
+  // Client 360 может нести не только день (?date=), но и id конкретной
+  // записи (?booking=), чтобы сразу открыть её в Preview Drawer, а не
+  // просто показать день. Только для визитов, у которых booking_id
+  // реально сохранён (см. sessions.upsert_client_visit) — старые визиты
+  // без него по-прежнему открывают только день, как раньше.
+  const urlBookingParam = new URLSearchParams(window.location.search).get("booking");
+  let curDate = urlDateParam ? fromIso(urlDateParam) : new Date();
+  let boxFilterSet = new Set(); // номера видимых боксов — пересобирается в buildBoxFilter()
+  let boxFilterAuto = true;     // true = следовать за «на смене сегодня» при смене даты; false = ручной выбор пользователя
+  let statusFilterSet = new Set(STATUS_ORDER); // видимые статусы визитов — по умолчанию все
+
+  // Phase 4b — фильтры боксов/статусов переживают полную перезагрузку
+  // страницы (переход и обратно, F5). boxFilterSet при boxFilterAuto=true
+  // всё равно пересчитывается в buildBoxFilter() от актуальных «на смене» —
+  // сохранённый набор здесь нужен только для ручного режима.
+  const savedBookingFilters = CW.loadFilterState("booking");
+  if (savedBookingFilters) {
+    if (typeof savedBookingFilters.boxFilterAuto === "boolean") boxFilterAuto = savedBookingFilters.boxFilterAuto;
+    if (Array.isArray(savedBookingFilters.boxFilterSet)) boxFilterSet = new Set(savedBookingFilters.boxFilterSet);
+    if (Array.isArray(savedBookingFilters.statusFilterSet) && savedBookingFilters.statusFilterSet.length) {
+      statusFilterSet = new Set(savedBookingFilters.statusFilterSet.filter(s => STATUS_ORDER.includes(s)));
+      if (!statusFilterSet.size) statusFilterSet = new Set(STATUS_ORDER);
+    }
+  }
+  function persistBookingFilters() {
+    CW.saveFilterState("booking", {
+      boxFilterAuto,
+      boxFilterSet: [...boxFilterSet],
+      statusFilterSet: [...statusFilterSet],
+    });
+  }
+  let daySummaryOpen = false;
+  let boxes = [];
+  let bookings = [];
+  let editingId = null;
+  let selectedClient = null;
+  let serviceNames = {}; // {key: "Человекочитаемое имя"} — из /api/config, чтобы не показывать в сетке сырые ключи услуг
+  let cfg = null; // весь /api/config: services/products/body_types/payment_types — нужен модалке этапа 4
+
+  function pad2(n) { return String(n).padStart(2, "0"); }
+  function dateKey(d) { return `${pad2(d.getDate())}.${pad2(d.getMonth() + 1)}.${d.getFullYear()}`; }
+  function isoDate(d) { return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; }
+  function fromIso(s) { const [y, m, d] = s.split("-").map(Number); return new Date(y, m - 1, d); }
+  function isToday(d) { return dateKey(d) === dateKey(new Date()); }
+  function dateLabel(d) {
+    return d.toLocaleDateString("ru-RU", { day: "numeric", month: "long", weekday: "long" });
+  }
+
+  // Синхронизация с мини-календарём в сайдбаре: подсвечиваем в нём текущую
+  // дату журнала и перерисовываем сетку без перехода на другую страницу,
+  // если пользователь кликнул по дню в календаре, пока уже открыт журнал.
+  // Тонкая обёртка над общим UI.Toast (см. js/ui-kit.js, PHASE 3 — Global
+  // Interaction System) — имя bkToast и сигнатура (text, type) сохранены,
+  // чтобы не переписывать все точки вызова ниже; свою локальную
+  // DOM/CSS-реализацию тоста страница больше не держит.
+  function bkToast(text, type = "success") {
+    UI.Toast.show(text, type);
+  }
+
+  function syncRailDate() { CW.setCalDate(curDate); CW.renderSidebar("booking"); }
+  CW.onCalDateSelect((iso) => {
+    curDate = fromIso(iso);
+    loadBookings();
+  });
+  syncRailDate();
+
+  if (!branch) {
+    showErr("Филиал не выбран. Выберите филиал в сайдбаре.");
+  } else {
+    init();
+  }
+
+  async function init() {
+    document.getElementById("dateLabel").textContent = dateLabel(curDate);
+    const tbAvatar = document.getElementById("tbAvatar");
+    tbAvatar.textContent = CW.initials(CW.getName());
+    tbAvatar.title = `${CW.getName() || "—"} · ${CW.roleLabel(CW.getRole()) || ""}`;
+    try {
+      cfg = await CW.authFetch("/api/config");
+      (cfg.services || []).forEach(s => { serviceNames[s.key] = s.name; });
+    } catch (e) { /* не критично для сетки — просто покажем сырые ключи, если конфиг недоступен */ }
+    buildModalStaticParts();
+    await loadBookings();
+    if (urlBookingParam) {
+      const bk = bookings.find(b => String(b.id) === urlBookingParam);
+      if (bk) openBookingPreview(bk);
+    }
+  }
+
+  async function loadBookings() {
+    if (!branch) return;
+    errEl.style.display = "none";
+    document.getElementById("dateLabel").textContent = dateLabel(curDate);
+    try {
+      const data = await CW.authFetch(`/api/bookings?branch=${encodeURIComponent(branch)}&date=${encodeURIComponent(dateKey(curDate))}`);
+      boxes = data.boxes || [];
+      bookings = data.bookings || [];
+      buildBoxFilter();
+      renderGrid();
+      loadDaySummary();
+    } catch (e) {
+      showErr(e.message);
+    }
+  }
+
+  // ---------- фильтр боксов: попап с чекбоксами вместо одиночного select ----------
+  // По умолчанию (boxFilterAuto=true) показываются боксы сотрудников, у которых
+  // сегодня (на выбранную дату) смена по графику (on_duty из /api/bookings).
+  // Как только пользователь вручную снял/поставил галочку или нажал «Все боксы»,
+  // включается ручной режим — выбор больше не меняется сам при смене даты, пока
+  // пользователь явно не вернётся в режим «На смене сегодня».
+  function buildBoxFilter() {
+    if (boxFilterAuto) {
+      const onDuty = boxes.filter(b => b.on_duty).map(b => b.box);
+      boxFilterSet = new Set(onDuty.length ? onDuty : boxes.map(b => b.box));
+    } else {
+      // ручной режим: сохраняем прежний выбор, но выбрасываем боксы, которых
+      // больше нет (состав сотрудников филиала мог измениться)
+      const stillValid = boxes.map(b => b.box);
+      boxFilterSet = new Set([...boxFilterSet].filter(n => stillValid.includes(n)));
+      if (!boxFilterSet.size) boxFilterSet = new Set(stillValid); // не оставляем пользователя с пустой сеткой
+    }
+    renderBoxFilterPanel();
+  }
+
+  function renderBoxFilterPanel() {
+    const btn = document.getElementById("boxFilterBtn");
+    const list = document.getElementById("bfList");
+    document.getElementById("bfAllBtn").classList.toggle("active", !boxFilterAuto && boxFilterSet.size === boxes.length);
+    document.getElementById("bfDutyBtn").classList.toggle("active", boxFilterAuto);
+
+    if (!boxes.length) {
+      list.innerHTML = `<div class="empty-note-sm">Нет сотрудников на филиале</div>`;
+    } else {
+      list.innerHTML = boxes.map(b => {
+        const checked = boxFilterSet.has(b.box);
+        const col = boxColor(b.box);
+        return `
+          <label class="bf-item ${checked ? "checked" : ""}" data-box="${b.box}">
+            <input type="checkbox" ${checked ? "checked" : ""}>
+            <span class="bf-dot" style="background:${col.c}"></span>
+            <span class="bf-name">Бокс ${b.box}${b.employee ? " — " + escapeHtml(b.employee) : ""}</span>
+            ${b.on_duty ? "" : `<span class="bf-off">не на смене</span>`}
+          </label>`;
+      }).join("");
+      list.querySelectorAll(".bf-item").forEach(item => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          const box = Number(item.dataset.box);
+          boxFilterAuto = false;
+          if (boxFilterSet.has(box)) {
+            if (boxFilterSet.size > 1) boxFilterSet.delete(box); // не даём снять последний бокс — сетка не может быть пустой
+          } else {
+            boxFilterSet.add(box);
+          }
+          renderBoxFilterPanel();
+          renderGrid();
+          persistBookingFilters();
+        });
+      });
+    }
+
+    if (!boxes.length) {
+      btn.innerHTML = `Все боксы`;
+    } else if (boxFilterSet.size === boxes.length) {
+      btn.innerHTML = `Все боксы`;
+    } else {
+      btn.innerHTML = `Боксы <span class="pb-badge">${boxFilterSet.size} из ${boxes.length}</span>`;
+    }
+  }
+
+  document.getElementById("bfAllBtn").addEventListener("click", () => {
+    boxFilterAuto = false;
+    boxFilterSet = new Set(boxes.map(b => b.box));
+    renderBoxFilterPanel();
+    renderGrid();
+    persistBookingFilters();
+  });
+  document.getElementById("railHamburgerBtn").addEventListener("click", () => {
+    const next = localStorage.getItem("cw_rail_expanded") !== "1";
+    localStorage.setItem("cw_rail_expanded", next ? "1" : "0");
+    CW.renderSidebar("booking");
+  });
+  // «Сотрудники» — у нас график задаётся циклом работа/отдых на странице
+  // «Сотрудники», а не разовым добавлением в конкретный день с часами, как в
+  // YCLIENTS, поэтому иконка ведёт на страницу графика, а не открывает мини-форму
+  document.getElementById("goWorkersBtn").addEventListener("click", () => {
+    CW.go("/static/workers.html");
+  });
+
+  document.getElementById("bfDutyBtn").addEventListener("click", () => {
+    boxFilterAuto = true;
+    buildBoxFilter();
+    renderGrid();
+    persistBookingFilters();
+  });
+
+  // ---------- фильтр по статусам визита — тот же паттерн попапа-чеклиста, что у боксов.
+  // Позволяет, например, скрыть все «Клиент не пришёл», чтобы они не мешали в журнале
+  // (как в YCLIENTS: Журнал → кнопка фильтрации → статусы визита). ----------
+  function renderStatusFilterPanel() {
+    const btn = document.getElementById("statusFilterBtn");
+    const list = document.getElementById("sfList");
+    document.getElementById("sfAllBtn").classList.toggle("active", statusFilterSet.size === STATUS_ORDER.length);
+    list.innerHTML = STATUS_ORDER.map(s => {
+      const checked = statusFilterSet.has(s);
+      return `
+        <label class="bf-item ${checked ? "checked" : ""}" data-status="${s}">
+          <input type="checkbox" ${checked ? "checked" : ""}>
+          <span class="bf-dot" style="background:${STATUS_ACCENT[s]}"></span>
+          <span class="bf-name"><i class="ti ${STATUS_ICONS[s]}"></i>&nbsp; ${STATUS_LABELS[s]}</span>
+        </label>`;
+    }).join("");
+    list.querySelectorAll(".bf-item").forEach(item => {
+      item.addEventListener("click", (e) => {
+        e.preventDefault();
+        const s = item.dataset.status;
+        if (statusFilterSet.has(s)) {
+          if (statusFilterSet.size > 1) statusFilterSet.delete(s); // не даём скрыть все статусы разом
+        } else {
+          statusFilterSet.add(s);
+        }
+        renderStatusFilterPanel();
+        renderGrid();
+        persistBookingFilters();
+      });
+    });
+    if (statusFilterSet.size === STATUS_ORDER.length) {
+      btn.innerHTML = `<i class="ti ti-filter"></i>`;
+    } else {
+      btn.innerHTML = `<i class="ti ti-filter"></i><span class="pb-badge">${statusFilterSet.size} из ${STATUS_ORDER.length}</span>`;
+    }
+  }
+  document.getElementById("sfAllBtn").addEventListener("click", () => {
+    statusFilterSet = new Set(STATUS_ORDER);
+    renderStatusFilterPanel();
+    renderGrid();
+    persistBookingFilters();
+  });
+  renderStatusFilterPanel();
+
+  // ---------- масштаб журнала (высота получасового слота) — как кнопка-шестерёнка
+  // «Масштаб» в YCLIENTS. Выбор сохраняется в localStorage, чтобы не сбрасывался. ----------
+  function renderZoomPanel() {
+    const list = document.getElementById("zoomList");
+    list.innerHTML = ZOOM_LEVELS.map(z => `
+      <div class="zoom-opt ${z.px === SLOT_PX ? "active" : ""}" data-px="${z.px}">
+        <span>${z.label}</span>
+        <i class="ti ti-check zo-check"></i>
+      </div>`).join("");
+    list.querySelectorAll(".zoom-opt").forEach(el => {
+      el.addEventListener("click", () => {
+        SLOT_PX = Number(el.dataset.px);
+        PX_PER_MIN = SLOT_PX / 30;
+        localStorage.setItem("cw_booking_zoom", String(SLOT_PX));
+        renderZoomPanel();
+        renderGrid();
+      });
+    });
+  }
+  renderZoomPanel();
+
+  // ---------- попапы: открытие/закрытие по клику на кнопку / клику снаружи ----------
+  function setupPopover(btnId, panelId, onOpen) {
+    const btn = document.getElementById(btnId);
+    const panel = document.getElementById(panelId);
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const willOpen = !panel.classList.contains("open");
+      document.querySelectorAll(".popover-panel.open").forEach(p => p.classList.remove("open"));
+      if (willOpen) {
+        panel.classList.add("open");
+        if (onOpen) onOpen();
+      }
+    });
+    panel.addEventListener("click", (e) => e.stopPropagation());
+  }
+  document.addEventListener("click", () => document.querySelectorAll(".popover-panel.open").forEach(p => p.classList.remove("open")));
+  setupPopover("boxFilterBtn", "boxFilterPanel");
+  setupPopover("statusFilterBtn", "statusFilterPanel");
+  setupPopover("zoomBtn", "zoomPanel");
+  setupPopover("clientSearchBtn", "clientSearchPanel", () => { document.getElementById("gcsInput").focus(); });
+  setupPopover("addMenuBtn", "addMenuPanel");
+  setupPopover("daySummaryBtn", "daySummaryPanel", () => { daySummaryOpen = true; loadDaySummary(); });
+
+  // ---------- поиск по клиентам прямо из тулбара журнала (как значок лупы в YCLIENTS) ----------
+  let gcsTimer = null;
+  document.getElementById("gcsInput").addEventListener("input", (e) => {
+    const q = e.target.value.trim();
+    const results = document.getElementById("gcsResults");
+    clearTimeout(gcsTimer);
+    if (q.length < 3) { results.innerHTML = `<div class="empty-note-sm">Введите минимум 3 символа</div>`; return; }
+    results.innerHTML = `<div class="empty-note-sm">Поиск…</div>`;
+    gcsTimer = setTimeout(async () => {
+      try {
+        const data = await CW.authFetch(`/api/clients/search?q=${encodeURIComponent(q)}`);
+        const clients = data.clients || [];
+        if (!clients.length) { results.innerHTML = `<div class="empty-note-sm">Ничего не найдено</div>`; return; }
+        results.innerHTML = clients.map((c, i) => `
+          <div class="client-dropdown-item" data-idx="${i}" style="cursor:pointer;border-radius:var(--r-sm)">
+            <div><div class="cdi-name">${escapeHtml(c.name) || "Без имени"}</div><div class="cdi-phone">${escapeHtml(c.phone)}</div></div>
+            <div class="cdi-meta">${c.visit_count} визит(ов) · ${CW.money(c.total_spent)}</div>
+          </div>`).join("");
+        results.querySelectorAll(".client-dropdown-item").forEach(el => {
+          el.addEventListener("click", () => {
+            startBookingForClient(clients[Number(el.dataset.idx)]);
+            document.getElementById("clientSearchPanel").classList.remove("open");
+          });
+        });
+      } catch (err) { results.innerHTML = `<div class="empty-note-sm">${escapeHtml(err.message)}</div>`; }
+    }, 300);
+  });
+  // клик по найденному клиенту — сразу открываем новую запись, предзаполненную его данными
+  function startBookingForClient(client) {
+    if (!boxes.length) { showErr("Сначала добавьте сотрудников на странице «Сотрудники» — иначе нет боксов."); return; }
+    const duty = boxes.find(b => b.on_duty) || boxes[0];
+    const now = new Date();
+    let minutes = Math.max(START_HOUR * 60, Math.min((END_HOUR - 1) * 60 + 30, Math.round((now.getHours() * 60 + now.getMinutes()) / 30) * 30));
+    openCreateModal(duty.box, minutes);
+    selectClient(client);
+  }
+  document.getElementById("daySummaryPanel").addEventListener("transitionend", () => {}); // no-op, задел на будущее
+  // отслеживаем закрытие попапа «Итоги дня», чтобы не дёргать API, пока он скрыт
+  const _daySummaryPanelObserver = new MutationObserver(() => {
+    daySummaryOpen = document.getElementById("daySummaryPanel").classList.contains("open");
+  });
+  _daySummaryPanelObserver.observe(document.getElementById("daySummaryPanel"), { attributes: true, attributeFilter: ["class"] });
+
+  // ---------- попап «Итоги дня» — реальные цифры кассы + записей за день ----------
+  async function loadDaySummary() {
+    const grid = document.getElementById("dsGrid");
+    const sub = document.getElementById("dsSub");
+    const note = document.getElementById("dsNote");
+    const links = document.getElementById("dsLinks");
+    sub.textContent = `${branch} · ${dateLabel(curDate)}`;
+    grid.innerHTML = `<div class="empty-note-sm">Загрузка…</div>`;
+    note.textContent = "";
+    links.innerHTML = "";
+    try {
+      const d = await CW.authFetch(`/api/day-summary?branch=${encodeURIComponent(branch)}&date=${encodeURIComponent(dateKey(curDate))}`);
+      document.getElementById("daySummaryAmount").textContent = CW.money(d.receipts_total || d.bookings_total || 0);
+      grid.innerHTML = `
+        <div class="mini-stat"><div class="ms-label">Поступлений в кассу</div><div class="ms-value">${CW.money(d.receipts_total)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Записей на сумму</div><div class="ms-value">${CW.money(d.bookings_total)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Оплата наличными</div><div class="ms-value">${CW.money(d.cash)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Оплата безналом</div><div class="ms-value">${CW.money(d.noncash)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Выполнено на сумму</div><div class="ms-value">${CW.money(d.done_total)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Записей клиентов</div><div class="ms-value">${d.bookings_count}</div></div>
+        <div class="mini-stat"><div class="ms-label">Лояльность на сумму</div><div class="ms-value">${CW.money(d.loyalty_total)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Товаров на сумму</div><div class="ms-value">${CW.money(d.products_total)}</div></div>`;
+      if (d.is_live) {
+        note.textContent = `Клиентов в кассе за смену: ${d.clients}. Данные из открытой смены — те же, что на страницах «Касса» и «Машины».`;
+        links.innerHTML = `<a href="/static/cash.html"><i class="ti ti-cash"></i>&nbsp;Касса</a><a href="/static/cars.html"><i class="ti ti-car"></i>&nbsp;Машины</a>`;
+      } else if (d.has_cash_data) {
+        note.textContent = `Клиентов в кассе за смену: ${d.clients}. Архивные данные закрытой смены за этот день (страницы «Касса»/«Машины» показывают только текущую открытую смену).`;
+      } else {
+        note.textContent = `За эту дату кассовых данных нет (смена ещё не открыта или не закрыта). Показаны только записи.`;
+      }
+    } catch (e) {
+      grid.innerHTML = `<div class="empty-note-sm">${escapeHtml(e.message)}</div>`;
+    }
+  }
+
+  function renderGrid() {
+    const grid = document.getElementById("bookingGrid");
+    const empty = document.getElementById("gridEmpty");
+    const legend = document.getElementById("legend");
+
+    if (!boxes.length) {
+      grid.style.display = "none";
+      legend.style.display = "none";
+      empty.style.display = "block";
+      empty.textContent = "На филиале ещё нет сотрудников — боксы появятся, когда добавите их на странице «Сотрудники».";
+      return;
+    }
+
+    const visibleBoxes = boxes.filter(b => boxFilterSet.has(b.box));
+    if (!visibleBoxes.length) {
+      grid.style.display = "none";
+      legend.style.display = "none";
+      empty.style.display = "block";
+      empty.textContent = "Нет боксов, подходящих под выбранный фильтр.";
+      return;
+    }
+
+    empty.style.display = "none";
+    grid.style.display = "grid";
+    grid.style.setProperty("--cols", visibleBoxes.length);
+    grid.style.setProperty("--slot-px", SLOT_PX + "px");
+
+    // компактная легенда статусов над сеткой (редизайн) — короткие подписи
+    // в одну строку, не занимает пол-экрана
+    legend.innerHTML = LEGEND_ORDER.map(s =>
+      `<div class="legend-item"><span class="legend-dot" style="background:${LEGEND_DOT_COLOR[s]}"></span>${STATUS_LABELS[s]}</div>`
+    ).join("");
+    legend.style.display = "flex";
+
+    // заголовки колонок + время
+    let html = `<div class="gh-corner"></div>`;
+    visibleBoxes.forEach(b => {
+      const col = boxColor(b.box);
+      const initials = b.employee ? initialsOf(b.employee) : "?";
+      const boxBookingCount = bookings.filter(bk => String(bk.box) === String(b.box)).length;
+      html += `
+        <div class="gh-col${b.on_duty ? "" : " off-duty"}">
+          <div class="gh-avatar" style="background:${col.t};color:${col.c}">${initials}</div>
+          <div><div class="gh-name">Бокс ${b.box}</div><div class="gh-role">${b.employee ? "Автомойщик — " + b.employee : "Сотрудник не назначен"}</div></div>
+          <div class="gh-count">${boxBookingCount}</div>
+        </div>`;
+    });
+
+    let timeHtml = "";
+    for (let h = START_HOUR; h < END_HOUR; h++) {
+      timeHtml += `<div class="gt-slot hour"><span class="gt-label">${pad2(h)}:00</span></div>`;
+      timeHtml += `<div class="gt-slot"><span class="gt-label">30</span></div>`;
+    }
+    html += `<div class="gt-col">${timeHtml}</div>`;
+
+    let slotsHtml = "";
+    for (let h = START_HOUR; h < END_HOUR; h++) {
+      slotsHtml += `<div class="gb-slot hour"></div><div class="gb-slot"></div>`;
+    }
+
+    visibleBoxes.forEach(b => {
+      html += `<div class="gb-col${b.on_duty ? "" : " off-duty"}" data-box="${b.box}">${slotsHtml}<div class="empty-slot-hint"><i class="ti ti-plus"></i></div></div>`;
+    });
+
+    grid.innerHTML = html;
+
+    // события: клик по пустому месту колонки — новая запись в этом боксе/времени
+    grid.querySelectorAll(".gb-col").forEach(col => {
+      col.addEventListener("click", (e) => {
+        if (e.target.closest(".appt")) return;
+        if (col.classList.contains("off-duty")) return;
+        const rect = col.getBoundingClientRect();
+        const offsetY = e.clientY - rect.top;
+        let minutes = START_HOUR * 60 + Math.round((offsetY / PX_PER_MIN) / 30) * 30;
+        minutes = Math.max(START_HOUR * 60, Math.min((END_HOUR - 1) * 60 + 30, minutes));
+        openCreateModal(Number(col.dataset.box), minutes);
+      });
+    });
+
+    // сами записи, спозиционированные по времени
+    const visibleBoxNums = new Set(visibleBoxes.map(b => String(b.box)));
+    bookings
+      .filter(bk => visibleBoxNums.has(String(bk.box)) && statusFilterSet.has(bk.status || "waiting"))
+      .forEach(bk => {
+      const col = grid.querySelector(`.gb-col[data-box="${bk.box}"]`);
+      if (!col) return;
+      const startMin = timeToMinutes(bk.start_time);
+      const endMin = timeToMinutes(bk.end_time);
+      if (startMin < 0 || endMin < 0) return;
+      const top = Math.max(0, (startMin - START_HOUR * 60)) * PX_PER_MIN;
+      const height = Math.max(28, (endMin - startMin) * PX_PER_MIN);
+      const col_ = boxColor(bk.box);
+      const status = bk.status || "waiting";
+      const svcList = [
+        ...(bk.service_keys || []).map(k => serviceNames[k] || k),
+        ...(bk.custom_services || []).map(s => s.name),
+      ];
+      const svcNames = svcList.length ? svcList.map(escapeHtml).join(", ") : (STATUS_LABELS[bk.status] || bk.status);
+      const compact = height < SLOT_PX * 1.7;
+      const dotCls = STATUS_DOT_CLASS[status] || "wait";
+      const priceVal = bk.price_override != null ? bk.price_override : bk.price;
+      const el = document.createElement("div");
+      el.className = "appt" + (status === "no_show" ? " no-show" : "") + (compact ? " compact" : "");
+      el.style.top = top + "px";
+      el.style.height = height + "px";
+      el.style.borderLeftColor = col_.c;
+      el.title = `${STATUS_LABELS[status] || status} · Открыть запись`;
+      el.innerHTML = `
+        <div class="appt-top">
+          <span class="appt-time">${bk.start_time}–${bk.end_time}</span>
+          <span class="appt-top-right">
+            ${bk.car_num && status !== "done" ? `<span class="appt-cash-flag" title="В кассе — машина №${bk.car_num}"><i class="ti ti-cash"></i></span>` : ""}
+            <span class="appt-status-dot ${dotCls}"><i class="ti ${STATUS_ICONS[status] || "ti-clock"}"></i>${compact ? "" : (STATUS_LABELS[status] || status)}</span>
+          </span>
+        </div>
+        <div class="appt-name">${escapeHtml(bk.client_name || bk.car || "Без имени")}</div>
+        ${bk.phone ? `<div class="appt-phone"><i class="ti ti-phone"></i>${escapeHtml(bk.phone)}</div>` : ""}
+        <div class="appt-service">${svcNames}</div>
+        ${priceVal != null ? `<div class="appt-price">${CW.money(priceVal)}</div>` : ""}
+        <div class="appt-resize-handle" title="Потянуть — изменить длительность"></div>`;
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        if (el.dataset.dragged === "1") { delete el.dataset.dragged; return; } // клик сразу после переноса — не открываем модалку
+        if (el.dataset.resized === "1") { delete el.dataset.resized; return; } // клик сразу после resize — не открываем модалку
+        openBookingPreview(bk);
+      });
+      wireApptDrag(el, bk);
+      wireApptResize(el, bk);
+      col.appendChild(el);
+    });
+
+    // линия "сейчас" — только если открыт сегодняшний день
+    if (isToday(curDate)) {
+      const now = new Date();
+      const nowMin = now.getHours() * 60 + now.getMinutes();
+      if (nowMin >= START_HOUR * 60 && nowMin <= END_HOUR * 60) {
+        const top = (nowMin - START_HOUR * 60) * PX_PER_MIN;
+        grid.querySelectorAll(".gb-col").forEach((col, i) => {
+          const line = document.createElement("div");
+          line.className = "now-line" + (i === 0 ? "" : " no-label");
+          line.style.top = top + "px";
+          line.dataset.time = `${pad2(now.getHours())}:${pad2(now.getMinutes())}`;
+          col.appendChild(line);
+        });
+      }
+    }
+  }
+
+  function timeToMinutes(v) {
+    if (!v) return -1;
+    const [h, m] = v.split(":").map(Number);
+    if (Number.isNaN(h) || Number.isNaN(m)) return -1;
+    return h * 60 + m;
+  }
+  function minutesToTime(min) { return `${pad2(Math.floor(min / 60))}:${pad2(min % 60)}`; }
+
+  // Проверка пересечения на клиенте — тот же принцип, что find_conflicting_booking
+  // на бэкенде (sessions.py): «не пришёл» слот снова свободен, сравниваем
+  // только с записями в ТОМ ЖЕ боксе. Используется для живой подсветки во
+  // время drag/resize, ещё до похода на сервер — сервер всё равно перепроверит
+  // при сохранении (это просто UX-подсказка, а не замена валидации).
+  function hasLocalConflict(box, startMin, endMin, excludeId) {
+    return bookings.some(b => {
+      if (b.box !== box && String(b.box) !== String(box)) return false;
+      if (b.id === excludeId) return false;
+      if (b.status === "no_show") return false;
+      const exStart = timeToMinutes(b.start_time), exEnd = timeToMinutes(b.end_time);
+      if (exStart < 0 || exEnd < 0) return false;
+      return startMin < exEnd && exStart < endMin;
+    });
+  }
+
+  // ---------- перенос записи: зажать и потянуть — время (вверх/вниз) и/или
+  // бокс (влево/вправо между колонками). Порог в пикселях отделяет обычный
+  // клик (открыть карточку) от начала переноса, чтобы случайное дрожание
+  // руки на клике не запускало drag. ----------
+  const DRAG_THRESHOLD = 6;
+  let dragState = null;
+
+  function wireApptDrag(el, bk) {
+    const start = (clientX, clientY) => {
+      const grid = document.getElementById("bookingGrid");
+      const startMin = timeToMinutes(bk.start_time);
+      const endMin = timeToMinutes(bk.end_time);
+      const durationMin = Math.max(30, endMin - startMin);
+      // Колонки боксов не двигаются во время драга — считаем их прямоугольники
+      // один раз здесь, а не через document.elementFromPoint на каждый мелкий
+      // сдвиг мыши/пальца (elementFromPoint форсирует синхронный layout —
+      // именно это и было основной причиной подтормаживания при переносе).
+      const colRects = Array.from(grid.querySelectorAll(".gb-col")).map(colEl => ({
+        box: Number(colEl.dataset.box), el: colEl, rect: colEl.getBoundingClientRect(),
+      }));
+      dragState = {
+        bk, el, grid, colRects,
+        startX: clientX, startY: clientY,
+        origTop: el.offsetTop, origBox: bk.box,
+        durationMin,
+        dragging: false,
+        newBox: bk.box, newStartMin: startMin,
+        ghost: null,
+        pendingX: clientX, pendingY: clientY,
+        rafScheduled: false,
+      };
+    };
+    el.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      start(e.clientX, e.clientY);
+      e.preventDefault();
+    });
+    el.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      start(t.clientX, t.clientY);
+    }, { passive: true });
+  }
+
+  function updateApptGhost(state) {
+    const col = boxColor(state.newBox);
+    const boxInfo = boxes.find(b => b.box === state.newBox);
+    const endMin = state.newStartMin + state.durationMin;
+    state.ghost.style.width = state.el.offsetWidth + "px";
+    state.ghost.style.height = state.el.offsetHeight + "px";
+    state.ghost.classList.toggle("conflict", !!state.conflict);
+    if (!state.conflict) {
+      state.ghost.style.borderLeftColor = col.c;
+      state.ghost.style.background = col.t;
+    }
+    const warn = state.conflict ? ` · <i class="ti ti-alert-triangle"></i> занято` : "";
+    state.ghost.innerHTML = `<div class="appt-time">${minutesToTime(state.newStartMin)}–${minutesToTime(endMin)} · Бокс ${state.newBox}${boxInfo && boxInfo.employee ? " (" + escapeHtml(boxInfo.employee) + ")" : ""}${warn}</div>`;
+  }
+
+  // Обработка перетаскивания вынесена из обработчика события и вызывается
+  // максимум раз за кадр (через requestAnimationFrame) — событий
+  // mousemove/touchmove за секунду может быть 60-120+, а пересчитывать
+  // колонку/время и перерисовывать ghost на каждое из них не нужно и просто
+  // забивает главный поток, отсюда ощущение лагов при переносе записи.
+  function processDragMove(clientX, clientY) {
+    const dragStateRef = dragState;
+    if (!dragStateRef) return;
+    const dx = clientX - dragStateRef.startX;
+    const dy = clientY - dragStateRef.startY;
+    if (!dragStateRef.dragging) {
+      if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+      dragStateRef.dragging = true;
+      dragStateRef.el.classList.add("dragging");
+      dragStateRef.el.dataset.dragged = "1";
+      dragStateRef.ghost = document.createElement("div");
+      dragStateRef.ghost.className = "appt-ghost";
+      document.body.appendChild(dragStateRef.ghost);
+      document.body.style.cursor = "grabbing";
+      document.body.style.userSelect = "none";
+    }
+
+    // колонка под курсором/пальцем — по заранее посчитанным прямоугольникам,
+    // без document.elementFromPoint (см. комментарий в wireApptDrag)
+    let targetCol = null;
+    for (const c of dragStateRef.colRects) {
+      if (clientX >= c.rect.left && clientX <= c.rect.right) { targetCol = c; break; }
+    }
+    if (dragStateRef._dropEl && dragStateRef._dropEl !== (targetCol && targetCol.el)) {
+      dragStateRef._dropEl.classList.remove("drop-target", "conflict");
+      dragStateRef._dropEl = null;
+    }
+    if (targetCol) {
+      dragStateRef.newBox = targetCol.box;
+      if (dragStateRef._dropEl !== targetCol.el) {
+        targetCol.el.classList.add("drop-target");
+        dragStateRef._dropEl = targetCol.el;
+      }
+      const offsetY = clientY - targetCol.rect.top;
+      let minutes = START_HOUR * 60 + Math.round((offsetY / PX_PER_MIN) / 30) * 30 - Math.round(dragStateRef.durationMin / 2 / 30) * 30;
+      minutes = Math.max(START_HOUR * 60, Math.min(END_HOUR * 60 - dragStateRef.durationMin, minutes));
+      dragStateRef.newStartMin = minutes;
+    }
+
+    // живая проверка пересечения — красим цель ДО отпускания, а не только
+    // после того, как сервер отклонит перенос (см. hasLocalConflict выше)
+    dragStateRef.conflict = hasLocalConflict(
+      dragStateRef.newBox, dragStateRef.newStartMin,
+      dragStateRef.newStartMin + dragStateRef.durationMin, dragStateRef.bk.id);
+    if (dragStateRef._dropEl) dragStateRef._dropEl.classList.toggle("conflict", dragStateRef.conflict);
+
+    updateApptGhost(dragStateRef);
+    // transform вместо left/top — не форсирует layout на каждый кадр,
+    // сдвиг ghost-элемента обрабатывается компоновкой на GPU
+    dragStateRef.ghost.style.transform = `translate3d(${clientX + 14}px, ${clientY - 14}px, 0)`;
+  }
+
+  function onDragPointerMove(clientX, clientY) {
+    if (!dragState) return;
+    dragState.pendingX = clientX;
+    dragState.pendingY = clientY;
+    if (dragState.rafScheduled) return;
+    dragState.rafScheduled = true;
+    requestAnimationFrame(() => {
+      if (!dragState) return;
+      dragState.rafScheduled = false;
+      processDragMove(dragState.pendingX, dragState.pendingY);
+    });
+  }
+
+  function finishDrag() {
+    if (!dragState) return;
+    const state = dragState;
+    dragState = null;
+    state.el.classList.remove("dragging");
+    if (state._dropEl) state._dropEl.classList.remove("drop-target");
+    if (state.ghost) state.ghost.remove();
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+    return state;
+  }
+
+  document.addEventListener("mousemove", (e) => { onDragPointerMove(e.clientX, e.clientY); });
+  document.addEventListener("touchmove", (e) => {
+    if (!dragState) return;
+    if (dragState.dragging) e.preventDefault(); // не даём странице скроллиться, пока реально переносим запись
+    const t = e.touches[0];
+    onDragPointerMove(t.clientX, t.clientY);
+  }, { passive: false });
+
+  async function commitDrag(state) {
+    if (!state.dragging) return; // обычный клик/тап — ничего не переносим, .appt click отработает сам
+    const changed = state.newBox !== state.origBox || state.newStartMin !== timeToMinutes(state.bk.start_time);
+    if (!changed) return;
+
+    // конфликт был виден ещё во время переноса (см. processDragMove) — раз он
+    // подтверждён на момент отпускания, не ходим на сервер зря: карточка и
+    // так никуда не двигалась визуально (двигался только ghost), достаточно
+    // просто показать причину отказа.
+    if (state.conflict) {
+      showErr("Этот бокс в это время уже занят другой записью.");
+      return;
+    }
+
+    const newStart = minutesToTime(state.newStartMin);
+    const newEnd = minutesToTime(state.newStartMin + state.durationMin);
+    try {
+      await CW.authFetch(`/api/bookings/${state.bk.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ box: state.newBox, start_time: newStart, end_time: newEnd }),
+      });
+      await loadBookings();
+    } catch (e) {
+      showErr(e.message); // например сервер увидел то, чего не было в локальных данных (гонка) — отклонил перенос
+      await loadBookings(); // откатываем визуально к тому, что реально сохранено
+    }
+  }
+
+  document.addEventListener("mouseup", () => { const s = finishDrag(); if (s) commitDrag(s); });
+  document.addEventListener("touchend", () => { const s = finishDrag(); if (s) commitDrag(s); });
+  document.addEventListener("touchcancel", () => { finishDrag(); });
+
+  // ---------- изменение длительности: тянуть за нижний край карточки.
+  // В отличие от переноса, здесь не создаём ghost — сама карточка и так уже
+  // стоит в нужном месте (бокс/начало не меняются), поэтому просто растягиваем
+  // её высоту в реальном времени и подсвечиваем красным, если новая
+  // длительность упирается в следующую запись того же бокса. ----------
+  const RESIZE_THRESHOLD = 4;
+  const MIN_DURATION_MIN = 30;
+  let resizeState = null;
+
+  function wireApptResize(el, bk) {
+    const handle = el.querySelector(".appt-resize-handle");
+    if (!handle) return;
+    const start = (clientY) => {
+      const startMin = timeToMinutes(bk.start_time);
+      const origDurationMin = Math.max(MIN_DURATION_MIN, timeToMinutes(bk.end_time) - startMin);
+      resizeState = {
+        bk, el, startY: clientY, startMin,
+        origDurationMin, newDurationMin: origDurationMin,
+        origHeight: el.style.height,
+        dragging: false, conflict: false,
+        pendingY: clientY, rafScheduled: false,
+      };
+    };
+    handle.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      e.stopPropagation(); e.preventDefault(); // не путать с переносом всей карточки
+      start(e.clientY);
+    });
+    handle.addEventListener("touchstart", (e) => {
+      e.stopPropagation();
+      const t = e.touches[0];
+      start(t.clientY);
+    }, { passive: true });
+  }
+
+  function processResizeMove(clientY) {
+    const s = resizeState;
+    if (!s) return;
+    const dy = clientY - s.startY;
+    if (!s.dragging) {
+      if (Math.abs(dy) < RESIZE_THRESHOLD) return;
+      s.dragging = true;
+      s.el.classList.add("resizing");
+      s.el.dataset.resized = "1";
+      document.body.style.cursor = "ns-resize";
+      document.body.style.userSelect = "none";
+    }
+    const deltaMin = dy / PX_PER_MIN;
+    let durMin = Math.round((s.origDurationMin + deltaMin) / 30) * 30;
+    durMin = Math.max(MIN_DURATION_MIN, Math.min(durMin, END_HOUR * 60 - s.startMin));
+    s.newDurationMin = durMin;
+    s.el.style.height = Math.max(28, durMin * PX_PER_MIN) + "px";
+    s.conflict = hasLocalConflict(s.bk.box, s.startMin, s.startMin + durMin, s.bk.id);
+    s.el.classList.toggle("resize-conflict", s.conflict);
+  }
+
+  function onResizePointerMove(clientY) {
+    if (!resizeState) return;
+    resizeState.pendingY = clientY;
+    if (resizeState.rafScheduled) return;
+    resizeState.rafScheduled = true;
+    requestAnimationFrame(() => {
+      if (!resizeState) return;
+      resizeState.rafScheduled = false;
+      processResizeMove(resizeState.pendingY);
+    });
+  }
+
+  function finishResize() {
+    if (!resizeState) return;
+    const s = resizeState;
+    resizeState = null;
+    s.el.classList.remove("resizing", "resize-conflict");
+    document.body.style.cursor = "";
+    document.body.style.userSelect = "";
+    return s;
+  }
+
+  document.addEventListener("mousemove", (e) => { onResizePointerMove(e.clientY); });
+  document.addEventListener("touchmove", (e) => {
+    if (!resizeState) return;
+    if (resizeState.dragging) e.preventDefault();
+    onResizePointerMove(e.touches[0].clientY);
+  }, { passive: false });
+
+  async function commitResize(s) {
+    if (!s.dragging) return; // обычный тап по хендлу — ничего не меняем
+    if (s.newDurationMin === s.origDurationMin) return;
+
+    if (s.conflict) {
+      s.el.style.height = s.origHeight; // визуально возвращаем как было
+      showErr("Новая длительность упирается в следующую запись этого бокса.");
+      return;
+    }
+
+    const newEnd = minutesToTime(s.startMin + s.newDurationMin);
+    try {
+      await CW.authFetch(`/api/bookings/${s.bk.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({ end_time: newEnd }),
+      });
+      await loadBookings();
+    } catch (e) {
+      showErr(e.message);
+      await loadBookings();
+    }
+  }
+
+  document.addEventListener("mouseup", () => { const s = finishResize(); if (s) commitResize(s); });
+  document.addEventListener("touchend", () => { const s = finishResize(); if (s) commitResize(s); });
+  document.addEventListener("touchcancel", () => { finishResize(); });
+
+
+  // ---------- модалка: бокс/время/статус (лево) · услуги/товары/оплата
+  // (центр, этап 4) · клиент (право) ----------
+  const modalBg = document.getElementById("modalBg");
+  // PHASE 3 — Global Interaction System: модалка теперь под общим
+  // UI.Modal (ESC / клик вне / фокус / scroll-lock достаются бесплатно,
+  // раньше их не было вовсе). closeDetail() сбрасывает внутреннее
+  // состояние под-панели (история/лояльность) — как и раньше при закрытии.
+  UI.Modal.register("modalBg", { onClose: () => closeDetail() });
+  const clientDropdown = document.getElementById("clientDropdown");
+  const fPhoneInput = document.getElementById("fPhone");
+  const fTotalInput = document.getElementById("fTotal");
+  const clientStateA = document.getElementById("clientStateA");
+  const clientStateB = document.getElementById("clientStateB");
+  const prevClientsList = document.getElementById("prevClientsList");
+  const prevClientsTitle = document.getElementById("prevClientsTitle");
+  let clientSearchTimer = null;
+  let manualPriceEdited = false;
+  let customServices = []; // [{name, price, percent}] — тот же формат, что в cars.html
+  let editingBookingSnapshot = null; // GAP-PAY1 (хвост): текущая запись при открытии на редактирование — источник phone/client_name/price/prepayment для payOnlineBtn
+
+  function buildBoxSelect(selected) {
+    const sel = document.getElementById("fBox");
+    sel.innerHTML = boxes.map(b => `<option value="${b.box}">Бокс ${b.box}${b.employee ? " — " + b.employee : ""}</option>`).join("");
+    if (selected) sel.value = selected;
+  }
+
+  function setStatusTab(status) {
+    document.querySelectorAll(".status-tab").forEach(b => b.classList.toggle("active", b.dataset.status === status));
+    const color = STATUS_ACCENT[status] || STATUS_ACCENT.waiting;
+    document.querySelector(".modal-lg").style.setProperty("--status-accent", color);
+    const pill = document.getElementById("modalStatusPill");
+    pill.style.display = "inline-flex";
+    pill.innerHTML = `<i class="ti ${STATUS_ICONS[status] || "ti-clock"}"></i>${STATUS_LABELS[status] || status}`;
+  }
+  function currentStatus() {
+    const active = document.querySelector(".status-tab.active");
+    return active ? active.dataset.status : "waiting";
+  }
+
+  // Части модалки, не зависящие от конкретной записи (тип кузова, услуги,
+  // товары, оплата, вкладки статуса) — строятся один раз после /api/config.
+  // Реализация услуг/товаров/оплаты — те же классы и та же логика, что уже
+  // работает в cars.html (svc-grid/custom-svc-*/pay-grid/split-*), просто
+  // источники данных для товаров — новые (cfg.products вместо cfg.services).
+  function buildModalStaticParts() {
+    if (!cfg) return;
+
+    const bodyTypeSel = document.getElementById("fBodyType");
+    bodyTypeSel.innerHTML = (cfg.body_types || []).map(b => `<option value="${b.key}">${b.name}</option>`).join("");
+    bodyTypeSel.addEventListener("change", updateTotal);
+
+    const statusTabs = document.getElementById("statusTabs");
+    statusTabs.innerHTML = STATUS_ORDER.map(s => `<button type="button" class="status-tab" data-status="${s}"${STATUS_KIND[s] ? ` data-kind="${STATUS_KIND[s]}"` : ""}><i class="ti ${STATUS_ICONS[s]}"></i>${STATUS_LABELS[s]}</button>`).join("");
+    statusTabs.querySelectorAll(".status-tab").forEach(btn => btn.addEventListener("click", () => setStatusTab(btn.dataset.status)));
+
+    function wireCheckGrid(gridEl, opts) {
+      const bumpToArrived = opts && opts.bumpToArrived;
+      gridEl.querySelectorAll(".svc-item").forEach(el => {
+        el.addEventListener("click", (e) => {
+          if (e.target.tagName !== "INPUT") {
+            const cb = el.querySelector("input");
+            cb.checked = !cb.checked;
+          }
+          const checked = el.querySelector("input").checked;
+          el.classList.toggle("checked", checked);
+          updateTotal();
+          // Выбрали услугу — считаем, что клиент приехал (если запись ещё
+          // просто "в ожидании"/"подтверждена"). Уже более поздние статусы
+          // (в работе/оплачено/не пришёл) автоматически не трогаем.
+          if (bumpToArrived && checked && ["waiting", "confirmed"].includes(currentStatus())) {
+            setStatusTab("arrived");
+          }
+        });
+      });
+    }
+
+    const svcGrid = document.getElementById("svcGrid");
+    svcGrid.innerHTML = (cfg.services || []).map(s => `
+      <label class="svc-item" data-key="${s.key}"><input type="checkbox" value="${s.key}"> ${s.name}</label>
+    `).join("");
+    wireCheckGrid(svcGrid, { bumpToArrived: true });
+
+    const prodGrid = document.getElementById("prodGrid");
+    const products = cfg.products || [];
+    document.getElementById("noProductsNote").style.display = products.length ? "none" : "block";
+    prodGrid.innerHTML = products.map(p => `
+      <label class="svc-item" data-key="${p.key}"><input type="checkbox" value="${p.key}"> ${p.name} — ${CW.money(p.price)}</label>
+    `).join("");
+    wireCheckGrid(prodGrid);
+
+    document.querySelectorAll(".subtab[data-sub]").forEach(tab => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".subtab[data-sub]").forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+        document.getElementById("servicesPane").classList.toggle("active", tab.dataset.sub === "services");
+        document.getElementById("productsPane").classList.toggle("active", tab.dataset.sub === "products");
+      });
+    });
+
+    const payGrid = document.getElementById("payGrid");
+    payGrid.innerHTML = (cfg.payment_types || []).map(p => `<button type="button" class="pay-btn" data-pay="${p}">${p[0].toUpperCase() + p.slice(1)}</button>`).join("");
+    payGrid.querySelectorAll(".pay-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        // в отличие от cars.html оплата у записи не обязательна — повторный
+        // клик по уже выбранному способу снимает выбор (см. 01-model.../BookingIn.payment)
+        const already = btn.classList.contains("active");
+        payGrid.querySelectorAll(".pay-btn").forEach(b => b.classList.remove("active"));
+        if (!already) {
+          btn.classList.add("active");
+          // Выбрали способ оплаты — значит уже рассчитались, отмечаем запись
+          // как оплаченную.
+          if (currentStatus() !== "done") setStatusTab("done");
+        }
+      });
+    });
+
+    const splitGrid = document.getElementById("splitGrid");
+    splitGrid.innerHTML = (cfg.payment_types || []).map(p => `
+      <div class="split-row">
+        <div class="split-label">${p[0].toUpperCase() + p.slice(1)}</div>
+        <input type="number" min="0" step="50" data-split="${p}" placeholder="0">
+      </div>
+    `).join("");
+    splitGrid.querySelectorAll("input").forEach(i => i.addEventListener("input", updateSplitHint));
+
+    document.getElementById("fSplitToggle").addEventListener("change", (e) => {
+      const on = e.target.checked;
+      splitGrid.classList.toggle("open", on);
+      payGrid.querySelectorAll(".pay-btn").forEach(b => b.disabled = on);
+      if (on) {
+        splitGrid.querySelectorAll("input").forEach(i => i.value = "");
+        const first = splitGrid.querySelector("input");
+        if (first) first.value = parseInt(fTotalInput.value) || 0;
+        if (currentStatus() !== "done") setStatusTab("done");
+      }
+      updateSplitHint();
+    });
+
+    document.getElementById("customAddBtn").addEventListener("click", () => {
+      document.getElementById("csName").value = "";
+      document.getElementById("csPrice").value = "";
+      document.getElementById("csPercent").value = "";
+      document.getElementById("customSvcForm").classList.add("open");
+    });
+    document.getElementById("csCancel").addEventListener("click", () => {
+      document.getElementById("customSvcForm").classList.remove("open");
+    });
+    document.getElementById("csAdd").addEventListener("click", () => {
+      const modalErr = document.getElementById("modalErr");
+      const name = document.getElementById("csName").value.trim();
+      const price = parseInt(document.getElementById("csPrice").value);
+      const percent = parseInt(document.getElementById("csPercent").value);
+      if (!name) { modalErr.textContent = "Укажите название услуги"; modalErr.style.display = "block"; return; }
+      if (isNaN(price) || price < 0) { modalErr.textContent = "Укажите корректную цену"; modalErr.style.display = "block"; return; }
+      if (isNaN(percent) || percent < 0 || percent > 100) { modalErr.textContent = "Процент сотруднику — от 0 до 100"; modalErr.style.display = "block"; return; }
+      modalErr.style.display = "none";
+      customServices.push({ name, price, percent });
+      renderCustomChips();
+      document.getElementById("customSvcForm").classList.remove("open");
+      updateTotal();
+    });
+
+    fTotalInput.addEventListener("input", () => {
+      manualPriceEdited = true;
+      document.getElementById("totalReset").classList.toggle("show", parseInt(fTotalInput.value) !== calcPrice());
+      updateSplitHint();
+    });
+    document.getElementById("totalReset").addEventListener("click", () => {
+      manualPriceEdited = false;
+      document.getElementById("discountHint").style.display = "none";
+      updateTotal();
+    });
+
+    document.getElementById("modalCloseBtn").addEventListener("click", closeModal);
+  }
+
+  function renderCustomChips() {
+    const list = document.getElementById("customSvcList");
+    list.innerHTML = customServices.map((c, i) => `
+      <div class="custom-svc-row">
+        <div class="csr-name">${escapeHtml(c.name)}</div>
+        <div class="csr-meta">${c.price} ₽ · ${c.percent}% мойщику</div>
+        <div class="csr-del" data-idx="${i}"><i class="ti ti-x"></i></div>
+      </div>
+    `).join("");
+    list.querySelectorAll(".csr-del").forEach(x => {
+      x.addEventListener("click", () => {
+        customServices.splice(parseInt(x.dataset.idx), 1);
+        renderCustomChips();
+        updateTotal();
+      });
+    });
+  }
+
+  function selectedServiceKeys() { return Array.from(document.querySelectorAll("#svcGrid input:checked")).map(i => i.value); }
+  function selectedProductKeys() { return Array.from(document.querySelectorAll("#prodGrid input:checked")).map(i => i.value); }
+  function servicePrice(svcKey, bodyType) {
+    const svc = (cfg.services || []).find(s => s.key === svcKey);
+    if (!svc) return 0;
+    return svc.prices[bodyType] ?? Object.values(svc.prices)[0] ?? 0;
+  }
+  function productPrice(prodKey) {
+    const p = (cfg.products || []).find(x => x.key === prodKey);
+    return p ? p.price : 0;
+  }
+  function calcPrice() {
+    const bodyType = document.getElementById("fBodyType").value;
+    const svcSum = selectedServiceKeys().reduce((sum, k) => sum + servicePrice(k, bodyType), 0);
+    const customSum = customServices.reduce((sum, c) => sum + c.price, 0);
+    const prodSum = selectedProductKeys().reduce((sum, k) => sum + productPrice(k), 0);
+    return svcSum + customSum + prodSum;
+  }
+  function updateTotal() {
+    if (!manualPriceEdited) fTotalInput.value = calcPrice();
+    document.getElementById("totalReset").classList.toggle("show", manualPriceEdited && parseInt(fTotalInput.value) !== calcPrice());
+    updateSplitHint();
+  }
+  function updateSplitHint() {
+    const hint = document.getElementById("splitHint");
+    if (!document.getElementById("fSplitToggle").checked) { hint.textContent = ""; return; }
+    const total = parseInt(fTotalInput.value) || 0;
+    const sum = Array.from(document.querySelectorAll("#splitGrid input")).reduce((s, i) => s + (parseInt(i.value) || 0), 0);
+    if (sum === total) { hint.textContent = `Сумма сходится: ${CW.money(sum)}`; hint.className = "split-hint ok"; }
+    else { hint.textContent = `Введено ${CW.money(sum)} из ${CW.money(total)} — суммы должны совпадать`; hint.className = "split-hint bad"; }
+  }
+  function getSplitPayload() {
+    if (!document.getElementById("fSplitToggle").checked) return null;
+    const out = {};
+    document.querySelectorAll("#splitGrid input").forEach(i => {
+      const v = parseInt(i.value) || 0;
+      if (v > 0) out[i.dataset.split] = v;
+    });
+    return out;
+  }
+
+  // Постоянная скидка клиента (GAP-M12, единая модель скидок) — при выборе
+  // клиента из поиска только показываем подсказку, «Итого» не трогаем.
+  // Когда запись конвертируется в машину в кассе (см. _compose_and_add_car
+  // в webapp/server.py), скидка применится сама отдельной строкой
+  // «Лояльность» — цена машины останется полной, зарплата мойщика и база
+  // % администратора не уменьшатся, как и у разовой ручной скидки.
+  function applyClientDiscountSuggestion(client) {
+    const hint = document.getElementById("discountHint");
+    if (!client || !client.discount_percent) { hint.style.display = "none"; return; }
+    const base = calcPrice();
+    const discountAmount = Math.round(base * client.discount_percent / 100);
+    hint.textContent = `Постоянная скидка клиента ${client.discount_percent}% (−${CW.money(discountAmount)}) применится автоматически отдельной строкой «Лояльность» после сохранения. Сумму менять не нужно.`;
+    hint.style.display = "block";
+  }
+
+  function resetModalPriceState() {
+    customServices = [];
+    renderCustomChips();
+    document.getElementById("customSvcForm").classList.remove("open");
+    document.querySelectorAll("#svcGrid input, #prodGrid input").forEach(i => { i.checked = false; i.closest(".svc-item").classList.remove("checked"); });
+    document.getElementById("fBodyType").value = (cfg && cfg.body_types && cfg.body_types[0] && cfg.body_types[0].key) || "sedan";
+    const payGrid = document.getElementById("payGrid");
+    payGrid.querySelectorAll(".pay-btn").forEach(b => { b.classList.remove("active"); b.disabled = false; });
+    document.getElementById("fSplitToggle").checked = false;
+    document.getElementById("splitGrid").classList.remove("open");
+    document.querySelectorAll("#splitGrid input").forEach(i => i.value = "");
+    manualPriceEdited = false;
+    document.getElementById("discountHint").style.display = "none";
+    document.querySelectorAll(".subtab[data-sub]").forEach((t, i) => t.classList.toggle("active", i === 0));
+    document.getElementById("servicesPane").classList.add("active");
+    document.getElementById("productsPane").classList.remove("active");
+  }
+
+  function openCreateModal(box, startMinutes) {
+    if (!boxes.length) { showErr("Сначала добавьте сотрудников на странице «Сотрудники» — иначе нет боксов."); return; }
+    editingId = null;
+    editingBookingSnapshot = null;
+    selectedClient = null;
+    document.getElementById("bookingIdTag").style.display = "none";
+    document.getElementById("modalTitle").textContent = "Новая запись";
+    document.getElementById("deleteBtn").style.display = "none";
+    document.getElementById("payOnlineBtn").style.display = "none"; // предоплата доступна только у уже созданной записи
+    document.getElementById("modalErr").style.display = "none";
+    fPhoneInput.value = "";
+    document.getElementById("fClientName").value = "";
+    document.getElementById("fComment").value = "";
+    resetClientSelection();
+    loadPrevClients();
+    buildBoxSelect(box || (boxes[0] && boxes[0].box));
+    document.getElementById("fDate").value = isoDate(curDate);
+    setStatusTab("waiting");
+    const start = startMinutes != null ? startMinutes : START_HOUR * 60;
+    const end = Math.min(END_HOUR * 60, start + 90);
+    document.getElementById("fStart").value = minutesToTime(start);
+    document.getElementById("fEnd").value = minutesToTime(end);
+    resetModalPriceState();
+    updateTotal();
+    UI.Modal.open("modalBg");
+  }
+
+  // Быстрая продажа — как кнопка «+» в журнале YCLIENTS: продать услугу/товар
+  // клиенту без записи на конкретное время. У нас нет отдельной сущности
+  // «продажа» на бэке, поэтому переиспользуем ту же запись (POST /api/bookings),
+  // но открываем её уже настроенной на «сейчас», короткую и сразу оплаченную —
+  // администратору остаётся только отметить услуги/товары и способ оплаты.
+  function openQuickSaleModal() {
+    if (!boxes.length) { showErr("Сначала добавьте сотрудников на странице «Сотрудники» — иначе нет боксов."); return; }
+    const duty = boxes.find(b => b.on_duty) || boxes[0];
+    const now = new Date();
+    let minutes = now.getHours() * 60 + now.getMinutes();
+    minutes = Math.max(START_HOUR * 60, Math.min((END_HOUR - 1) * 60 + 30, Math.round(minutes / 10) * 10));
+    openCreateModal(duty.box, minutes);
+    document.getElementById("modalTitle").textContent = "Быстрая продажа";
+    document.getElementById("fEnd").value = minutesToTime(Math.min(END_HOUR * 60, minutes + 20));
+    setStatusTab("done");
+  }
+  document.getElementById("quickSaleBtn").addEventListener("click", () => {
+    document.getElementById("addMenuPanel").classList.remove("open");
+    openQuickSaleModal();
+  });
+
+  function openEditModal(bk) {
+    editingId = bk.id;
+    editingBookingSnapshot = bk;
+    selectedClient = null;
+    document.getElementById("bookingIdTag").style.display = "block";
+    const prepaidNote = bk.prepayment?.status === "paid" ? ` · Предоплата ${bk.prepayment.amount}₽ ✅` : "";
+    document.getElementById("bookingIdTag").textContent = `Запись №${bk.id}${prepaidNote}`;
+    // GAP-PAY1 (хвост): та же граница доступности, что и в Mini App
+    // (bkOpenSheet, index.html) — не предлагаем предоплату для уже
+    // закрытых записей и для уже оплаченных.
+    const payEligible = !["done", "no_show"].includes(bk.status) && bk.prepayment?.status !== "paid";
+    document.getElementById("payOnlineBtn").style.display = payEligible ? "inline-flex" : "none";
+    document.getElementById("modalTitle").textContent = "Запись";
+    document.getElementById("deleteBtn").style.display = "inline-flex";
+    document.getElementById("modalErr").style.display = "none";
+    resetClientSelection();
+    loadPrevClients();
+    fPhoneInput.value = bk.phone || "";
+    document.getElementById("fClientName").value = bk.client_name || bk.car || "";
+    document.getElementById("fComment").value = bk.comment || "";
+    buildBoxSelect(bk.box);
+    document.getElementById("fDate").value = isoDate(parseDateKey(bk.date));
+    setStatusTab(bk.status || "waiting");
+    document.getElementById("fStart").value = bk.start_time || "";
+    document.getElementById("fEnd").value = bk.end_time || "";
+
+    resetModalPriceState();
+    document.getElementById("fBodyType").value = bk.body_type || document.getElementById("fBodyType").value;
+    (bk.service_keys || []).forEach(k => {
+      const cb = document.querySelector(`#svcGrid input[value="${k}"]`);
+      if (cb) { cb.checked = true; cb.closest(".svc-item").classList.add("checked"); }
+    });
+    (bk.product_keys || []).forEach(k => {
+      const cb = document.querySelector(`#prodGrid input[value="${k}"]`);
+      if (cb) { cb.checked = true; cb.closest(".svc-item").classList.add("checked"); }
+    });
+    customServices = (bk.custom_services || []).map(c => ({
+      name: c.name, price: c.price, percent: Math.round(c.percent <= 1 ? c.percent * 100 : c.percent),
+    }));
+    renderCustomChips();
+
+    const payGrid = document.getElementById("payGrid");
+    const payToMatch = bk.payment_split ? Object.keys(bk.payment_split)[0] : bk.payment;
+    const matchBtn = payToMatch && Array.from(payGrid.children).find(b => b.dataset.pay === payToMatch);
+    if (matchBtn) matchBtn.classList.add("active");
+    if (bk.payment_split) {
+      document.getElementById("fSplitToggle").checked = true;
+      document.getElementById("splitGrid").classList.add("open");
+      payGrid.querySelectorAll(".pay-btn").forEach(b => b.disabled = true);
+      document.querySelectorAll("#splitGrid input").forEach(i => { i.value = bk.payment_split[i.dataset.split] || ""; });
+    }
+
+    // сохранённая цена записи (bk.price) первична — она уже учитывает
+    // и услуги/товары, и любую ручную правку (price_override) на бэкенде;
+    // "расчётная" calcPrice() пересчитается только если состав поменяют.
+    if (bk.price_override != null) {
+      manualPriceEdited = true;
+      fTotalInput.value = bk.price ?? 0;
+    } else {
+      manualPriceEdited = false;
+      fTotalInput.value = bk.price ?? calcPrice();
+    }
+    document.getElementById("totalReset").classList.toggle("show", manualPriceEdited && parseInt(fTotalInput.value) !== calcPrice());
+    updateSplitHint();
+
+    // пассивно подтягиваем карточку клиента (визиты/скидка), но НЕ
+    // применяем скидку к уже сохранённой сумме — это делает только явный
+    // выбор клиента через поиск (см. selectClient/applyClientDiscountSuggestion).
+    if (bk.phone) {
+      CW.authFetch(`/api/clients/${encodeURIComponent(bk.phone)}`)
+        .then(client => { if (client) selectClient(client, { suggestDiscount: false }); })
+        .catch(() => {});
+    }
+
+    UI.Modal.open("modalBg");
+  }
+
+  function parseDateKey(s) {
+    const [d, m, y] = (s || "").split(".").map(Number);
+    if (!d || !m || !y) return curDate;
+    return new Date(y, m - 1, d);
+  }
+
+  // closeDetail() уже вызывается автоматически через onClose в
+  // UI.Modal.register выше; ESC и клик вне тоже обрабатывает UI.Modal.
+  function closeModal() { UI.Modal.close("modalBg"); }
+  document.getElementById("cancelBtn").addEventListener("click", closeModal);
+
+  // ---------- панель клиента v5: состояние A (поиск + последние клиенты сети)
+  // / состояние B (карточка выбранного клиента) — см. разметку #clientStateA/#clientStateB ----------
+  function hideClientDropdown() { clientDropdown.classList.remove("open"); }
+
+  // сброс к состоянию A: снимаем выбор клиента, чистим поля, возвращаем поиск
+  function resetClientSelection() {
+    selectedClient = null;
+    fPhoneInput.value = "";
+    document.getElementById("fClientName").value = "";
+    document.getElementById("discountHint").style.display = "none";
+    clientStateB.style.display = "none";
+    clientStateA.style.display = "block";
+    hideClientDropdown();
+  }
+  document.getElementById("clientBackBtn").addEventListener("click", () => {
+    resetClientSelection();
+    fPhoneInput.focus();
+  });
+
+  function selectClient(client, opts) {
+    opts = opts || {};
+    selectedClient = client;
+    if (client.name) document.getElementById("fClientName").value = client.name;
+    fPhoneInput.value = client.phone || "";
+    clientStateA.style.display = "none";
+    clientStateB.style.display = "block";
+    document.getElementById("chName").textContent = client.name || "Без имени";
+    document.getElementById("chPhone").textContent = client.phone || "";
+    const badge = document.getElementById("chBadge");
+    if (client.visit_count > 1) {
+      badge.className = "badge-returning";
+      badge.textContent = `Постоянный клиент · ${client.visit_count} визит(ов)${client.discount_percent ? " · скидка " + client.discount_percent + "%" : ""}`;
+    } else {
+      badge.className = "badge-new";
+      badge.textContent = "Новый клиент";
+    }
+    hideClientDropdown();
+    if (opts.suggestDiscount !== false) applyClientDiscountSuggestion(client);
+  }
+  document.getElementById("chCopyBtn").addEventListener("click", () => {
+    if (!selectedClient || !selectedClient.phone) return;
+    navigator.clipboard.writeText(selectedClient.phone).catch(() => {});
+  });
+
+  function renderClientDropdown(clients) {
+    if (!clients.length) { hideClientDropdown(); return; }
+    clientDropdown.innerHTML = clients.map(c => `
+      <div class="client-dropdown-item" data-phone="${escapeHtml(c.phone)}">
+        <div><div class="cdi-name">${escapeHtml(c.name) || "Без имени"}</div><div class="cdi-phone">${escapeHtml(c.phone)}</div></div>
+        <div class="cdi-meta">${c.visit_count} визит(ов) · ${CW.money(c.total_spent)}</div>
+      </div>`).join("");
+    clientDropdown.querySelectorAll(".client-dropdown-item").forEach((el, i) => {
+      el.addEventListener("click", () => selectClient(clients[i]));
+    });
+    clientDropdown.classList.add("open");
+  }
+  fPhoneInput.addEventListener("input", () => {
+    selectedClient = null;
+    const q = fPhoneInput.value.trim();
+    clearTimeout(clientSearchTimer);
+    if (q.length < 3) { hideClientDropdown(); return; }
+    clientSearchTimer = setTimeout(async () => {
+      try {
+        const data = await CW.authFetch(`/api/clients/search?q=${encodeURIComponent(q)}`);
+        renderClientDropdown(data.clients || []);
+      } catch (e) { hideClientDropdown(); }
+    }, 300);
+  });
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest("#fPhone") && !e.target.closest("#clientDropdown")) hideClientDropdown();
+  });
+
+  // список «Предыдущие клиенты» — последние клиенты сети (по дате визита),
+  // чтобы не набирать телефон/имя, если это постоянный посетитель
+  let prevClientsCache = null;
+  async function loadPrevClients() {
+    if (!prevClientsCache) {
+      try {
+        const data = await CW.authFetch("/api/clients");
+        prevClientsCache = (data.clients || []).slice(0, 6);
+      } catch (e) { prevClientsCache = []; }
+    }
+    if (!prevClientsCache.length) { prevClientsTitle.style.display = "none"; prevClientsList.innerHTML = ""; return; }
+    prevClientsTitle.style.display = "block";
+    prevClientsList.innerHTML = prevClientsCache.map((c, i) => `
+      <div class="pc-item" data-idx="${i}">
+        <div class="pc-name">${escapeHtml(c.name) || "Без имени"}</div>
+        <div class="pc-phone">${escapeHtml(c.phone)}</div>
+      </div>`).join("");
+    prevClientsList.querySelectorAll(".pc-item").forEach(el => {
+      el.addEventListener("click", () => selectClient(prevClientsCache[Number(el.dataset.idx)]));
+    });
+  }
+
+  // ---------- клиентская панель: История / Лояльность / Сообщения / Счета (этап 5) ----------
+  // История — реальные визиты клиента (carwash_clients.json, поле visits — этап 2).
+  // Лояльность — реальные метрики (визитов/потрачено) + управление постоянной
+  // скидкой прямо здесь, через уже рабочий API (PUT/DELETE /api/clients/{phone}/discount,
+  // этап 2), а не фейковый кэшбэк, которого в бэкенде нет (см. 00-audit-i-plan.md).
+  // Сообщения и звонки / Счета клиента — честная заглушка: этих сущностей
+  // (СМС-провайдер, история звонков, лицевые счета) в бэкенде физически нет.
+  const detailView = document.getElementById("detailView");
+  const detailContent = document.getElementById("detailContent");
+  const detailTitleEl = document.getElementById("detailTitle");
+  const modalColsEl = document.querySelector(".modal-cols");
+  const clientIconGrid = document.getElementById("clientIconGrid");
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  // инициалы сотрудника для аватарки в шапке колонки (как фото/инициалы сотрудника в YCLIENTS)
+  function initialsOf(name) {
+    const parts = String(name).trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "?";
+    return (parts[0][0] + (parts[1] ? parts[1][0] : "")).toUpperCase();
+  }
+
+  const DETAIL_TITLES = {
+    history: "История посещений", loyalty: "Лояльность",
+    messages: "Сообщения и звонки", accounts: "Счета клиента",
+  };
+
+  function renderHistoryDetail() {
+    const visits = (selectedClient.visits || []).slice().reverse();
+    if (!visits.length) return `<div class="empty-note-sm">У этого клиента пока нет визитов.</div>`;
+    return `<div class="detail-scroll">${visits.map(v => `
+      <div class="visit-group">
+        <div class="visit-date">${escapeHtml(v.date || "—")}</div>
+        <div class="visit-row">
+          <div>
+            <div class="vr-box">${escapeHtml(v.branch || "—")}</div>
+            <div class="vr-time">${escapeHtml(v.time || "")}${v.car ? " · " + escapeHtml(v.car) : ""}</div>
+          </div>
+          <span class="vr-status-dot ${v.status === "done" ? "done" : "other"}"><i class="ti ${v.status === "done" ? "ti-check" : "ti-clock"}"></i></span>
+          <div class="vr-service">${escapeHtml(v.service) || "—"}</div>
+          <div class="vr-price">${CW.money(v.total || 0)}</div>
+          <div class="vr-paid">${CW.money(v.paid != null ? v.paid : (v.total || 0))}</div>
+        </div>
+      </div>`).join("")}</div>`;
+  }
+
+  function discountBlockHtml(c) {
+    if (c.discount_percent) {
+      return `
+        <div class="discount-block">
+          <div class="section-label" style="margin-top:0">Постоянная скидка</div>
+          <div class="discount-current">
+            <span class="badge-active"><i class="ti ti-check" style="font-size:11px"></i> Активна</span>
+            <span>Скидка ${c.discount_percent}% на все услуги</span>
+            <button type="button" class="discount-remove" id="removeDiscountBtn">Удалить</button>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="discount-block">
+        <div class="section-label" style="margin-top:0">Постоянная скидка</div>
+        <div class="discount-current"><span class="badge-inactive">Не установлена</span></div>
+        <div class="discount-form">
+          <input type="number" id="discountInput" placeholder="10" min="1" max="100">
+          <span>%</span>
+          <button type="button" class="btn accent small" id="saveDiscountBtn"><i class="ti ti-percentage"></i>Сохранить</button>
+        </div>
+      </div>`;
+  }
+
+  function renderLoyaltyDetail() {
+    const c = selectedClient;
+    return `
+      <div class="loyalty-card">
+        <div class="loyalty-card-title">${escapeHtml(c.name) || "Клиент без имени"}</div>
+        <div class="loyalty-card-sub">${escapeHtml(c.phone || "")}</div>
+        <div class="loyalty-grid">
+          <div class="loyalty-metric"><div class="lm-label">Визитов</div><div class="lm-value">${c.visit_count || 0}</div></div>
+          <div class="loyalty-metric"><div class="lm-label">Всего потрачено</div><div class="lm-value">${CW.money(c.total_spent || 0)}</div></div>
+          <div class="loyalty-metric"><div class="lm-label">Последний визит</div><div class="lm-value" style="font-size:13px">${escapeHtml(c.last_visit) || "—"}</div></div>
+        </div>
+      </div>
+      ${discountBlockHtml(c)}
+      <div class="discount-err" id="discountErr"></div>`;
+  }
+
+  function renderMessagesDetail() {
+    return `<div class="module-stub"><i class="ti ti-message-2"></i><span>Модуль в разработке. СМС-уведомлений и записи звонков в системе пока нет — здесь появится переписка с клиентом, когда подключим провайдера связи.</span></div>`;
+  }
+  function renderAccountsDetail() {
+    return `<div class="module-stub"><i class="ti ti-wallet"></i><span>Модуль в разработке. Лицевых счетов клиентов в системе пока нет — здесь появится баланс и история пополнений, когда добавим эту функцию.</span></div>`;
+  }
+
+  const DETAIL_BUILDERS = { history: renderHistoryDetail, loyalty: renderLoyaltyDetail, messages: renderMessagesDetail, accounts: renderAccountsDetail };
+
+  async function refreshSelectedClient() {
+    if (!selectedClient || !selectedClient.phone) return;
+    try {
+      selectedClient = await CW.authFetch(`/api/clients/${encodeURIComponent(selectedClient.phone)}`);
+    } catch (e) { /* не получилось обновить — покажем то, что уже загружено */ }
+  }
+
+  function wireDetailActions(type) {
+    if (type !== "loyalty") return;
+    const saveBtn = document.getElementById("saveDiscountBtn");
+    if (saveBtn) saveBtn.addEventListener("click", async () => {
+      const errEl = document.getElementById("discountErr");
+      errEl.style.display = "none";
+      const val = parseFloat(document.getElementById("discountInput").value);
+      if (!val || val <= 0 || val > 100) { errEl.textContent = "Укажите скидку от 1 до 100%"; errEl.style.display = "block"; return; }
+      saveBtn.disabled = true;
+      try {
+        selectedClient = await CW.authFetch(`/api/clients/${encodeURIComponent(selectedClient.phone)}/discount`, { method: "PUT", body: JSON.stringify({ percent: val }) });
+        openDetail("loyalty");
+      } catch (e) {
+        errEl.textContent = e.message; errEl.style.display = "block"; saveBtn.disabled = false;
+      }
+    });
+    const removeBtn = document.getElementById("removeDiscountBtn");
+    if (removeBtn) removeBtn.addEventListener("click", async () => {
+      removeBtn.disabled = true;
+      try {
+        selectedClient = await CW.authFetch(`/api/clients/${encodeURIComponent(selectedClient.phone)}/discount`, { method: "DELETE" });
+        openDetail("loyalty");
+      } catch (e) { removeBtn.disabled = false; }
+    });
+  }
+
+  async function openDetail(type) {
+    if (!selectedClient) return;
+    detailTitleEl.textContent = DETAIL_TITLES[type];
+    modalColsEl.style.display = "none";
+    detailView.classList.add("open");
+    if (type === "history" || type === "loyalty") {
+      detailContent.innerHTML = `<div class="empty-note-sm">Загрузка…</div>`;
+      await refreshSelectedClient();
+    }
+    detailContent.innerHTML = DETAIL_BUILDERS[type]();
+    wireDetailActions(type);
+  }
+  function closeDetail() {
+    detailView.classList.remove("open");
+    modalColsEl.style.display = "grid";
+  }
+
+  clientIconGrid.querySelectorAll(".ci-tile[data-detail]").forEach(tile => {
+    tile.addEventListener("click", () => { if (!tile.disabled) openDetail(tile.dataset.detail); });
+  });
+  document.getElementById("detailBackBtn").addEventListener("click", closeDetail);
+
+  document.getElementById("newBookingBtn").addEventListener("click", () => {
+    document.getElementById("addMenuPanel").classList.remove("open");
+    openCreateModal();
+  });
+  document.getElementById("refreshBtn").addEventListener("click", loadBookings);
+
+  document.getElementById("saveBtn").addEventListener("click", async () => {
+    const modalErr = document.getElementById("modalErr");
+    modalErr.style.display = "none";
+
+    const box = Number(document.getElementById("fBox").value);
+    const dateVal = document.getElementById("fDate").value;
+    const start = document.getElementById("fStart").value;
+    const end = document.getElementById("fEnd").value;
+    const status = currentStatus();
+    if (!box) { modalErr.textContent = "Выберите бокс"; modalErr.style.display = "block"; return; }
+    if (!dateVal) { modalErr.textContent = "Выберите дату"; modalErr.style.display = "block"; return; }
+    if (!start || !end) { modalErr.textContent = "Укажите время начала и окончания"; modalErr.style.display = "block"; return; }
+    if (start >= end) { modalErr.textContent = "Время начала должно быть раньше окончания"; modalErr.style.display = "block"; return; }
+
+    const total = parseInt(fTotalInput.value) || 0;
+    if (total < 0) { modalErr.textContent = "Итоговая сумма не может быть отрицательной"; modalErr.style.display = "block"; return; }
+    const payBtn = document.querySelector("#payGrid .pay-btn.active");
+    const payment = payBtn ? payBtn.dataset.pay : "";
+    const split = getSplitPayload();
+    if (split) {
+      const sum = Object.values(split).reduce((a, b) => a + b, 0);
+      if (sum !== total) {
+        modalErr.textContent = `Сумма раздельной оплаты (${sum}₽) не совпадает с итогом (${total}₽)`;
+        modalErr.style.display = "block";
+        return;
+      }
+      if (!Object.keys(split).length) {
+        modalErr.textContent = "Укажите суммы для раздельной оплаты хотя бы в одном способе";
+        modalErr.style.display = "block";
+        return;
+      }
+    }
+
+    const boxInfo = boxes.find(b => b.box === box);
+    const clientCarValue = document.getElementById("fClientName").value.trim();
+    const payload = {
+      branch, date: dateKey(fromIso(dateVal)), box,
+      start_time: start, end_time: end,
+      employee: (boxInfo && boxInfo.employee) || "",
+      body_type: document.getElementById("fBodyType").value,
+      service_keys: selectedServiceKeys(), custom_services: customServices,
+      product_keys: selectedProductKeys(),
+      car: clientCarValue,
+      comment: document.getElementById("fComment").value.trim(),
+      phone: fPhoneInput.value.trim(),
+      client_name: clientCarValue,
+      payment, payment_split: split,
+      status,
+    };
+    if (manualPriceEdited && total !== calcPrice()) {
+      payload.price_override = total;
+    } else if (editingId) {
+      payload.clear_price_override = true;
+    }
+
+    const saveBtn = document.getElementById("saveBtn");
+    saveBtn.disabled = true;
+    try {
+      let res;
+      if (editingId) {
+        res = await CW.authFetch(`/api/bookings/${editingId}`, { method: "PATCH", body: JSON.stringify(payload) });
+      } else {
+        res = await CW.authFetch("/api/bookings", { method: "POST", body: JSON.stringify(payload) });
+      }
+      closeModal();
+      await loadBookings();
+      if (res && res.car_created) {
+        bkToast(`Машина №${res.car_created} добавлена в кассу`);
+      } else if (res && res.car_note) {
+        bkToast(res.car_note, "warn");
+      }
+    } catch (e) {
+      modalErr.textContent = e.message;
+      modalErr.style.display = "block";
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+
+  // Booking Drawer / PHASE 1 Journal UX: удаление записи ("Отменить") теперь
+  // идёт через общий UI.Confirm (ui-kit.js) вместо нативного confirm() —
+  // тот же принцип, что уже применён к другим опасным действиям в проекте,
+  // плюс единый визуальный язык (см. PROJECT_BRAIN/UX_TARGET_V4.md).
+  async function deleteBooking(bookingId, opts = {}) {
+    const ok = await UI.Confirm.show({
+      title: "Отменить запись?",
+      message: "Запись будет удалена из журнала. Действие необратимо.",
+      confirmText: "Отменить запись",
+      cancelText: "Не отменять",
+      danger: true,
+    });
+    if (!ok) return false;
+    await CW.authFetch(`/api/bookings/${bookingId}`, { method: "DELETE" });
+    if (opts.onSuccess) opts.onSuccess();
+    await loadBookings();
+    return true;
+  }
+
+  document.getElementById("deleteBtn").addEventListener("click", async () => {
+    if (!editingId) return;
+    try {
+      await deleteBooking(editingId, { onSuccess: closeModal });
+    } catch (e) {
+      const modalErr = document.getElementById("modalErr");
+      modalErr.textContent = e.message;
+      modalErr.style.display = "block";
+    }
+  });
+
+  // GAP-PAY1 (хвост, сайт booking.html) — предоплата записи онлайн.
+  // Тот же паттерн, что уже работает в кассе (CW_payOnline, cars.html):
+  // сумма через prompt, ссылка открывается в новой вкладке, в мок-режиме
+  // (cfg.payment_mock) дополнительно предлагается тестовое подтверждение.
+  // Вынесено в отдельную функцию, чтобы её мог вызывать и модал редактирования,
+  // и Booking Preview Drawer (см. bpvPayBtn ниже) — без дублирования логики.
+  // GAP-PAY1 / PHASE 3: раньше здесь были нативные prompt()/confirm()/
+  // alert() — единственное место в проекте, не построенное на ui-kit.js.
+  // Теперь — общий PaymentFlow.payOnline (webapp/static/js/payment-
+  // flow.js), тот же самый, что использует cars.html:payOnline. Бэкенд-
+  // вызовы (/api/payments, /mock-confirm) не изменились.
+  async function doPayOnline(bk, opts = {}) {
+    await PaymentFlow.payOnline({
+      branch, purpose: "advance", bookingId: bk.id,
+      phone: bk.phone || "", clientName: bk.client_name || bk.car || "",
+      description: `Предоплата записи ${bk.client_name || bk.car || ""}`.trim(),
+      defaultAmount: bk.price || "",
+      mock: cfg.payment_mock,
+      title: "Предоплата записи",
+      onError: opts.onError || ((msg) => bkToast(msg, "error")),
+      onSuccess: async (payment) => {
+        if (opts.onSuccess) opts.onSuccess(payment);
+        await loadBookings();
+      },
+    });
+  }
+
+  document.getElementById("payOnlineBtn").addEventListener("click", () => {
+    if (!editingId || !editingBookingSnapshot) return;
+    const modalErr = document.getElementById("modalErr");
+    doPayOnline(editingBookingSnapshot, {
+      onError: (msg) => { modalErr.textContent = msg; modalErr.style.display = "block"; },
+      onSuccess: closeModal,
+    });
+  });
+
+  // ============================================================
+  // Booking Preview Drawer — PHASE 1 Journal UX (UX_TARGET_V4.md:
+  // "click booking → Drawer"). Клик по карточке записи в сетке теперь
+  // открывает лёгкую панель просмотра вместо полной формы редактирования;
+  // полная форма (#modalBg / openEditModal) открывается только по кнопке
+  // "Редактировать". Построено на UI.Drawer (ui-kit.js) — тот же движок,
+  // что уже используется в clients.html (editClientDrawer).
+  // ============================================================
+  const bookingPreviewDrawer = UI.Drawer.create("bookingPreviewDrawer", {
+    side: "right",
+    title: "Запись",
+    bodyHTML: `
+      <div id="bpvContent"></div>
+      <div class="bpv-actions">
+        <button type="button" class="btn accent" id="bpvEditBtn"><i class="ti ti-edit"></i> Редактировать</button>
+        <button type="button" class="btn secondary" id="bpvPayBtn" style="display:none"><i class="ti ti-credit-card"></i> Оплатить онлайн</button>
+        <button type="button" class="btn secondary" id="bpvClientBtn" style="display:none"><i class="ti ti-user"></i> Карточка клиента</button>
+        <button type="button" class="btn danger" id="bpvCancelBtn"><i class="ti ti-trash"></i> Отменить запись</button>
+      </div>`,
+  });
+  let previewBooking = null;
+
+  function renderBookingPreview(bk) {
+    const status = bk.status || "waiting";
+    const boxInfo = boxes.find(b => b.box === bk.box);
+    const svcList = [
+      ...(bk.service_keys || []).map(k => serviceNames[k] || k),
+      ...(bk.custom_services || []).map(s => s.name),
+    ];
+    const priceVal = bk.price_override != null ? bk.price_override : bk.price;
+    const payLabel = bk.payment_split
+      ? Object.entries(bk.payment_split).map(([k, v]) => `${k[0].toUpperCase() + k.slice(1)}: ${CW.money(v)}`).join(", ")
+      : (bk.payment ? (bk.payment[0].toUpperCase() + bk.payment.slice(1)) : "не выбран");
+    const prepaidNote = bk.prepayment?.status === "paid" ? `Предоплата ${CW.money(bk.prepayment.amount)} внесена` : "";
+
+    document.getElementById("bpvContent").innerHTML = `
+      <div class="bpv-status"><span class="appt-status-dot ${STATUS_DOT_CLASS[status] || "wait"}"><i class="ti ${STATUS_ICONS[status] || "ti-clock"}"></i>${STATUS_LABELS[status] || status}</span></div>
+      <div class="bpv-row bpv-row-lg"><i class="ti ti-user"></i><div><div class="bpv-name">${escapeHtml(bk.client_name || bk.car || "Без имени")}</div>${bk.phone ? `<div class="bpv-sub">${escapeHtml(bk.phone)}</div>` : ""}</div></div>
+      ${(bk.car || bk.car_num) ? `<div class="bpv-row"><i class="ti ti-car"></i><div>${escapeHtml(bk.car || "")}${bk.car_num ? ` · №${escapeHtml(bk.car_num)}` : ""}</div></div>` : ""}
+      <div class="bpv-row"><i class="ti ti-calendar"></i><div>${escapeHtml(bk.date || "")} · ${bk.start_time}–${bk.end_time}</div></div>
+      <div class="bpv-row"><i class="ti ti-tools"></i><div>Бокс ${bk.box}${boxInfo && boxInfo.employee ? " · " + escapeHtml(boxInfo.employee) : ""}</div></div>
+      ${svcList.length ? `<div class="bpv-row"><i class="ti ti-list-check"></i><div>${svcList.map(escapeHtml).join(", ")}</div></div>` : ""}
+      ${priceVal != null ? `<div class="bpv-row"><i class="ti ti-cash"></i><div>${CW.money(priceVal)} · ${escapeHtml(payLabel)}</div></div>` : ""}
+      ${prepaidNote ? `<div class="bpv-row"><i class="ti ti-circle-check"></i><div>${prepaidNote}</div></div>` : ""}
+      ${bk.comment ? `<div class="bpv-row bpv-comment"><i class="ti ti-note"></i><div>${escapeHtml(bk.comment)}</div></div>` : ""}`;
+
+    const payEligible = !["done", "no_show"].includes(status) && bk.prepayment?.status !== "paid";
+    document.getElementById("bpvPayBtn").style.display = payEligible ? "flex" : "none";
+    document.getElementById("bpvClientBtn").style.display = bk.phone ? "flex" : "none";
+  }
+
+  function openBookingPreview(bk) {
+    previewBooking = bk;
+    renderBookingPreview(bk);
+    bookingPreviewDrawer.open();
+  }
+
+  document.getElementById("bpvEditBtn").addEventListener("click", () => {
+    if (!previewBooking) return;
+    bookingPreviewDrawer.close();
+    openEditModal(previewBooking);
+  });
+  document.getElementById("bpvClientBtn").addEventListener("click", () => {
+    if (previewBooking && previewBooking.phone) {
+      window.location.href = `/static/clients.html?phone=${encodeURIComponent(previewBooking.phone)}`;
+    }
+  });
+  document.getElementById("bpvPayBtn").addEventListener("click", () => {
+    if (previewBooking) doPayOnline(previewBooking, { onSuccess: () => bookingPreviewDrawer.close() });
+  });
+  document.getElementById("bpvCancelBtn").addEventListener("click", async () => {
+    if (!previewBooking) return;
+    try {
+      await deleteBooking(previewBooking.id, { onSuccess: () => bookingPreviewDrawer.close() });
+    } catch (e) {
+      bkToast(e.message, "error");
+    }
+  });
+
+  // ---------- навигация по датам ----------
+  document.getElementById("datePrev").addEventListener("click", () => { curDate.setDate(curDate.getDate() - 1); syncRailDate(); loadBookings(); });
+  document.getElementById("dateNext").addEventListener("click", () => { curDate.setDate(curDate.getDate() + 1); syncRailDate(); loadBookings(); });
+  document.getElementById("todayBtn").addEventListener("click", () => { curDate = new Date(); syncRailDate(); loadBookings(); });
+}
+</script>
+</body>
+</html>

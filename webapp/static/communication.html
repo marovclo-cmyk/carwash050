@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarWash Cloud — Общение с клиентами</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="/static/css/theme-plata.css">
+</head>
+<body>
+<div class="shell">
+  <div class="rail" id="sidebarRoot"></div>
+
+  <div class="main">
+    <div class="err-banner" id="errBanner"></div>
+
+    <div class="page-head">
+      <div>
+        <div class="page-title">Общение с клиентами</div>
+        <div class="page-sub">Раздел в разработке</div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="shell-soon">
+        <div class="shell-soon-icon"><i class="ti ti-message-circle"></i></div>
+        <div class="shell-soon-title">Общение с клиентами — скоро</div>
+        <div class="shell-soon-text">История переписки и коммуникации с клиентами по разным каналам — раздел появится после согласования требований к каналам связи.</div>
+        <span class="shell-soon-badge">P2 · в дорожной карте</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/site-common.js"></script>
+<script>
+if (CW.requireAuth()) {
+  CW.renderSidebar("communication");
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarWash Cloud — Лояльность</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="/static/css/theme-plata.css">
+</head>
+<body>
+<div class="shell">
+  <div class="rail" id="sidebarRoot"></div>
+
+  <div class="main">
+    <div class="err-banner" id="errBanner"></div>
+
+    <div class="page-head">
+      <div>
+        <div class="page-title">Лояльность</div>
+        <div class="page-sub" id="pageSub">—</div>
+      </div>
+      <div class="head-actions">
+        <button class="btn secondary" id="refreshBtn"><i class="ti ti-refresh"></i>Обновить</button>
+      </div>
+    </div>
+
+    <div class="stat-row" id="statRow">
+      <div class="stat-card"><div class="stat-top"><span class="sq b4"><i class="ti ti-discount-2"></i></span></div><div class="stat-label">Скидок за смену</div><div class="stat-value">—</div></div>
+      <div class="stat-card"><div class="stat-top"><span class="sq b4"><i class="ti ti-percentage"></i></span></div><div class="stat-label">Сумма скидок</div><div class="stat-value">—</div></div>
+      <div class="stat-card"><div class="stat-top"><span class="sq b1"><i class="ti ti-car"></i></span></div><div class="stat-label">Машин за смену</div><div class="stat-value">—</div></div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="panel-head">
+        <div class="panel-title">Скидки по машинам за текущую смену</div>
+        <div style="font-size:13px;color:var(--purple);font-weight:700" id="loyTotal">0 ₽</div>
+      </div>
+      <div id="loyList"></div>
+      <div id="loyEmpty" class="empty-note" style="display:none">Скидок лояльности пока нет</div>
+      <div class="add-row">
+        <input class="f-car" id="loyCar" type="number" placeholder="№ машины" style="width:140px">
+        <input class="f-amount" id="loyAmount" type="number" placeholder="Сумма скидки, ₽" style="flex:1">
+        <button id="loyAddBtn"><i class="ti ti-plus"></i></button>
+      </div>
+      <div class="note">Скидка привязывается к номеру машины в текущей смене (см. страницу «Машины») и автоматически вычитается из итога кассы по способу оплаты этой машины.</div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/site-common.js"></script>
+<script>
+if (CW.requireAuth()) {
+  CW.renderSidebar("loyalty");
+
+  const branch = CW.getActiveBranch();
+  const errEl = document.getElementById("errBanner");
+  function showErr(msg) { errEl.textContent = msg; errEl.style.display = "block"; }
+
+  let carsByNum = {};
+
+  if (!branch) {
+    showErr("Филиал не выбран. Выберите филиал в сайдбаре.");
+  } else {
+    document.getElementById("pageSub").textContent = `${branch} · ${CW.todayLabel()}`;
+    load();
+  }
+
+  function carLabel(num) {
+    const c = carsByNum[num];
+    if (!c) return `Машина №${num} (не найдена в смене)`;
+    return `${c.car || "Без клиента"} · ${c.service || ""}`.trim();
+  }
+
+  async function load() {
+    errEl.style.display = "none";
+    try {
+      const data = await CW.authFetch(`/api/session?branch=${encodeURIComponent(branch)}`);
+      const session = data.session || {};
+      const summary = data.summary || {};
+      const cars = session.cars || [];
+      carsByNum = {};
+      cars.forEach(c => { carsByNum[c.num] = c; });
+
+      const loyalty = session.loyalty || [];
+      const totalLoyalty = summary.total_loyalty || 0;
+
+      document.getElementById("statRow").innerHTML = `
+        <div class="stat-card"><div class="stat-top"><span class="sq b4"><i class="ti ti-discount-2"></i></span></div><div class="stat-label">Скидок за смену</div><div class="stat-value">${loyalty.length}</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="sq b4"><i class="ti ti-percentage"></i></span></div><div class="stat-label">Сумма скидок</div><div class="stat-value">${CW.money(totalLoyalty)}</div></div>
+        <div class="stat-card"><div class="stat-top"><span class="sq b1"><i class="ti ti-car"></i></span></div><div class="stat-label">Машин за смену</div><div class="stat-value">${cars.length}</div></div>
+      `;
+      document.getElementById("loyTotal").textContent = CW.money(totalLoyalty);
+
+      const loyList = document.getElementById("loyList");
+      const loyEmpty = document.getElementById("loyEmpty");
+      if (!loyalty.length) {
+        loyList.innerHTML = ""; loyEmpty.style.display = "block";
+      } else {
+        loyEmpty.style.display = "none";
+        loyList.innerHTML = loyalty.map((l, i) => `
+          <div class="list-row">
+            <div class="list-car">№${l.car_num}</div>
+            <div class="list-info">
+              <div class="list-name">${carLabel(l.car_num)}</div>
+              <div class="list-meta">${l.auto ? `Постоянная скидка клиента ${l.percent}%` : `Машина №${l.car_num}`}</div>
+            </div>
+            <div class="list-amount purple">−${CW.money(l.discount)}</div>
+            <div class="icon-btn danger" onclick="CW_delLoyalty(${i})"><i class="ti ti-trash"></i></div>
+          </div>
+        `).join("");
+      }
+    } catch (e) {
+      showErr(e.message);
+    }
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", load);
+
+  document.getElementById("loyAddBtn").addEventListener("click", async () => {
+    const car_num = parseInt(document.getElementById("loyCar").value, 10);
+    const discount = parseInt(document.getElementById("loyAmount").value, 10);
+    if (!car_num || !discount) { showErr("Укажите номер машины и сумму скидки"); return; }
+    if (!carsByNum[car_num]) { showErr(`Машина №${car_num} не найдена в текущей смене. Проверьте номер на странице «Машины».`); return; }
+    try {
+      await CW.authFetch("/api/loyalty", { method: "POST", body: JSON.stringify({ branch, car_num, discount }) });
+      document.getElementById("loyCar").value = "";
+      document.getElementById("loyAmount").value = "";
+      await load();
+    } catch (e) { showErr(e.message); }
+  });
+
+  window.CW_delLoyalty = async (idx) => {
+    try {
+      await CW.authFetch(`/api/loyalty/${encodeURIComponent(branch)}/${idx}`, { method: "DELETE" });
+      await load();
+    } catch (e) { showErr(e.message); }
+  };
+}
+</script>
+</body>
+</html>

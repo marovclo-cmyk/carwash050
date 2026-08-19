@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarWash Cloud — клиенты</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="/static/css/theme-plata.css">
+<style>
+  .search-field{ position:relative; margin-bottom:16px; }
+  .search-field input{
+    width:100%; padding:12px 14px 12px 40px; border-radius:var(--r-sm);
+    border:1.5px solid var(--line); background:var(--paper); font-size:14px;
+  }
+  .search-field input:focus{ outline:none; border-color:var(--orange); }
+  .search-field i{ position:absolute; left:14px; top:50%; transform:translateY(-50%); color:var(--muted); }
+  .client-row{ cursor:pointer; }
+  .client-row:hover{ background:var(--paper-2); }
+  .client-av{ width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+  .client-name{ font-size:14px; font-weight:600; }
+  .client-sub{ font-size:12px; color:var(--muted); margin-top:1px; }
+  .client-right{ text-align:right; }
+  .client-total{ font-size:14px; font-weight:700; color:var(--green); }
+  .client-visits{ font-size:11px; color:var(--muted); }
+  .detail-back{ display:flex; align-items:center; gap:6px; color:var(--muted); font-size:13px; cursor:pointer; margin-bottom:14px; }
+  .detail-back:hover{ color:var(--ink); }
+  /* ── СЕГМЕНТЫ (GAP-CRM1, этап 1 — сегментация) ──────────────────────────── */
+  .filter-chips{ display:flex; gap:8px; overflow-x:auto; padding:2px 2px 4px; margin-bottom:14px; }
+  .filter-chips::-webkit-scrollbar{ display:none; }
+  .filter-chip{
+    flex-shrink:0; background:var(--paper); border-radius:20px;
+    padding:7px 14px; font-size:12px; font-weight:500; color:var(--muted);
+    white-space:nowrap; cursor:pointer; border:1px solid var(--line); transition:all .1s;
+  }
+  .filter-chip.active{ background:var(--ink); color:var(--paper); border-color:transparent; font-weight:700; }
+  /* ── GAP-CRM2 (Phase 7, этап 1 — профиль/lifecycle) ──────────────────────
+     lifecycle-статус переиспользует .status-tag (см. theme-plata.css),
+     двух модификаторов там не было — добавлены только они, ничего в
+     самой базовой .status-tag не менялось. */
+  .status-tag.inactive{ background:var(--red-tint); color:var(--red); }
+  .status-tag.muted{ background:var(--paper-2); color:var(--muted); }
+  .client-name-row{ display:flex; align-items:center; gap:8px; }
+  .client-name-row .status-tag{ padding:2px 8px; font-size:10px; }
+
+  /* ── Phase 2 (Client 360) ──────────────────────────────────────────────
+     .module-stub/.loyalty-card/.discount-block/.badge-active/.badge-inactive
+     — same small page-local pattern already used by booking.html's client
+     detail panel (ci-tile → history/loyalty/messages/accounts), copied
+     here rather than invented so both pages read the same "not built yet"
+     language and the same loyalty-discount UI. Not moved into
+     theme-plata.css: every other page-specific block in this project also
+     lives locally in its own <style>, this follows that convention. */
+  .client-tab-panel{ margin-bottom:16px; }
+  .module-stub{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px; padding:56px 10px; color:var(--muted); }
+  .module-stub i{ font-size:28px; color:var(--muted); }
+  .module-stub span{ font-size:12.5px; font-weight:600; max-width:320px; line-height:1.4; }
+  .loyalty-card{ background:var(--paper-2); border-radius:20px; padding:18px; margin-bottom:16px; }
+  .loyalty-card-title{ font-family:var(--font-display); font-size:15px; font-weight:600; margin-bottom:2px; }
+  .loyalty-card-sub{ font-size:11.5px; color:var(--muted); font-weight:600; }
+  .discount-block{ background:var(--paper-2); border-radius:18px; padding:18px; }
+  .discount-current{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .discount-remove{ background:none; border:none; color:var(--muted); font-size:12px; text-decoration:underline; cursor:pointer; padding:0; }
+  .badge-active{ background:var(--green-tint); color:var(--green); font-size:11px; font-weight:700; padding:4px 11px; border-radius:999px; }
+  .badge-inactive{ background:var(--paper-3,var(--paper-2)); color:var(--muted); font-size:11px; font-weight:700; padding:4px 11px; border-radius:999px; }
+  .discount-form{ display:flex; align-items:center; gap:8px; }
+  .discount-form input{ width:80px; padding:9px 11px; border-radius:9px; border:1.5px solid var(--line); background:var(--paper); font-size:13px; }
+  .discount-form input:focus{ outline:none; border-color:var(--orange); }
+  .car-chip-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:11px 20px; border-bottom:1px solid var(--line); cursor:pointer; }
+  .car-chip-row:last-child{ border-bottom:none; }
+  .car-chip-row:hover{ background:var(--paper-2); }
+  .car-chip-name{ font-size:13px; font-weight:600; }
+  .car-chip-hint{ font-size:11.5px; color:var(--muted); }
+  .visit-row-clickable{ cursor:pointer; }
+  .visit-row-clickable:hover{ background:var(--paper-2); }
+  .vp-title{ font-size:13px; font-weight:700; margin-bottom:8px; }
+  .vp-line{ display:flex; justify-content:space-between; gap:16px; font-size:12.5px; padding:3px 0; color:var(--text); }
+  .vp-line span:first-child{ color:var(--muted); }
+  .vp-actions{ margin-top:10px; padding-top:10px; border-top:1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="rail" id="sidebarRoot"></div>
+
+  <div class="main">
+    <div class="err-banner" id="errBanner"></div>
+
+    <div id="viewList">
+      <div class="page-head">
+        <div>
+          <div class="page-title">Клиенты</div>
+          <div class="page-sub" id="pageSub">—</div>
+        </div>
+        <div class="head-actions">
+          <button class="btn secondary" id="refreshBtn"><i class="ti ti-refresh"></i>Обновить</button>
+        </div>
+      </div>
+
+      <div class="search-field">
+        <i class="ti ti-search"></i>
+        <input type="text" id="qInput" placeholder="Поиск по телефону или имени">
+      </div>
+
+      <div class="filter-chips" id="segmentChips"></div>
+
+      <div class="panel">
+        <div id="clientsList"></div>
+        <div id="clientsEmpty" class="empty-note" style="display:none">Клиентов пока нет — они появятся сами, как только при добавлении машины укажут телефон</div>
+      </div>
+    </div>
+
+    <div id="viewDetail" style="display:none">
+      <div class="detail-back" id="backBtn"><i class="ti ti-chevron-left"></i>Все клиенты</div>
+      <div class="page-head">
+        <div>
+          <div class="client-name-row">
+            <div class="page-title" id="dName">—</div>
+            <span id="dLifecycle"></span>
+            <span id="dTelegramBadge"></span>
+          </div>
+          <div class="page-sub" id="dPhone">—</div>
+        </div>
+        <div class="head-actions">
+          <button class="btn secondary" id="editClientBtn"><i class="ti ti-pencil"></i>Редактировать</button>
+        </div>
+      </div>
+      <div id="editClientPanel" class="panel" style="display:none;margin-bottom:16px;padding:16px 20px">
+        <div class="field">
+          <label>Имя клиента</label>
+          <input type="text" id="eName" placeholder="Например, Дарья">
+        </div>
+        <div class="field">
+          <label>Машины (через запятую)</label>
+          <input type="text" id="eCars" placeholder="Например, Lexus RX, Camry">
+        </div>
+        <div id="editClientErr" class="err-banner" style="display:none;margin-bottom:10px"></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn" id="saveClientBtn">Сохранить</button>
+          <button class="btn secondary" id="cancelClientBtn">Отмена</button>
+        </div>
+      </div>
+      <!-- Phase 2 — Client 360: вкладки вместо плоского списка панелей.
+           Переиспользован уже существующий глобальный .tabs/.tab (см.
+           theme-plata.css, тот же класс, что и на reports.html —
+           Сегодня/Неделя/Месяц/Архив), новый компонент не изобретался. -->
+      <div class="tabs" id="clientTabs">
+        <div class="tab active" data-tab="overview">Обзор</div>
+        <div class="tab" data-tab="visits">Визиты</div>
+        <div class="tab" data-tab="cars">Машины</div>
+        <div class="tab" data-tab="payments">Оплаты</div>
+        <div class="tab" data-tab="notes">Заметки</div>
+        <div class="tab" data-tab="loyalty">Лояльность</div>
+        <div class="tab" data-tab="communication">Общение</div>
+        <div class="tab" data-tab="stats">Статистика</div>
+      </div>
+
+      <div id="tabOverview" class="client-tab-panel">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px">
+          <div class="mini-stat"><div class="ms-label">Визитов</div><div class="ms-value" id="dVisits">0</div></div>
+          <div class="mini-stat"><div class="ms-label">Всего потрачено</div><div class="ms-value" id="dTotal" style="color:var(--green)">0</div></div>
+          <div class="mini-stat"><div class="ms-label">Средний чек</div><div class="ms-value" id="dAvgCheck" style="color:var(--green)">0</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+          <div class="mini-stat"><div class="ms-label">Последний визит</div><div class="ms-value" id="dLast" style="font-size:13px">—</div></div>
+          <div class="mini-stat"><div class="ms-label">Любимый филиал</div><div class="ms-value" id="dFavBranch" style="font-size:13px">—</div></div>
+          <div class="mini-stat"><div class="ms-label">Любимая услуга</div><div class="ms-value" id="dFavService" style="font-size:13px">—</div></div>
+        </div>
+      </div>
+
+      <div id="tabVisits" class="client-tab-panel" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">История визитов</div></div>
+          <div id="carFilterNote" style="display:none;padding:10px 20px;font-size:12px;color:var(--muted);border-bottom:1px solid var(--line)"></div>
+          <div id="dVisitsList"></div>
+        </div>
+      </div>
+
+      <div id="tabCars" class="client-tab-panel" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Машины клиента</div></div>
+          <div id="dCars" style="padding:12px 20px;font-size:13px;color:var(--muted)">—</div>
+        </div>
+      </div>
+
+      <div id="tabPayments" class="client-tab-panel" style="display:none">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Оплаты по визитам</div></div>
+          <div id="dPayments"></div>
+        </div>
+      </div>
+
+      <div id="tabNotes" class="client-tab-panel" style="display:none">
+        <div class="panel">
+          <div class="module-stub"><i class="ti ti-notes"></i><span>Модуль в разработке. Заметок по клиентам в системе пока нет — здесь появится история комментариев персонала, когда добавим эту функцию.</span></div>
+        </div>
+      </div>
+
+      <div id="tabLoyalty" class="client-tab-panel" style="display:none">
+        <div class="panel" style="padding:18px 20px">
+          <div id="dLoyalty"></div>
+          <div class="err-banner" id="loyaltyErr" style="display:none;margin-top:10px"></div>
+        </div>
+      </div>
+
+      <div id="tabCommunication" class="client-tab-panel" style="display:none">
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head"><div class="panel-title">Telegram</div></div>
+          <div id="dCommunicationStatus" style="padding:12px 20px;font-size:13px;color:var(--muted)">—</div>
+        </div>
+        <div class="panel">
+          <div class="module-stub"><i class="ti ti-message-2"></i><span>Модуль в разработке. СМС-уведомлений и записи звонков в системе пока нет — здесь появится переписка с клиентом, когда подключим провайдера связи.</span></div>
+        </div>
+      </div>
+
+      <div id="tabStats" class="client-tab-panel" style="display:none">
+        <div class="panel" style="margin-bottom:16px">
+          <div class="panel-head"><div class="panel-title">Тренд визитов (6 мес.)</div></div>
+          <div id="dTrend" style="display:flex;align-items:flex-end;gap:6px;padding:16px 20px 12px;height:80px"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">Топ услуг</div></div>
+          <div id="dServiceBreakdown" style="padding:12px 20px;font-size:13px;color:var(--muted)">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/site-common.js"></script>
+<script src="/static/js/ui-kit.js"></script>
+<script>
+if (CW.requireAuth()) {
+  CW.renderSidebar("clients");
+
+  const errEl = document.getElementById("errBanner");
+  function showErr(msg) { errEl.textContent = msg; errEl.style.display = "block"; }
+
+  document.getElementById("pageSub").textContent = CW.todayLabel();
+
+  // ── Сегменты (GAP-CRM1, этап 1 — сегментация без рассылок; каналы
+  // уведомлений клиенту не решены владельцем, см. GAP-NOTIFY1, поэтому
+  // рассылки сюда сознательно не входят). Все сегменты считаются на
+  // уже загруженных полях client_summary() (visit_count/total_spent/
+  // last_visit/discount_percent) — новых бэкенд-эндпоинтов не потребовалось.
+  const SEGMENTS = [
+    { id: "all",       label: "Все" },
+    { id: "inactive30", label: "Не были 30+ дней" },
+    { id: "new",       label: "Новые (1 визит)" },
+    { id: "no_visits", label: "Без визитов" },
+    { id: "discount",  label: "Постоянная скидка" },
+    { id: "top10",     label: "Топ-10 по чеку" },
+  ];
+  // Phase 4b — фильтры страницы переживают полную перезагрузку (переход на
+  // другую страницу и обратно, F5): восстанавливаем сохранённые query/сегмент
+  // до первой отрисовки чипов/списка, а не после.
+  const savedFilters = CW.loadFilterState("clients") || {};
+  let activeSegment = savedFilters.segment || "all";
+  let currentQuery = savedFilters.query || "";
+  document.getElementById("qInput").value = currentQuery;
+  const emptyDefaultText = document.getElementById("clientsEmpty").textContent;
+  function persistClientsFilters() {
+    CW.saveFilterState("clients", { segment: activeSegment, query: currentQuery });
+  }
+
+  function parseRuDate(s) {
+    // "ДД.ММ.ГГГГ" → Date | null — тот же формат, что везде в проекте
+    // хранит даты визитов (см. sessions.upsert_client_visit).
+    if (!s) return null;
+    const parts = s.split(".");
+    if (parts.length !== 3) return null;
+    const [d, m, y] = parts.map(Number);
+    if (!d || !m || !y) return null;
+    return new Date(y, m - 1, d);
+  }
+
+  function applySegment(clients, segment) {
+    switch (segment) {
+      case "inactive30": {
+        const now = new Date();
+        return clients.filter(c => {
+          const d = parseRuDate(c.last_visit);
+          return d && (now - d) / 86400000 >= 30;
+        });
+      }
+      case "new":
+        return clients.filter(c => c.visit_count === 1);
+      case "no_visits":
+        return clients.filter(c => c.visit_count === 0);
+      case "discount":
+        return clients.filter(c => c.discount_percent != null);
+      case "top10":
+        return clients.slice().sort((a, b) => (b.total_spent || 0) - (a.total_spent || 0)).slice(0, 10);
+      default:
+        return clients;
+    }
+  }
+
+  function renderSegmentChips() {
+    const el = document.getElementById("segmentChips");
+    el.innerHTML = SEGMENTS.map(s =>
+      `<div class="filter-chip${s.id === activeSegment ? " active" : ""}" data-seg="${s.id}">${s.label}</div>`
+    ).join("");
+    el.querySelectorAll(".filter-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        activeSegment = chip.dataset.seg;
+        renderSegmentChips();
+        applyFilters();
+        persistClientsFilters();
+      });
+    });
+  }
+
+  function applyFilters() {
+    let list = applySegment(clientsCache, activeSegment);
+    if (currentQuery) {
+      const qDigits = currentQuery.replace(/\D/g, "");
+      list = list.filter(c =>
+        (qDigits && c.phone.includes(qDigits)) || (c.name || "").toLowerCase().includes(currentQuery)
+      );
+    }
+    renderList(list);
+  }
+
+  renderSegmentChips();
+
+  let clientsCache = [];
+
+  async function loadClients() {
+    errEl.style.display = "none";
+    try {
+      const data = await CW.authFetch("/api/clients");
+      clientsCache = data.clients || [];
+      applyFilters();
+    } catch (e) { showErr(e.message); }
+  }
+
+  function avatarColor(name) {
+    const colors = ["#FF5000", "#7A5CFF", "#1B8A57", "#D63A2E", "#0D0D0D"];
+    let h = 0;
+    for (const ch of (name || "?")) h = (h * 31 + ch.charCodeAt(0)) % colors.length;
+    return colors[h];
+  }
+  function initials(name) {
+    const parts = (name || "").trim().split(/\s+/).filter(Boolean);
+    if (!parts.length) return "?";
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  function formatPhone(phone) {
+    if (phone.length === 11) return `+${phone[0]} ${phone.slice(1, 4)} ${phone.slice(4, 7)}-${phone.slice(7, 9)}-${phone.slice(9, 11)}`;
+    return phone;
+  }
+
+  // GAP-CRM2 (Phase 7, этап 1): подписи/цвета для client.lifecycle_stage,
+  // который считает бэкенд (sessions.client_summary) — те же пороги, что
+  // уже были в SEGMENTS выше, просто выведены как один явный статус.
+  const LIFECYCLE = {
+    no_visits: { label: "Без визитов", cls: "muted" },
+    new:       { label: "Новый",       cls: "progress" },
+    inactive:  { label: "Не был 30+ дней", cls: "inactive" },
+    active:    { label: "Активный",    cls: "done" },
+  };
+  function lifecycleBadge(stage) {
+    const l = LIFECYCLE[stage];
+    if (!l) return "";
+    return `<span class="status-tag ${l.cls}">${l.label}</span>`;
+  }
+
+  function telegramBadge(notifyOptIn) {
+    // Stage 21 (GAP-NOTIFY1): просто статус привязки для персонала, без
+    // логики отправки — сама отправка появится в следующих этапах.
+    return notifyOptIn
+      ? `<span class="status-tag done" title="Клиент подключил Telegram-уведомления"><i class="ti ti-brand-telegram"></i> Telegram</span>`
+      : `<span class="status-tag muted" title="Клиент ещё не подключил Telegram-уведомления"><i class="ti ti-brand-telegram"></i> не подключен</span>`;
+  }
+
+  function renderList(clients) {
+    const list = document.getElementById("clientsList");
+    const empty = document.getElementById("clientsEmpty");
+    if (!clients.length) {
+      list.innerHTML = "";
+      empty.textContent = (activeSegment === "all" && !currentQuery)
+        ? emptyDefaultText
+        : "Никого не найдено — попробуйте другой сегмент или запрос";
+      empty.style.display = "block";
+      return;
+    }
+    empty.style.display = "none";
+    list.innerHTML = clients.map(c => {
+      const col = avatarColor(c.name || c.phone);
+      return `
+      <div class="worker-row client-row" data-phone="${c.phone}">
+        <div class="client-av" style="background:${col}22;color:${col}">${initials(c.name)}</div>
+        <div style="flex:1">
+          <div class="client-name-row">
+            <div class="client-name">${c.name || "Без имени"}</div>
+            ${lifecycleBadge(c.lifecycle_stage)}
+          </div>
+          <div class="client-sub">${formatPhone(c.phone)} · ${(c.cars || []).slice(0, 2).join(", ") || "—"}</div>
+        </div>
+        <div class="client-right">
+          <div class="client-total">${CW.money(c.total_spent)}</div>
+          <div class="client-visits">${c.visit_count} визит(ов) · ${c.last_visit || "—"}</div>
+        </div>
+      </div>`;
+    }).join("");
+    list.querySelectorAll(".client-row").forEach(el => {
+      el.addEventListener("click", () => openDetail(el.dataset.phone));
+    });
+  }
+
+  document.getElementById("qInput").addEventListener("input", (e) => {
+    currentQuery = e.target.value.trim().toLowerCase();
+    applyFilters();
+    persistClientsFilters();
+  });
+
+  document.getElementById("refreshBtn").addEventListener("click", loadClients);
+  document.getElementById("backBtn").addEventListener("click", () => {
+    UI.Popover.closeAll();
+    document.getElementById("viewDetail").style.display = "none";
+    document.getElementById("viewList").style.display = "block";
+  });
+
+  let currentClient = null;
+
+  // PHASE 3 — Global Interaction System: панель редактирования клиента
+  // раньше была инлайн-блоком (просто display:block/none, без подложки,
+  // ESC, блокировки скролла и фокуса). Теперь это настоящий UI.Drawer —
+  // сама форма (поля eName/eCars/editClientErr/кнопки) не пересоздаётся,
+  // просто переносится внутрь панели drawer'а (см. UI.Drawer.wrap).
+  const editClientDrawer = UI.Drawer.wrap(document.getElementById("editClientPanel"), {
+    side: "right",
+    title: "Редактировать клиента",
+  });
+
+  document.getElementById("editClientBtn").addEventListener("click", () => {
+    document.getElementById("eName").value = currentClient?.name || "";
+    document.getElementById("eCars").value = (currentClient?.cars || []).join(", ");
+    document.getElementById("editClientErr").style.display = "none";
+    editClientDrawer.open();
+  });
+  document.getElementById("cancelClientBtn").addEventListener("click", () => {
+    editClientDrawer.close();
+  });
+  document.getElementById("saveClientBtn").addEventListener("click", async () => {
+    const errEl2 = document.getElementById("editClientErr");
+    errEl2.style.display = "none";
+    const name = document.getElementById("eName").value.trim();
+    const cars = document.getElementById("eCars").value.split(",").map(s => s.trim()).filter(Boolean);
+    const btn = document.getElementById("saveClientBtn");
+    btn.disabled = true;
+    try {
+      const updated = await CW.authFetch(`/api/clients/${encodeURIComponent(currentClient.phone)}`, {
+        method: "PUT", body: JSON.stringify({ name, cars }),
+      });
+      currentClient = updated;
+      document.getElementById("dName").textContent = updated.name || "Без имени";
+      renderCarsTab();
+      editClientDrawer.close();
+      UI.Toast.success("Изменения сохранены");
+      const idx = clientsCache.findIndex(c => c.phone === updated.phone);
+      if (idx !== -1) clientsCache[idx] = { ...clientsCache[idx], name: updated.name, cars: updated.cars };
+    } catch (e) {
+      errEl2.textContent = e.message;
+      errEl2.style.display = "block";
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
+  // ── Phase 2 — Client 360 ────────────────────────────────────────────
+  // Вкладки переиспользуют глобальный .tabs/.tab (theme-plata.css, тот
+  // же класс, что и на reports.html), просто восемь панелей вместо
+  // одного длинного плоского списка. Данные — то же самое, что client_
+  // summary() уже отдавал (visits/cars/discount_percent/notify_opt_in),
+  // ничего на бэкенде не добавлялось для Visits/Cars/Payments/Loyalty/
+  // Communication/Statistics; Notes честно помечены как ещё не
+  // реализованные (нет такого поля в модели клиента) — тот же паттерн
+  // "Модуль в разработке", что уже использует booking.html для Chat/
+  // Счетов клиента.
+  let activeClientTab = "overview";
+  let carFilter = null; // активный фильтр по машине во вкладке "Визиты" (клик по машине во вкладке "Машины")
+
+  function switchClientTab(tab) {
+    activeClientTab = tab;
+    document.querySelectorAll("#clientTabs .tab").forEach(t => t.classList.toggle("active", t.dataset.tab === tab));
+    document.querySelectorAll(".client-tab-panel").forEach(p => { p.style.display = "none"; });
+    const panelId = "tab" + tab.charAt(0).toUpperCase() + tab.slice(1);
+    document.getElementById(panelId).style.display = "";
+  }
+  document.querySelectorAll("#clientTabs .tab").forEach(t => {
+    t.addEventListener("click", () => switchClientTab(t.dataset.tab));
+  });
+
+  function visitStatusMeta(v) {
+    const paid = v.paid != null ? v.paid : v.total;
+    if (v.total > 0 && paid >= v.total) return { cls: "done", label: "Оплачено" };
+    if (paid > 0) return { cls: "progress", label: "Частично" };
+    return { cls: "inactive", label: "Не оплачено" };
+  }
+
+  function ruDateToIso(s) {
+    const d = parseRuDate(s);
+    if (!d) return null;
+    const pad = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  }
+
+  // Визит — это запись в кассовой истории клиента (client.visits). GAP-DB1
+  // Phase 5.1 (item 3 из бандла Phase 4/5): visits теперь МОГУТ хранить
+  // booking_id (см. sessions.upsert_client_visit) — точную связь с записью
+  // журнала, а не только день. Визиты, заведённые до этого изменения (или
+  // не из записи — ручное добавление машины), booking_id не несут: для них
+  // по-прежнему только переход на день, как и раньше — это не баг, а честное
+  // отсутствие данных у старых/безбукинговых визитов.
+  function openVisitPopover(anchorEl, v) {
+    const meta = visitStatusMeta(v);
+    const wrap = document.createElement("div");
+    wrap.innerHTML = `
+      <div class="vp-title">${v.date} · ${v.branch || "—"}</div>
+      <div class="vp-line"><span>Машина</span><span>${v.car || "—"}</span></div>
+      <div class="vp-line"><span>Услуга</span><span>${v.service || "—"}</span></div>
+      <div class="vp-line"><span>Время</span><span>${v.time || "—"}</span></div>
+      <div class="vp-line"><span>Сумма</span><span>${CW.money(v.total)}</span></div>
+      <div class="vp-line"><span>Оплачено</span><span>${CW.money(v.paid != null ? v.paid : v.total)}</span></div>
+      <div class="vp-line"><span>Статус оплаты</span><span class="status-tag ${meta.cls}" style="cursor:default">${meta.label}</span></div>
+      <div class="vp-actions">
+        <button type="button" class="btn secondary" id="vpOpenJournal" style="width:100%;justify-content:center">
+          <i class="ti ti-calendar-event"></i>${v.booking_id ? "Открыть эту запись в журнале" : "Открыть этот день в журнале"}
+        </button>
+      </div>`;
+    const pop = UI.Popover.open(anchorEl, wrap, { align: "right" });
+    const iso = ruDateToIso(v.date);
+    const btn = pop.querySelector("#vpOpenJournal");
+    if (iso) {
+      btn.addEventListener("click", () => {
+        if (v.branch) CW.setActiveBranch(v.branch);
+        const bookingQs = v.booking_id ? `&booking=${encodeURIComponent(v.booking_id)}` : "";
+        window.location.href = `/static/booking.html?date=${iso}${bookingQs}`;
+      });
+    } else {
+      btn.disabled = true;
+    }
+  }
+
+  function renderVisitsList() {
+    const note = document.getElementById("carFilterNote");
+    let visits = (currentClient.visits || []).slice().reverse();
+    if (carFilter) {
+      visits = visits.filter(v => v.car === carFilter);
+      note.style.display = "block";
+      note.innerHTML = `Фильтр по машине: <b>${carFilter}</b> · <span style="text-decoration:underline;cursor:pointer" id="clearCarFilter">сбросить</span>`;
+      document.getElementById("clearCarFilter").addEventListener("click", () => { carFilter = null; renderVisitsList(); });
+    } else {
+      note.style.display = "none";
+    }
+    const list = document.getElementById("dVisitsList");
+    list.innerHTML = visits.length ? visits.map((v, i) => `
+      <div class="worker-row visit-row-clickable" style="padding:10px 20px" data-vidx="${i}">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${v.date} · ${v.branch}</div>
+          <div class="client-sub">${v.car || "—"}${v.service ? " · " + v.service : ""}</div>
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--green)">${CW.money(v.total)}</div>
+      </div>`).join("") : `<div class="empty-note">${carFilter ? "У этой машины визитов не найдено" : "Визитов пока нет"}</div>`;
+    list.querySelectorAll(".visit-row-clickable").forEach(el => {
+      el.addEventListener("click", () => openVisitPopover(el, visits[Number(el.dataset.vidx)]));
+    });
+  }
+
+  // "Машина → детали" в UX_TARGET_V4 подразумевает отдельную карточку
+  // машины, которой в проекте физически не существует (cars.html — это
+  // машины смены в кассе, а не реестр машин клиента). Честная замена:
+  // клик по машине фильтрует уже реальные визиты этого клиента по ней —
+  // никаких новых данных не выдумано.
+  function renderCarsTab() {
+    const cars = currentClient.cars || [];
+    const el = document.getElementById("dCars");
+    if (!cars.length) { el.innerHTML = "—"; return; }
+    el.innerHTML = cars.map(car => `
+      <div class="car-chip-row" data-car="${car}">
+        <div>
+          <div class="car-chip-name">${car}</div>
+          <div class="car-chip-hint">Показать визиты этой машины</div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--muted)"></i>
+      </div>`).join("");
+    el.querySelectorAll(".car-chip-row").forEach(row => {
+      row.addEventListener("click", () => {
+        carFilter = row.dataset.car;
+        switchClientTab("visits");
+        renderVisitsList();
+      });
+    });
+  }
+
+  // Отдельного реестра оплат по клиенту в бэкенде нет (только paid/total
+  // на каждом визите, см. client_summary/upsert_client_visit) — вкладка
+  // "Оплаты" честно построена из тех же visits, без метода оплаты (его
+  // не сохраняют в визите), просто в разрезе "сколько должно/оплачено".
+  function renderPaymentsTab() {
+    const visits = (currentClient.visits || []).slice().reverse();
+    const el = document.getElementById("dPayments");
+    if (!visits.length) { el.innerHTML = `<div class="empty-note">Оплат пока нет</div>`; return; }
+    el.innerHTML = visits.map(v => {
+      const meta = visitStatusMeta(v);
+      const paid = v.paid != null ? v.paid : v.total;
+      return `
+      <div class="worker-row" style="padding:10px 20px">
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:600">${v.date} · ${v.branch}</div>
+          <div class="client-sub">${v.service || v.car || "—"}</div>
+        </div>
+        <span class="status-tag ${meta.cls}" style="margin-right:12px;cursor:default">${meta.label}</span>
+        <div style="font-size:13px;font-weight:700;color:var(--green);min-width:70px;text-align:right">${CW.money(paid)}</div>
+      </div>`;
+    }).join("");
+  }
+
+  // Лояльность — тот же UI/эндпоинты (PUT/DELETE /api/clients/{phone}/
+  // discount), что уже реализованы в booking.html (ci-tile "Лояльность"
+  // в модалке записи) — здесь не изобретается новая бизнес-логика,
+  // только даётся такой же доступ со страницы карточки клиента, где его
+  // раньше не было (discount_percent только читался, не редактировался).
+  function discountBlockHtml(c) {
+    if (c.discount_percent) {
+      return `
+        <div class="discount-block">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:10px">Постоянная скидка</div>
+          <div class="discount-current">
+            <span class="badge-active"><i class="ti ti-check" style="font-size:11px"></i> Активна</span>
+            <span style="font-size:13px">Скидка ${c.discount_percent}% на все услуги</span>
+            <button type="button" class="discount-remove" id="removeDiscountBtn">Удалить</button>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="discount-block">
+        <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;margin-bottom:10px">Постоянная скидка</div>
+        <div class="discount-current"><span class="badge-inactive">Не установлена</span></div>
+        <div class="discount-form">
+          <input type="number" id="discountInput" placeholder="10" min="1" max="100">
+          <span style="font-size:13px;color:var(--muted)">%</span>
+          <button type="button" class="btn accent small" id="saveDiscountBtn"><i class="ti ti-percentage"></i>Сохранить</button>
+        </div>
+      </div>`;
+  }
+
+  function renderLoyaltyTab() {
+    const c = currentClient;
+    document.getElementById("dLoyalty").innerHTML = `
+      <div class="loyalty-card">
+        <div class="loyalty-card-title">${c.name || "Клиент без имени"}</div>
+        <div class="loyalty-card-sub">${formatPhone(c.phone)}</div>
+      </div>
+      ${discountBlockHtml(c)}`;
+    document.getElementById("loyaltyErr").style.display = "none";
+    const saveBtn = document.getElementById("saveDiscountBtn");
+    if (saveBtn) saveBtn.addEventListener("click", async () => {
+      const errEl2 = document.getElementById("loyaltyErr");
+      errEl2.style.display = "none";
+      const val = parseFloat(document.getElementById("discountInput").value);
+      if (!val || val <= 0 || val > 100) { errEl2.textContent = "Укажите скидку от 1 до 100%"; errEl2.style.display = "block"; return; }
+      saveBtn.disabled = true;
+      try {
+        currentClient = await CW.authFetch(`/api/clients/${encodeURIComponent(currentClient.phone)}/discount`, { method: "PUT", body: JSON.stringify({ percent: val }) });
+        const idx = clientsCache.findIndex(cl => cl.phone === currentClient.phone);
+        if (idx !== -1) clientsCache[idx] = { ...clientsCache[idx], discount_percent: currentClient.discount_percent };
+        renderLoyaltyTab();
+        UI.Toast.success("Скидка сохранена");
+      } catch (e) {
+        errEl2.textContent = e.message; errEl2.style.display = "block"; saveBtn.disabled = false;
+      }
+    });
+    const removeBtn = document.getElementById("removeDiscountBtn");
+    if (removeBtn) removeBtn.addEventListener("click", async () => {
+      removeBtn.disabled = true;
+      try {
+        currentClient = await CW.authFetch(`/api/clients/${encodeURIComponent(currentClient.phone)}/discount`, { method: "DELETE" });
+        const idx = clientsCache.findIndex(cl => cl.phone === currentClient.phone);
+        if (idx !== -1) clientsCache[idx] = { ...clientsCache[idx], discount_percent: null };
+        renderLoyaltyTab();
+        UI.Toast.success("Скидка удалена");
+      } catch (e) { removeBtn.disabled = false; UI.Toast.error(e.message); }
+    });
+  }
+
+  // Общение — сейчас в системе есть только статус привязки Telegram
+  // (notify_opt_in, GAP-NOTIFY1); переписки/звонков нет вообще нигде в
+  // проекте, поэтому вкладка честно показывает статус + тот же module-
+  // stub-текст, что уже использует booking.html для этого же случая
+  // (Chat), а не выдуманную историю сообщений.
+  function renderCommunicationTab() {
+    const c = currentClient;
+    document.getElementById("dCommunicationStatus").innerHTML = c.notify_opt_in
+      ? `<div style="display:flex;align-items:center;gap:10px"><span class="status-tag done"><i class="ti ti-brand-telegram"></i> Подключен</span><span>Клиент получает напоминания о записях и win-back-сообщения в Telegram.</span></div>`
+      : `<div style="display:flex;align-items:center;gap:10px"><span class="status-tag muted"><i class="ti ti-brand-telegram"></i> Не подключен</span><span>Клиент ещё не подключил Telegram — автоматические напоминания и win-back ему не приходят.</span></div>`;
+  }
+
+  async function openDetail(phone) {
+    errEl.style.display = "none";
+    try {
+      const c = await CW.authFetch(`/api/clients/${encodeURIComponent(phone)}`);
+      currentClient = c;
+      editClientDrawer.close();
+      UI.Popover.closeAll();
+      carFilter = null;
+      switchClientTab("overview");
+      document.getElementById("viewList").style.display = "none";
+      document.getElementById("viewDetail").style.display = "block";
+      document.getElementById("dName").textContent = c.name || "Без имени";
+      document.getElementById("dLifecycle").innerHTML = lifecycleBadge(c.lifecycle_stage);
+      document.getElementById("dTelegramBadge").innerHTML = telegramBadge(c.notify_opt_in);
+      document.getElementById("dPhone").textContent = formatPhone(c.phone);
+      document.getElementById("dVisits").textContent = c.visit_count;
+      document.getElementById("dTotal").textContent = CW.money(c.total_spent);
+      document.getElementById("dAvgCheck").textContent = CW.money(c.avg_check);
+      document.getElementById("dLast").textContent = c.last_visit || "—";
+      document.getElementById("dFavBranch").textContent = c.favorite_branch || "—";
+      document.getElementById("dFavService").textContent = c.favorite_service || "—";
+      renderCarsTab();
+      renderPaymentsTab();
+      renderLoyaltyTab();
+      renderCommunicationTab();
+      const trend = c.visit_trend || [];
+      const trendMax = Math.max(1, ...trend.map(t => t.count));
+      document.getElementById("dTrend").innerHTML = trend.map(t => `
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;justify-content:flex-end">
+          <div title="${t.count} визит(ов)" style="width:100%;max-width:22px;border-radius:4px 4px 0 0;
+            background:${t.count ? 'var(--orange)' : 'var(--border)'};
+            height:${Math.max(3, Math.round((t.count / trendMax) * 48))}px"></div>
+          <div style="font-size:10px;color:var(--muted)">${t.label}</div>
+        </div>`).join("");
+      const breakdown = c.service_breakdown || [];
+      const breakdownMax = Math.max(1, ...breakdown.map(s => s.count));
+      document.getElementById("dServiceBreakdown").innerHTML = breakdown.length ? breakdown.map(s => `
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+          <div style="flex:0 0 120px;font-size:13px;color:var(--text)">${s.service}</div>
+          <div style="flex:1;background:var(--border);border-radius:4px;height:8px;overflow:hidden">
+            <div style="width:${Math.round((s.count / breakdownMax) * 100)}%;height:100%;background:var(--orange)"></div>
+          </div>
+          <div style="flex:0 0 24px;text-align:right;font-size:12px;color:var(--muted)">${s.count}</div>
+        </div>`).join("") : "—";
+      renderVisitsList();
+    } catch (e) { showErr(e.message); }
+  }
+
+  loadClients();
+
+  // Открытие карточки конкретного клиента по прямой ссылке — сейчас
+  // используется из Booking Preview Drawer (booking.html, кнопка
+  // "Карточка клиента"): /static/clients.html?phone=... сразу открывает
+  // деталь, не дожидаясь клика по строке в списке.
+  const urlPhoneParam = new URLSearchParams(window.location.search).get("phone");
+  if (urlPhoneParam) openDetail(urlPhoneParam);
+}
+</script>
+</body>
+</html>

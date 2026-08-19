@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CarWash Cloud — Сотрудники</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="/static/css/theme-plata.css">
+</head>
+<body>
+<div class="shell">
+  <div class="rail" id="sidebarRoot"></div>
+
+  <div class="main">
+    <div class="err-banner" id="errBanner"></div>
+
+    <div class="page-head">
+      <div>
+        <div class="page-title">Сотрудники</div>
+        <div class="page-sub" id="pageSub">—</div>
+      </div>
+      <div class="head-actions">
+        <button class="btn secondary" id="refreshBtn"><i class="ti ti-refresh"></i>Обновить</button>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Мойщики</div>
+          <div class="panel-sub">Список сотрудников филиала и их график работы</div>
+        </div>
+      </div>
+      <div id="workerList"></div>
+      <div id="workerEmpty" class="empty-note" style="display:none">Сотрудников пока нет — добавьте первого ниже</div>
+      <div class="add-row" id="addWorkerRow">
+        <input class="f-name" id="wName" type="text" placeholder="Имя сотрудника">
+        <button id="wAddBtn"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-bottom:16px">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Администраторы</div>
+          <div class="panel-sub" id="adminsSub">—</div>
+        </div>
+        <button class="btn secondary" id="adminHistBtn" style="height:34px;padding:0 14px;font-size:12px"><i class="ti ti-history"></i>История зарплаты</button>
+      </div>
+      <div id="adminsList"></div>
+      <div id="adminsEmpty" class="empty-note" style="display:none">Администраторов пока нет — добавьте первого ниже</div>
+      <div class="add-row" id="addAdminRow">
+        <input class="f-name" id="aName" type="text" placeholder="Имя администратора">
+        <button id="aAddBtn"><i class="ti ti-plus"></i></button>
+      </div>
+    </div>
+
+    <div class="panel" id="adminPanel" style="display:none;margin-bottom:16px">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">Доступ в Telegram-боте</div>
+          <div class="panel-sub" id="adminSub">—</div>
+        </div>
+      </div>
+      <div class="add-row" style="border-top:none">
+        <select id="adminSelect" style="flex:1"></select>
+        <button id="adminSetBtn"><i class="ti ti-check"></i></button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="panel-title">График на неделю</div>
+          <div class="panel-sub" id="weekSub">—</div>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="week" id="weekTable"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка графика -->
+<div class="modal-bg" id="schedModal">
+  <div class="modal" style="width:380px">
+    <h2>График — <span id="schedWorkerName"></span></h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="field">
+        <label>Работает дней</label>
+        <input type="number" id="schedWork" min="1" value="3">
+      </div>
+      <div class="field">
+        <label>Отдыхает дней</label>
+        <input type="number" id="schedRest" min="0" value="1">
+      </div>
+    </div>
+    <div class="field">
+      <label>Дата начала цикла</label>
+      <input type="date" id="schedStart">
+    </div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="schedClearBtn"><i class="ti ti-x"></i>Убрать график</button>
+      <button class="btn accent" id="schedSaveBtn"><i class="ti ti-check"></i>Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка зарплаты -->
+<div class="modal-bg" id="salModal">
+  <div class="modal" style="width:460px">
+    <h2>Зарплата — <span id="salWorkerName"></span></h2>
+    <div style="display:flex;gap:6px;margin-bottom:16px" id="salTabs">
+      <button class="btn secondary sal-tab active" data-period="today">Сегодня</button>
+      <button class="btn secondary sal-tab" data-period="week">Неделя</button>
+      <button class="btn secondary sal-tab" data-period="month">Месяц</button>
+    </div>
+    <div id="salSummary" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px"></div>
+    <div style="max-height:260px;overflow-y:auto;border:1.5px solid var(--line);border-radius:var(--r-sm)" id="salDays"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="salAvansBtn" style="flex:1;justify-content:center"><i class="ti ti-cash"></i>Выдать аванс</button>
+      <button class="btn secondary" id="salCloseBtn" style="flex:1;justify-content:center">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- Модалка истории дежурств администраторов -->
+<div class="modal-bg" id="adminHistModal">
+  <div class="modal" style="width:520px">
+    <h2>История дежурств — кто был администратором</h2>
+    <div class="panel-sub" style="margin-bottom:14px">
+      Отметь для каждой прошедшей смены, кто дежурил — тогда «Зарплата» у этого
+      администратора за неделю/месяц начнёт учитывать эти дни.
+    </div>
+    <div style="max-height:360px;overflow-y:auto;border:1.5px solid var(--line);border-radius:var(--r-sm)" id="adminHistList"></div>
+    <div class="modal-actions">
+      <button class="btn secondary" id="adminHistCloseBtn" style="flex:1;justify-content:center">Отмена</button>
+      <button class="btn accent" id="adminHistSaveBtn" style="flex:1;justify-content:center"><i class="ti ti-check"></i>Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<script src="/static/site-common.js"></script>
+<script src="/static/js/ui-kit.js"></script>
+<script>
+if (CW.requireAuth()) {
+  CW.renderSidebar("workers");
+
+  const branch = CW.getActiveBranch();
+  const role = CW.getRole();
+  const errEl = document.getElementById("errBanner");
+  function showErr(msg) { errEl.textContent = msg; errEl.style.display = "block"; }
+
+  const canManage = role === "админ" || role === "владелец";
+  if (!canManage) {
+    document.getElementById("addWorkerRow").style.display = "none";
+    document.getElementById("addAdminRow").style.display = "none";
+    document.getElementById("adminHistBtn").style.display = "none";
+  }
+
+  if (!branch) {
+    showErr("Филиал не выбран. Выберите филиал в сайдбаре.");
+  } else {
+    document.getElementById("pageSub").textContent = `${branch} · ${CW.todayLabel()}`;
+
+    if (role === "владелец") {
+      document.getElementById("adminPanel").style.display = "block";
+      loadUsersForAdmin();
+    }
+
+    load();
+    loadWeek();
+    loadAdmins();
+  }
+
+  document.getElementById("refreshBtn").addEventListener("click", () => { load(); loadWeek(); loadAdmins(); });
+
+  let workersCache = [];
+  let scheduleCache = {};
+  let carsCache = [];
+  let fixedRatesCache = {};
+  let adminFixedRate = 0;
+
+  async function load() {
+    errEl.style.display = "none";
+    try {
+      const data = await CW.authFetch(`/api/workers?branch=${encodeURIComponent(branch)}`);
+      workersCache = data.workers || [];
+      scheduleCache = data.schedule || {};
+      const sessData = await CW.authFetch(`/api/session?branch=${encodeURIComponent(branch)}`);
+      carsCache = (sessData.session && sessData.session.cars) || [];
+      fixedRatesCache = (sessData.summary && sessData.summary.fixed_rates) || {};
+      adminFixedRate = (sessData.summary && sessData.summary.admin_fixed_rate) || 0;
+      renderWorkers();
+      renderAdmins();
+      if (role === "владелец") renderAdminSub(data.admin_id);
+    } catch (e) { showErr(e.message); }
+  }
+
+  function renderAdminSub(adminId) {
+    const sub = document.getElementById("adminSub");
+    sub.textContent = adminId ? `Текущий: ID ${adminId}` : "Администратор не назначен";
+  }
+
+  let usersCache = [];
+  async function loadUsersForAdmin() {
+    try {
+      const data = await CW.authFetch("/api/users");
+      usersCache = data.users || [];
+      const sel = document.getElementById("adminSelect");
+      sel.innerHTML = usersCache.map(u => `<option value="${u.user_id}">${u.name} (ID ${u.user_id})</option>`).join("")
+        || `<option value="">Нет пользователей в белом списке</option>`;
+    } catch (e) { /* тихо, панель не критична */ }
+  }
+
+  document.getElementById("adminSetBtn").addEventListener("click", async () => {
+    const userId = parseInt(document.getElementById("adminSelect").value, 10);
+    if (!userId) { showErr("Выберите пользователя из списка"); return; }
+    try {
+      await CW.authFetch("/api/branch-admin", { method: "POST", body: JSON.stringify({ branch, user_id: userId }) });
+      await load();
+    } catch (e) { showErr(e.message); }
+  });
+
+  function renderWorkers() {
+    const list = document.getElementById("workerList");
+    const empty = document.getElementById("workerEmpty");
+    if (!workersCache.length) {
+      list.innerHTML = ""; empty.style.display = "block"; return;
+    }
+    empty.style.display = "none";
+    list.innerHTML = workersCache.map(name => {
+      const st = scheduleCache[name] || { working: true, schedule: null };
+      let tag;
+      if (!st.schedule) tag = `<span class="tag noschedule">без графика</span>`;
+      else tag = st.working ? `<span class="tag working">работает сегодня</span>` : `<span class="tag resting">отдыхает</span>`;
+      const schedMeta = st.schedule ? `${st.schedule.work}/${st.schedule.rest} · с ${st.schedule.start}` : "график не задан";
+      const carsToday = carsCache.filter(c => c.employee === name).length;
+      const rate = fixedRatesCache[name];
+      const rateTag = rate ? `<span class="tag rate">ставка ${rate}₽</span>` : "";
+      return `
+        <div class="worker-row">
+          <div class="worker-av">${CW.initials(name)}</div>
+          <div class="worker-info">
+            <div class="worker-name">${name} ${tag} ${rateTag}</div>
+            <div class="worker-meta">${schedMeta} · машин сегодня: ${carsToday}</div>
+          </div>
+          ${canManage ? `
+          <div class="worker-actions">
+            <div class="icon-btn" title="Зарплата за период" onclick="CW_openSalary('${name.replace(/'/g, "\\'")}')"><i class="ti ti-report-money"></i></div>
+            <div class="icon-btn" title="Выдать аванс" onclick="CW_giveAvans('${name.replace(/'/g, "\\'")}')"><i class="ti ti-cash"></i></div>
+            <div class="icon-btn ${rate ? "rate-active" : ""}" title="${rate ? "Изменить/убрать ставку" : "Поставить ставку (если 0 машин за день)"}" onclick="CW_toggleRate('${name.replace(/'/g, "\\'")}', ${rate || 0})"><i class="ti ti-cash-banknote"></i></div>
+            <div class="icon-btn" title="Настроить график" onclick="CW_openSched('${name.replace(/'/g, "\\'")}')"><i class="ti ti-calendar-time"></i></div>
+            <div class="icon-btn danger" title="Удалить сотрудника" onclick="CW_delWorker('${name.replace(/'/g, "\\'")}')"><i class="ti ti-trash"></i></div>
+          </div>` : ""}
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("wAddBtn").addEventListener("click", async () => {
+    const name = document.getElementById("wName").value.trim();
+    if (!name) { showErr("Укажите имя сотрудника"); return; }
+    try {
+      await CW.authFetch("/api/workers", { method: "POST", body: JSON.stringify({ branch, name }) });
+      document.getElementById("wName").value = "";
+      await load();
+      await loadWeek();
+    } catch (e) { showErr(e.message); }
+  });
+
+  window.CW_delWorker = async (name) => {
+    const ok = await UI.Confirm.show({
+      title: "Удалить сотрудника?",
+      message: `Удалить сотрудника «${name}» из филиала?`,
+      confirmText: "Удалить", danger: true,
+    });
+    if (!ok) return;
+    try {
+      await CW.authFetch(`/api/workers/${encodeURIComponent(branch)}/${encodeURIComponent(name)}`, { method: "DELETE" });
+      await load();
+      await loadWeek();
+    } catch (e) { showErr(e.message); }
+  };
+
+  // ── Администраторы (ростер имён + дежурный на сегодня) ─────────────
+  let adminsCache = [];
+  let adminOnDuty = "";
+
+  async function loadAdmins() {
+    try {
+      const data = await CW.authFetch(`/api/admins?branch=${encodeURIComponent(branch)}`);
+      adminsCache = data.admins || [];
+      adminOnDuty = data.admin_on_duty || "";
+      renderAdmins();
+    } catch (e) { /* не критично для остальной страницы */ }
+  }
+
+  function renderAdmins() {
+    const list = document.getElementById("adminsList");
+    const empty = document.getElementById("adminsEmpty");
+    const sub = document.getElementById("adminsSub");
+    sub.textContent = adminOnDuty ? `Дежурит сегодня: ${adminOnDuty}` : "Дежурный администратор не назначен";
+
+    if (!adminsCache.length) {
+      list.innerHTML = ""; empty.style.display = "block"; return;
+    }
+    empty.style.display = "none";
+    list.innerHTML = adminsCache.map(name => {
+      const isDuty = name === adminOnDuty;
+      const tag = isDuty ? `<span class="tag admin">дежурит сегодня</span>` : "";
+      const rate = isDuty ? adminFixedRate : 0;
+      const rateTag = rate ? `<span class="tag rate">ставка ${rate}₽</span>` : "";
+      return `
+        <div class="worker-row">
+          <div class="worker-av" style="background:var(--purple-tint);color:var(--purple)">${CW.initials(name)}</div>
+          <div class="worker-info">
+            <div class="worker-name">${name} ${tag} ${rateTag}</div>
+            <div class="worker-meta">${isDuty ? "Получает % администратора за сегодняшнюю смену" : "Не дежурит сегодня"}</div>
+          </div>
+          ${canManage ? `
+          <div class="worker-actions">
+            <div class="icon-btn" title="Зарплата за период" onclick="CW_openAdminSalary('${name.replace(/'/g, "\\'")}')"><i class="ti ti-report-money"></i></div>
+            <div class="icon-btn ${isDuty ? "rate-active" : ""}" title="${isDuty ? "Снять дежурство" : "Назначить дежурным сегодня"}" onclick="CW_toggleDuty('${name.replace(/'/g, "\\'")}', ${isDuty})"><i class="ti ti-shield-check"></i></div>
+            ${isDuty ? `<div class="icon-btn ${rate ? "rate-active" : ""}" title="${rate ? "Изменить/убрать ставку" : "Поставить ставку (если 0 машин за день)"}" onclick="CW_toggleAdminRate(${rate})"><i class="ti ti-cash-banknote"></i></div>` : ""}
+            <div class="icon-btn danger" title="Удалить администратора" onclick="CW_delAdmin('${name.replace(/'/g, "\\'")}')"><i class="ti ti-trash"></i></div>
+          </div>` : ""}
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("aAddBtn").addEventListener("click", async () => {
+    const name = document.getElementById("aName").value.trim();
+    if (!name) { showErr("Укажите имя администратора"); return; }
+    try {
+      await CW.authFetch("/api/admins", { method: "POST", body: JSON.stringify({ branch, name }) });
+      document.getElementById("aName").value = "";
+      await loadAdmins();
+    } catch (e) { showErr(e.message); }
+  });
+
+  window.CW_delAdmin = async (name) => {
+    const ok = await UI.Confirm.show({
+      title: "Убрать администратора?",
+      message: `Убрать «${name}» из администраторов филиала?`,
+      confirmText: "Убрать", danger: true,
+    });
+    if (!ok) return;
+    try {
+      await CW.authFetch(`/api/admins/${encodeURIComponent(branch)}/${encodeURIComponent(name)}`, { method: "DELETE" });
+      await loadAdmins();
+    } catch (e) { showErr(e.message); }
+  };
+
+  window.CW_toggleDuty = async (name, isDuty) => {
+    try {
+      await CW.authFetch("/api/admin-on-duty", {
+        method: "POST", body: JSON.stringify({ branch, name: isDuty ? "" : name }),
+      });
+      await loadAdmins();
+    } catch (e) { showErr(e.message); }
+  };
+
+  // PHASE 5 (accumulated flagged item #2, confirmed): ставки и аванс
+  // раньше были prompt(). Тот же паттерн, что cash.html::stockDialog —
+  // .modal-bg/.modal/.field + UI.Modal.register. Один общий диалог для
+  // всех трёх мест (ставка админа, ставка сотрудника, аванс) — они
+  // отличаются только заголовком/подсказкой/значением по умолчанию.
+  function amountDialog({ title, hint, defaultValue }) {
+    return new Promise((resolve) => {
+      const bg = document.createElement("div");
+      bg.className = "modal-bg";
+      bg.innerHTML = `
+        <div class="modal" style="width:380px">
+          <h2>${title}</h2>
+          ${hint ? `<div style="font-size:13px;color:var(--muted);margin-bottom:10px">${hint}</div>` : ""}
+          <div class="field">
+            <label>Сумма (₽)</label>
+            <input type="number" id="amtInput" min="0" value="${defaultValue}">
+          </div>
+          <div class="err-banner" id="amtErr" style="display:none;margin-top:10px"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="amtCancel">Отмена</button>
+            <button type="button" class="btn accent" id="amtSave">Сохранить</button>
+          </div>
+        </div>`;
+      document.body.appendChild(bg);
+      let resolved = false;
+      const entry = UI.Modal.register(bg, {
+        onClose: () => { if (!resolved) { resolved = true; resolve(null); } setTimeout(() => bg.remove(), 220); },
+      });
+      function finish(result) { resolved = true; resolve(result); entry.close(); }
+      bg.querySelector("#amtCancel").addEventListener("click", () => finish(null));
+      bg.querySelector("#amtSave").addEventListener("click", () => {
+        const raw = bg.querySelector("#amtInput").value.replace(/[^\d]/g, "");
+        const amount = parseInt(raw, 10);
+        if (isNaN(amount) || amount < 0) {
+          const err = bg.querySelector("#amtErr");
+          err.textContent = "Сумма должна быть неотрицательным числом";
+          err.style.display = "block";
+          return;
+        }
+        finish(amount);
+      });
+      entry.open();
+      requestAnimationFrame(() => bg.querySelector("#amtInput").focus());
+    });
+  }
+
+  // ── Ставка (фикс. зарплата за день, например при 0 машин) ──────────
+  // ── Ставка администратора (фикс. зарплата за день, например при 0 машин) ──
+  window.CW_toggleAdminRate = async (currentRate) => {
+    const amount = await amountDialog({
+      title: "Ставка администратора",
+      hint: currentRate
+        ? `Ставка администратора на сегодня: ${CW.money(currentRate)}. Введите новую сумму, или 0 — чтобы убрать ставку.`
+        : `Ставка администратора на сегодня (например, если 0 машин).`,
+      defaultValue: currentRate || 1000,
+    });
+    if (amount === null) return;
+    try {
+      if (amount <= 0) {
+        if (!currentRate) return; // нечего убирать
+        await CW.authFetch(`/api/admin-fixed-rate/${encodeURIComponent(branch)}`, { method: "DELETE" });
+      } else {
+        await CW.authFetch("/api/admin-fixed-rate", { method: "POST", body: JSON.stringify({ branch, amount }) });
+      }
+      await load();
+    } catch (e) { showErr(e.message); }
+  };
+
+  window.CW_toggleRate = async (name, currentRate) => {
+    const amount = await amountDialog({
+      title: "Ставка сотрудника",
+      hint: currentRate
+        ? `Ставка для ${name} на сегодня: ${CW.money(currentRate)}. Введите новую сумму, или 0 — чтобы убрать ставку.`
+        : `Ставка для ${name} на сегодня (например, если 0 машин).`,
+      defaultValue: currentRate || 1000,
+    });
+    if (amount === null) return;
+    try {
+      if (amount <= 0) {
+        if (!currentRate) return; // нечего убирать
+        await CW.authFetch(`/api/fixed-rate/${encodeURIComponent(branch)}/${encodeURIComponent(name)}`, { method: "DELETE" });
+      } else {
+        await CW.authFetch("/api/fixed-rate", { method: "POST", body: JSON.stringify({ branch, worker: name, amount }) });
+      }
+      await load();
+    } catch (e) { showErr(e.message); }
+  };
+
+  // ── График (модалка) ──────────────────────────────────────────────
+  const schedModal = document.getElementById("schedModal");
+  UI.Modal.register("schedModal", {});
+  let schedWorker = null;
+
+  window.CW_openSched = (name) => {
+    schedWorker = name;
+    document.getElementById("schedWorkerName").textContent = name;
+    const st = scheduleCache[name];
+    if (st && st.schedule) {
+      document.getElementById("schedWork").value = st.schedule.work;
+      document.getElementById("schedRest").value = st.schedule.rest;
+      document.getElementById("schedStart").value = st.schedule.start;
+    } else {
+      document.getElementById("schedWork").value = 3;
+      document.getElementById("schedRest").value = 1;
+      document.getElementById("schedStart").value = new Date().toISOString().slice(0, 10);
+    }
+    UI.Modal.open("schedModal");
+  };
+
+  // клик вне / ESC / фокус / scroll-lock — общие через UI.Modal
+
+  document.getElementById("schedSaveBtn").addEventListener("click", async () => {
+    const work_days = parseInt(document.getElementById("schedWork").value, 10);
+    const rest_days = parseInt(document.getElementById("schedRest").value, 10);
+    const start_date = document.getElementById("schedStart").value;
+    if (!work_days || work_days <= 0 || rest_days < 0 || !start_date) { showErr("Проверьте данные графика"); return; }
+    try {
+      await CW.authFetch("/api/schedule", { method: "POST", body: JSON.stringify({ branch, name: schedWorker, work_days, rest_days, start_date }) });
+      UI.Modal.close("schedModal");
+      await load();
+      await loadWeek();
+    } catch (e) { showErr(e.message); }
+  });
+
+  document.getElementById("schedClearBtn").addEventListener("click", async () => {
+    try {
+      await CW.authFetch(`/api/schedule/${encodeURIComponent(branch)}/${encodeURIComponent(schedWorker)}`, { method: "DELETE" });
+      UI.Modal.close("schedModal");
+      await load();
+      await loadWeek();
+    } catch (e) { showErr(e.message); }
+  });
+
+  // ── Зарплата за период ───────────────────────────────────────────────
+  const salModal = document.getElementById("salModal");
+  UI.Modal.register("salModal", {});
+  let salWorker = null;
+  let salPeriod = "today";
+  let salIsAdmin = false;
+
+  window.CW_openSalary = (name) => {
+    salWorker = name;
+    salIsAdmin = false;
+    salPeriod = "today";
+    document.getElementById("salWorkerName").textContent = name;
+    document.querySelectorAll(".sal-tab").forEach(t => t.classList.toggle("active", t.dataset.period === "today"));
+    UI.Modal.open("salModal");
+    loadSalary();
+  };
+
+  window.CW_openAdminSalary = (name) => {
+    salWorker = name;
+    salIsAdmin = true;
+    salPeriod = "today";
+    document.getElementById("salWorkerName").textContent = `${name} (админ)`;
+    document.querySelectorAll(".sal-tab").forEach(t => t.classList.toggle("active", t.dataset.period === "today"));
+    UI.Modal.open("salModal");
+    loadSalary();
+  };
+
+  document.querySelectorAll(".sal-tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      salPeriod = tab.dataset.period;
+      document.querySelectorAll(".sal-tab").forEach(t => t.classList.toggle("active", t === tab));
+      loadSalary();
+    });
+  });
+
+  document.getElementById("salCloseBtn").addEventListener("click", () => UI.Modal.close("salModal"));
+  document.getElementById("salAvansBtn").addEventListener("click", () => { if (salWorker) giveAvans(salWorker, loadSalary); });
+
+  async function loadSalary() {
+    const summaryEl = document.getElementById("salSummary");
+    const daysEl = document.getElementById("salDays");
+    summaryEl.innerHTML = `<div class="empty-note" style="padding:10px 0">Загрузка…</div>`;
+    daysEl.innerHTML = "";
+    try {
+      // Единая карточка сотрудника: объединяет заработок по ВСЕМ его ролям
+      // (мойщик + администратор + любые будущие роли) под одним именем.
+      const data = await CW.authFetch(`/api/employee-stats?branch=${encodeURIComponent(branch)}&name=${encodeURIComponent(salWorker)}&period=${salPeriod}`);
+
+      const roleRows = Object.entries(data.by_role || {}).map(([role, amount]) => `
+        <div class="worker-row" style="padding:8px 14px">
+          <div style="flex:1;font-size:13px;font-weight:600">${role[0].toUpperCase() + role.slice(1)}</div>
+          <div style="font-size:13px;font-weight:700;color:var(--green)">${CW.money(amount)}</div>
+        </div>`).join("") || `<div class="empty-note">За этот период данных нет</div>`;
+
+      const advance = data.advance || 0;
+      const remaining = data.remaining !== undefined ? data.remaining : data.total - advance;
+      summaryEl.innerHTML = `
+        <div class="mini-stat"><div class="ms-label">Смен</div><div class="ms-value">${data.shifts}</div></div>
+        <div class="mini-stat"><div class="ms-label">Машин</div><div class="ms-value">${data.cars}</div></div>
+        <div class="mini-stat"><div class="ms-label">Общий заработок</div><div class="ms-value" style="color:var(--green)">${CW.money(data.total)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Аванс</div><div class="ms-value" style="color:var(--red,#e33)">${CW.money(advance)}</div></div>
+        <div class="mini-stat"><div class="ms-label">Остаток к выплате</div><div class="ms-value">${CW.money(remaining)}</div></div>
+      `;
+
+      const dayRows = (data.days || []).slice().reverse().map(d => `
+        <div class="worker-row" style="padding:10px 14px">
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">${d.date}</div>
+            <div class="worker-meta">${Object.entries(d.roles).map(([r, a]) => `${r}: ${CW.money(a)}`).join(" · ")}</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--green)">${CW.money(d.total)}</div>
+        </div>`).join("");
+
+      const avansRows = (data.advances || []).slice().reverse().map(a => `
+        <div class="worker-row" style="padding:8px 14px">
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">${a.date}</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:var(--red,#e33)">-${CW.money(a.amount)}</div>
+          <div class="icon-btn danger" title="Удалить запись" onclick="CW_delAvans('${salWorker.replace(/'/g, "\\'")}', ${a.idx})"><i class="ti ti-x"></i></div>
+        </div>`).join("");
+
+      daysEl.innerHTML = `
+        <div style="padding:8px 14px 2px;font-size:11px;color:var(--muted)">Разбивка по ролям (${data.roles.join(", ")})</div>
+        ${roleRows}
+        ${data.avg_per_shift ? `<div style="padding:8px 14px;font-size:12px;color:var(--muted)">Средний заработок за смену: ${CW.money(data.avg_per_shift)} · за автомобиль: ${CW.money(data.avg_per_car)}</div>` : ""}
+        <div style="padding:8px 14px 2px;font-size:11px;color:var(--muted)">По дням</div>
+        ${dayRows || `<div class="empty-note">За этот период данных нет</div>`}
+        <div style="padding:8px 14px 2px;font-size:11px;color:var(--muted)">Авансы за период</div>
+        ${avansRows || `<div class="empty-note">Авансов не было</div>`}
+      `;
+    } catch (e) {
+      summaryEl.innerHTML = "";
+      daysEl.innerHTML = `<div class="empty-note">${e.message}</div>`;
+    }
+  }
+
+  // ── Аванс ────────────────────────────────────────────────────────────
+  async function giveAvans(name, onDone) {
+    const amount = await amountDialog({
+      title: "Аванс",
+      hint: `Сумма аванса для ${name}.`,
+      defaultValue: 2000,
+    });
+    if (amount === null) return;
+    if (!amount) { showErr("Введите корректную сумму"); return; }
+    try {
+      await CW.authFetch("/api/advance", { method: "POST", body: JSON.stringify({ branch, name, amount }) });
+      if (onDone) onDone();
+    } catch (e) { showErr(e.message); }
+  }
+  window.CW_giveAvans = (name) => giveAvans(name, () => {
+    if (salModal.classList.contains("open") && salWorker === name) loadSalary();
+  });
+  window.CW_delAvans = async (name, idx) => {
+    const ok = await UI.Confirm.show({
+      title: "Удалить запись аванса?",
+      confirmText: "Удалить", danger: true,
+    });
+    if (!ok) return;
+    try {
+      await CW.authFetch(`/api/advance/${encodeURIComponent(branch)}/${encodeURIComponent(name)}/${idx}`, { method: "DELETE" });
+      if (salModal.classList.contains("open") && salWorker === name) loadSalary();
+    } catch (e) { showErr(e.message); }
+  };
+
+  // ── История дежурств администраторов (заполнение задним числом) ────
+  const adminHistModal = document.getElementById("adminHistModal");
+  UI.Modal.register("adminHistModal", {});
+
+  document.getElementById("adminHistBtn").addEventListener("click", openAdminHistory);
+  document.getElementById("adminHistCloseBtn").addEventListener("click", () => UI.Modal.close("adminHistModal"));
+
+  async function openAdminHistory() {
+    const list = document.getElementById("adminHistList");
+    list.innerHTML = `<div class="empty-note">Загрузка…</div>`;
+    UI.Modal.open("adminHistModal");
+    try {
+      const data = await CW.authFetch(`/api/admin-history?branch=${encodeURIComponent(branch)}`);
+      const admins = data.admins || [];
+      if (!data.days.length) {
+        list.innerHTML = `<div class="empty-note">Архив смен для этого филиала пока пуст</div>`;
+        return;
+      }
+      if (!admins.length) {
+        list.innerHTML = `<div class="empty-note">Сначала добавьте администраторов в список выше</div>`;
+        return;
+      }
+      list.innerHTML = data.days.map(d => `
+        <div class="worker-row" style="padding:10px 14px" data-date="${d.date}">
+          <div style="flex:1">
+            <div style="font-size:13px;font-weight:600">${d.date}</div>
+            <div class="worker-meta">${d.cars} машин · выручка ${CW.money(d.revenue)} · зарплата админа ${CW.money(d.admin_salary)}</div>
+          </div>
+          <select class="hist-admin-select" style="width:150px;height:36px">
+            <option value="">— не указан —</option>
+            ${admins.map(a => `<option value="${a}" ${a === d.admin_name ? "selected" : ""}>${a}</option>`).join("")}
+          </select>
+        </div>
+      `).join("");
+    } catch (e) {
+      list.innerHTML = `<div class="empty-note">${e.message}</div>`;
+    }
+  }
+
+  document.getElementById("adminHistSaveBtn").addEventListener("click", async () => {
+    const rows = document.querySelectorAll("#adminHistList [data-date]");
+    const assignments = {};
+    rows.forEach(row => {
+      const date = row.dataset.date;
+      const val = row.querySelector(".hist-admin-select").value;
+      assignments[date] = val;
+    });
+    if (!Object.keys(assignments).length) { UI.Modal.close("adminHistModal"); return; }
+    try {
+      await CW.authFetch("/api/admin-history", { method: "POST", body: JSON.stringify({ branch, assignments }) });
+      UI.Modal.close("adminHistModal");
+    } catch (e) { showErr(e.message); }
+  });
+
+  // ── Неделя ─────────────────────────────────────────────────────────
+  async function loadWeek() {
+    if (!branch) return;
+    try {
+      const data = await CW.authFetch(`/api/schedule/week?branch=${encodeURIComponent(branch)}`);
+      const weekSub = document.getElementById("weekSub");
+      const from = data.day_labels[0], to = data.day_labels[6];
+      weekSub.textContent = `${from} — ${to}`;
+
+      const table = document.getElementById("weekTable");
+      const workers = Object.keys(data.workers || {});
+      if (!workers.length) {
+        table.innerHTML = `<tr><td style="padding:20px 18px;color:var(--muted)">Нет сотрудников для отображения графика</td></tr>`;
+        return;
+      }
+      const head = `<tr><th>Сотрудник</th>${data.weekday_labels.map((wd, i) => `<th>${wd}<br>${data.day_labels[i]}</th>`).join("")}</tr>`;
+      const rows = workers.map(w => {
+        const cells = data.workers[w].map(on => `<td><span class="wk-cell ${on ? "on" : "off"}">${on ? "✓" : "—"}</span></td>`).join("");
+        return `<tr><td>${w}</td>${cells}</tr>`;
+      }).join("");
+      table.innerHTML = head + rows;
+    } catch (e) { /* не критично для страницы */ }
+  }
+}
+</script>
+</body>
+</html>

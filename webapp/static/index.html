@@ -1,0 +1,3403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<title>ClaudeFormula 2.0</title>
+<script>
+  (function(){
+    try{
+      var t = localStorage.getItem("cf_theme");
+      if (t === "light" || t === "dark") document.documentElement.setAttribute("data-theme", t);
+    }catch(e){}
+  })();
+</script>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="/static/js/ui-kit.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+/* ── PLATA — редизайн мини-аппа под фирменный стиль сайта ────────────────
+   Цвет: Plata Orange #FF5000 + чёрный/белый (без синего/бирюзового —
+   бренд-гайд platacard.mx фиксирует именно эту пару). Тот же принцип,
+   что и в webapp/static/css/theme-plata.css на сайте: карточки на
+   паспарту, оранжевый градиент как материал, без стеклянных
+   размытий/орбов (плоский, графичный стиль вместо предыдущего
+   Glass/Orb-скина).
+   Шрифты: Clash Display (заголовки/цифры) + General Sans (текст) —
+   те же, что на сайте, вместо прежнего Gosha Sans/Inter.
+   ────────────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#0A0A0A;
+  --surface-0:#161616;
+  --surface-1:#161616;
+  --surface-2:#202020;
+  --surface-3:#2B2B2B;
+  --text:#FFFFFF;
+  --text-secondary:#B6B4AF;
+  --text-muted:#847F79;
+  --border:rgba(255,255,255,0.09);
+  --border-strong:rgba(255,255,255,0.17);
+  --accent:#FF5000;
+  --accent-b:#FF4000;
+  --accent-tint:rgba(255,80,0,0.20);
+  --accent-gradient:linear-gradient(125deg,#FF4000 0%,#FF5000 46%,#FF711F 100%);
+  --green:#2ECC82;
+  --green-tint:rgba(46,204,130,0.18);
+  --red:#FF5B4E;
+  --red-tint:rgba(255,91,78,0.16);
+  --orange:#FF5000;
+  --orange-tint:rgba(255,80,0,0.20);
+  --purple:#A48CFF;
+  --purple-tint:rgba(164,140,255,0.18);
+  --good:#2ECC82;
+
+  --radius-xl:28px;
+  --radius-lg:20px;
+  --radius-md:14px;
+  --radius-sm:10px;
+
+  --font-display:'Clash Display','General Sans',-apple-system,sans-serif;
+  --font-body:'General Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+@import url('https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&f[]=general-sans@400,500,600,700&display=swap');
+
+h1,h2,h3,.font-display{font-family:var(--font-display)}
+
+html[data-theme="light"]{
+  --bg:#F6F6F5;
+  --surface-0:#FFFFFF;
+  --surface-1:#FFFFFF;
+  --surface-2:#F6F6F5;
+  --surface-3:#EFEFED;
+  --text:#0D0D0D;
+  --text-secondary:#6E6B66;
+  --text-muted:#9A9790;
+  --border:rgba(13,13,13,0.09);
+  --border-strong:rgba(13,13,13,0.16);
+  --accent:#FF5000;
+  --accent-b:#FF4000;
+  --accent-tint:rgba(255,80,0,0.10);
+  --accent-gradient:linear-gradient(125deg,#FF4000 0%,#FF5000 46%,#FF711F 100%);
+  --green:#1B8A57;
+  --green-tint:rgba(27,138,87,0.12);
+  --red:#D63A2E;
+  --red-tint:rgba(214,58,46,0.12);
+  --orange:#FF5000;
+  --orange-tint:rgba(255,80,0,0.10);
+  --purple:#7A5CFF;
+  --purple-tint:rgba(122,92,255,0.12);
+  --good:#1B8A57;
+}
+
+/* ── decor: старый слой орбов/стеклянных размытий из Glass/Orb v2
+   полностью убран (и из CSS, и из разметки) — плоские карточки, как
+   на сайте. Это правило раньше скрывало ещё оставшуюся в теле разметку
+   орбов; теперь и разметки нет, оставлено как явное подтверждение
+   отсутствия орбов в этом файле. */
+
+.glass-card{
+  background:var(--surface-1);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+}
+
+.hero-glass{
+  position:relative; isolation:isolate; overflow:hidden;
+  border-radius:var(--radius-xl);
+  padding:26px 24px 22px;
+  background:
+    radial-gradient(120% 140% at 8% 0%, rgba(255,255,255,.20) 0%, transparent 55%),
+    radial-gradient(120% 140% at 95% 15%, rgba(255,255,255,.12) 0%, transparent 50%),
+    linear-gradient(155deg, #FF4000 0%, #FF5000 55%, #FF2E00 100%);
+  background-size:180% 180%, 180% 180%, 100% 100%;
+  animation:hero-shift 16s ease-in-out infinite;
+  box-shadow:0 20px 44px -18px rgba(255,80,0,0.45);
+  color:#fff;
+}
+@keyframes hero-shift{
+  0%,100%{ background-position:0% 0%, 100% 0%, 0 0; }
+  50%{ background-position:30% 20%, 70% 30%, 0 0; }
+}
+.hero-glass::after{
+  content:""; position:absolute; width:220px; height:220px; border-radius:50%;
+  right:-70px; top:-70px;
+  background:radial-gradient(circle, rgba(255,255,255,.22), transparent 65%);
+  filter:blur(2px);
+}
+
+.pill{ display:inline-block; font-size:10.5px; font-weight:700; padding:2.5px 8px; border-radius:100px; }
+.pill.ok{ background:var(--green-tint); color:var(--green); }
+.pill.wip{ background:var(--accent-tint); color:var(--accent); }
+.pill.muted{ background:var(--surface-3); color:var(--text-muted); }
+.pill.bad{ background:var(--red-tint); color:var(--red); }
+
+/* ── Запись (booking) — агенда дня ──────────────────────────────────────── */
+.bk-daynav{ display:flex; align-items:center; justify-content:space-between; padding:2px 16px 14px; }
+.bk-daynav-btn{ width:36px; height:36px; border-radius:12px; background:var(--surface-1); border:0.5px solid var(--border); display:flex; align-items:center; justify-content:center; color:var(--text); }
+.bk-daynav-btn:active{ background:var(--surface-2); }
+.bk-daynav-date{ font-family:var(--font-display); font-size:15px; font-weight:600; text-align:center; position:relative; }
+.bk-daynav-date input{ position:absolute; inset:0; opacity:0; width:100%; height:100%; }
+.bk-box-head{ display:flex; align-items:center; gap:8px; padding:14px 16px 8px; }
+.bk-box-head .n{ width:24px; height:24px; border-radius:8px; background:var(--accent-tint); color:var(--accent); font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.bk-box-head .name{ font-size:13px; font-weight:600; color:var(--text); }
+.bk-box-head .off{ font-size:11px; color:var(--text-muted); margin-left:auto; }
+.bk-appt{ display:flex; align-items:flex-start; gap:12px; padding:12px 16px; cursor:pointer; }
+.bk-appt:active{ background:var(--surface-2); }
+.bk-appt+.bk-appt{ border-top:1px solid var(--border); }
+.bk-appt-time{ font-family:var(--font-mono,monospace); font-size:12.5px; font-weight:600; color:var(--text-secondary); white-space:nowrap; padding-top:1px; min-width:38px; }
+.bk-appt-body{ flex:1; min-width:0; }
+.bk-appt-title{ font-size:14px; font-weight:600; color:var(--text); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bk-appt-sub{ font-size:12px; color:var(--text-muted); margin-top:2px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.bk-appt-status{ padding-top:1px; }
+.bk-empty-box{ padding:10px 16px 16px; font-size:13px; color:var(--text-muted); }
+.bk-fab{ position:fixed; right:16px; bottom:86px; width:52px; height:52px; border-radius:18px; background:var(--accent-gradient); color:#fff; display:flex; align-items:center; justify-content:center; font-size:22px; box-shadow:0 12px 24px -8px rgba(255,80,0,0.5); z-index:40; }
+.bk-fab:active{ transform:scale(0.94); }
+
+.action-tile{
+  display:flex; flex-direction:column; align-items:center; gap:9px;
+  padding:16px 4px 13px;
+  background:var(--surface-1); border:1px solid var(--border);
+  border-radius:var(--radius-md);
+  cursor:pointer;
+  transition:transform .15s cubic-bezier(.3,.7,.4,1), background .15s ease;
+}
+.action-tile:active{ transform:scale(.94); background:var(--surface-2); }
+.action-tile .sq{ width:44px; height:44px; border-radius:14px; display:flex; align-items:center; justify-content:center; color:#fff; }
+.action-tile .sq.b1{ background:var(--accent-gradient); }
+.action-tile .sq.b2{ background:#2A2A2A; }
+html[data-theme="light"] .action-tile .sq.b2{ background:#0D0D0D; }
+.action-tile .sq.b3{ background:var(--green); }
+.action-tile .sq.b4{ background:var(--purple); }
+
+/* ── RESET ─────────────────────────────────────────────────────────────── */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html{height:100%;-webkit-text-size-adjust:none}
+body{
+  min-height:100%;
+  font-family:var(--font-body);
+  letter-spacing:-0.01em;
+  background:var(--bg);
+  color:var(--text);
+  padding-bottom:calc(80px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ── LAYOUT ─────────────────────────────────────────────────────────────── */
+.container{max-width:460px;margin:0 auto;position:relative;z-index:1}
+.page{padding:0 0 8px}
+.px{padding-left:16px;padding-right:16px}
+
+/* ── TAB BAR — чёрная пилюля с оранжевым акцентом (как rail на сайте) ──── */
+.tabbar{
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;
+  background:#0D0D0D;
+  border-top:0.5px solid rgba(255,255,255,0.08);
+  padding-bottom:env(safe-area-inset-bottom);
+  max-width:460px;margin:0 auto;
+  z-index:50;
+}
+.tab{
+  flex:1;text-align:center;
+  padding:10px 0 8px;
+  font-size:10px;font-weight:500;
+  color:rgba(255,255,255,0.45);
+  cursor:pointer;
+  transition:color .15s ease;
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+.tab.active{color:var(--accent)}
+.tab i{font-size:22px;display:block}
+.hidden{display:none!important}
+
+/* ── TOPBAR ─────────────────────────────────────────────────────────────── */
+.topbar{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:16px 16px 10px;
+}
+.topbar-title{font-family:var(--font-display);font-size:22px;font-weight:600;letter-spacing:-0.02em}
+.topbar-sub{
+  font-size:13px;color:var(--text-secondary);
+  margin-top:1px;
+  display:flex;align-items:center;gap:3px;cursor:pointer;
+}
+.topbar-sub i{font-size:11px;color:var(--text-muted)}
+.bell-btn{
+  width:34px;height:34px;border-radius:50%;
+  background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;
+  border:1px solid var(--border);
+}
+.bell-btn i{font-size:17px;color:var(--text-secondary)}
+
+/* ── BACK HEADER ─────────────────────────────────────────────────────────  */
+.back-header{
+  display:flex;align-items:center;gap:10px;
+  padding:14px 16px 10px;
+}
+.back-btn{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface-2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;border:1px solid var(--border);flex-shrink:0;
+}
+.back-btn i{font-size:15px;color:var(--text-secondary)}
+.back-header-title{font-family:var(--font-display);font-size:17px;font-weight:600}
+
+/* ── SHIFT BAR (используется тж. в Кассе) ── */
+.shift-bar{
+  margin:10px 16px 0;
+  background:var(--surface-1);border-radius:16px;
+  padding:12px 16px;
+  display:flex;align-items:center;gap:12px;
+  border:1px solid var(--border);
+}
+.shift-bar i{font-size:17px;color:var(--text-muted)}
+.shift-bar .sb-body{flex:1}
+.shift-bar .sb-text{font-size:13px;font-weight:500;margin-bottom:6px}
+.shift-bar .sb-sub{font-size:11px;color:var(--text-muted);margin-bottom:6px}
+.sb-track{height:4px;background:var(--surface-2);border-radius:2px}
+.sb-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .4s ease}
+
+/* ── WAVE CHART (используется тж. в Отчётах) ── */
+.wave-chart{margin-top:14px}
+.wave-chart svg{display:block;width:100%;height:44px}
+
+/* ── SECTION LABEL ── */
+.section-label{
+  font-size:13px;font-weight:600;color:var(--text-secondary);
+  padding:14px 16px 6px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.section-label .see-all{
+  font-size:12px;font-weight:500;color:var(--text-muted);cursor:pointer;
+}
+
+/* ── HOME SCREEN ──────────────────────────────────────────────────────── */
+.home-wrap{ position:relative; padding:14px 16px calc(96px + env(safe-area-inset-bottom,0px)); }
+
+.home-topbar{ display:flex; align-items:center; justify-content:space-between; padding:2px 2px 16px; }
+.home-who{ display:flex; align-items:center; gap:11px; }
+.home-avatar{
+  width:38px; height:38px; border-radius:50%;
+  background:var(--accent-gradient);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display);font-weight:700; font-size:14px; color:#fff; flex-shrink:0;
+}
+.home-who-text .hi{ font-size:12px; color:var(--text-muted); font-weight:500; }
+.home-who-text .name{ font-family:var(--font-display); font-size:15px; font-weight:600; margin-top:1px; }
+.home-branch-chip{
+  display:flex; align-items:center; gap:6px;
+  background:var(--surface-1); border:1px solid var(--border);
+  padding:9px 13px 9px 12px; border-radius:100px;
+  font-size:13px; font-weight:600; color:var(--text);
+  cursor:pointer; max-width:52%;
+}
+.home-branch-chip span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.home-branch-chip i{ opacity:.55; font-size:12px; flex-shrink:0; }
+
+.home-hero{ padding:26px 22px 20px; }
+.home-hero-top{ display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1; }
+.home-hero-label{ font-size:13px; font-weight:600; color:rgba(255,255,255,.78); }
+.home-hero-badge{
+  font-size:12px; font-weight:700; color:#0A0A0A;
+  background:rgba(255,255,255,.92);
+  padding:5px 10px; border-radius:100px;
+  display:flex; align-items:center; gap:4px;
+}
+.home-hero-badge.negative{ background:rgba(10,10,10,.35); color:#fff; }
+.home-hero-sum{
+  position:relative; z-index:1;
+  font-family:var(--font-display);
+  font-size:40px; font-weight:600; letter-spacing:-1.2px;
+  margin:10px 0 2px; font-variant-numeric:tabular-nums; color:#fff;
+}
+.home-hero-sum span{ font-size:19px; font-weight:600; opacity:.6; margin-left:2px; }
+.home-hero-sub{ position:relative; z-index:1; font-size:13px; color:rgba(255,255,255,.72); font-weight:500; }
+.home-hero-wave{ position:relative; z-index:1; margin-top:16px; height:36px; }
+.home-hero-wave svg{ width:100%; height:100%; display:block; }
+
+.home-segmented{
+  display:flex; gap:2px; margin-top:14px;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.18);
+  padding:3px; border-radius:100px;
+}
+.home-seg{ flex:1; text-align:center; padding:9px 0; font-size:13px; font-weight:600; color:rgba(255,255,255,.7); border-radius:100px; cursor:pointer; transition:color .2s,background .2s; }
+.home-seg.active{ background:rgba(255,255,255,.95); color:#0A0A0A; }
+
+.home-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+.home-stat .ic{
+  width:28px; height:28px; border-radius:9px;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--accent-tint); color:var(--accent); margin-bottom:10px; font-size:14px;
+}
+.home-stats .home-stat:nth-child(1) .ic{ background:var(--accent-tint); color:var(--accent); }
+.home-stats .home-stat:nth-child(2) .ic{ background:var(--purple-tint); color:var(--purple); }
+.home-stats .home-stat:nth-child(3) .ic{ background:var(--green-tint); color:var(--green); }
+.home-stat{ padding:14px 12px; }
+.home-stat .val{ font-family:var(--font-display); font-size:18px; font-weight:600; letter-spacing:-.3px; font-variant-numeric:tabular-nums; }
+.home-stat .lab{ font-size:11px; color:var(--text-muted); margin-top:2px; font-weight:500; }
+
+.home-section{ margin-top:24px; }
+.home-section-head{ display:flex; align-items:baseline; justify-content:space-between; padding:0 2px 12px; }
+.home-section-head h2{ font-family:var(--font-display); font-size:16px; font-weight:600; margin:0; letter-spacing:-.2px; }
+.home-section-head a{ font-size:12.5px; color:var(--text-muted); font-weight:600; cursor:pointer; }
+
+.home-actions{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.home-actions .lab{ font-size:10.5px; font-weight:600; color:var(--text-secondary); text-align:center; line-height:1.25; }
+
+.home-list .row{
+  display:flex; align-items:center; gap:12px;
+  padding:13px 16px; border-bottom:1px solid var(--border);
+  cursor:pointer;
+}
+.home-list .row:last-child{ border-bottom:none; }
+.home-row-ic{
+  width:38px; height:38px; border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  background:var(--surface-2); color:var(--text-secondary); font-size:16px;
+}
+.home-row-mid{ flex:1; min-width:0; }
+.home-row-title{ font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.home-row-sub{ font-size:12px; color:var(--text-muted); margin-top:2px; }
+.home-row-right{ text-align:right; flex-shrink:0; }
+.home-row-price{ font-family:var(--font-display);font-size:14.5px; font-weight:600; font-variant-numeric:tabular-nums; }
+
+.home-team{ display:flex; gap:14px; overflow-x:auto; padding:2px 2px 4px; scrollbar-width:none; }
+.home-team::-webkit-scrollbar{ display:none; }
+.home-member{ flex-shrink:0; width:64px; text-align:center; cursor:pointer; }
+.home-member .av{
+  width:52px; height:52px; border-radius:50%; margin:0 auto 8px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-display); font-weight:700; font-size:15px; position:relative;
+  border:1px solid var(--border);
+}
+.home-member .dot{
+  position:absolute; bottom:1px; right:1px; width:12px; height:12px; border-radius:50%;
+  background:var(--good); border:2.5px solid var(--bg);
+}
+.home-member .dot.off{ background:var(--text-muted); }
+.home-member .nm{ font-size:11.5px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.home-member .amt{ font-size:10.5px; color:var(--text-muted); margin-top:1px; font-variant-numeric:tabular-nums; }
+.home-member.more .av{ border:1.5px dashed var(--border-strong); background:transparent; color:var(--text-muted); }
+
+@media (max-width:380px){
+  .home-hero-sum{ font-size:34px; }
+  .home-actions .lab{ font-size:10px; }
+}
+
+/* ── HERO-CARD (используется в Отчётах — раньше без стилей, теперь как hero-glass) ── */
+.hero-card{
+  position:relative; isolation:isolate; overflow:hidden;
+  margin:0 16px; border-radius:var(--radius-xl);
+  padding:22px 20px 20px;
+  background:
+    radial-gradient(120% 140% at 8% 0%, rgba(255,255,255,.20) 0%, transparent 55%),
+    linear-gradient(155deg, #FF4000 0%, #FF5000 55%, #FF2E00 100%);
+  box-shadow:0 20px 44px -18px rgba(255,80,0,0.4);
+  color:#fff;
+}
+.hero-card.green-card{
+  background:
+    radial-gradient(120% 140% at 8% 0%, rgba(255,255,255,.16) 0%, transparent 55%),
+    linear-gradient(155deg, #219A63 0%, #1B8A57 60%, #0F6B42 100%);
+  box-shadow:0 20px 44px -18px rgba(27,138,87,0.4);
+}
+.hc-label{ font-size:13px; font-weight:600; color:rgba(255,255,255,.78); }
+.hc-amount{ font-family:var(--font-display); font-size:32px; font-weight:600; letter-spacing:-1px; margin-top:8px; font-variant-numeric:tabular-nums; }
+.hc-sub{ font-size:12.5px; color:rgba(255,255,255,.72); margin-top:4px; font-weight:500; }
+
+/* ── OPERATIONS LIST ─────────────────────────────────────────────────────── */
+.op-list{margin:0 16px;background:var(--surface-1);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border)}
+.op-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 14px;cursor:pointer;
+  transition:background .1s;
+}
+.op-row+.op-row{border-top:1px solid var(--border)}
+.op-row:active{background:var(--surface-2)}
+.op-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.op-dot.orange{background:var(--accent)}
+.op-info{flex:1;min-width:0}
+.op-name{font-size:13px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.op-meta{font-size:11px;color:var(--text-muted);margin:1px 0 0}
+.op-price{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--text);white-space:nowrap}
+
+/* ── EXPENSE ROW ─────────────────────────────────────────────────────────── */
+.expense-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:11px 14px;
+}
+.expense-row+.expense-row{border-top:1px solid var(--border)}
+.expense-name{font-size:14px;font-weight:500}
+.expense-right{display:flex;align-items:center;gap:10px}
+.expense-amount{font-family:var(--font-display);font-size:14px;font-weight:600;color:var(--red)}
+.expense-del{font-size:12px;color:var(--red);cursor:pointer;font-weight:500;padding:2px 6px}
+
+/* ── КНОПКИ ──────────────────────────────────────────────────────────────── */
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+.btn{
+  width:100%;height:52px;border-radius:100px;
+  background:var(--accent-gradient);color:#fff;
+  box-shadow:0 8px 20px -8px rgba(255,80,0,0.4);
+  font-size:16px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:transform .12s cubic-bezier(0,0,.2,1),opacity .12s;
+}
+.btn:active{transform:scale(0.97);opacity:.92}
+.btn.secondary{background:var(--surface-1);color:var(--text);border:1px solid var(--border);box-shadow:none}
+.btn.danger-outline{background:var(--red-tint);color:var(--red);box-shadow:none}
+.btn.ghost{background:transparent;color:var(--text-secondary);border:1px solid var(--border);box-shadow:none}
+.btn-sm{height:44px;font-size:14px;border-radius:100px}
+.btn-wrap{padding:12px 16px}
+.btn-logout{
+  width:100%;height:50px;border-radius:100px;
+  background:var(--red-tint);color:var(--red);
+  font-size:16px;font-weight:600;margin-top:10px;
+}
+
+/* ── LOADING STATE ───────────────────────────────────────────────────────── */
+.btn.loading{color:transparent;pointer-events:none;position:relative}
+.btn.loading::after{
+  content:"";position:absolute;left:50%;top:50%;
+  width:18px;height:18px;margin:-9px 0 0 -9px;
+  border-radius:50%;border:2px solid rgba(255,255,255,0.3);
+  border-top-color:#fff;animation:spin .7s linear infinite;
+}
+.btn.secondary.loading::after,.btn.ghost.loading::after{border:2px solid var(--border-strong);border-top-color:var(--text-secondary)}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── FORM ELEMENTS ───────────────────────────────────────────────────────── */
+.field-label{font-size:12px;color:var(--text-muted);font-weight:600;padding:0 2px 6px;text-transform:uppercase;letter-spacing:0.04em}
+.field-wrap{padding:0 16px 12px}
+input,select,textarea{
+  width:100%;padding:14px 16px;
+  border-radius:14px;border:none;
+  background:var(--surface-1);color:var(--text);
+  font-size:15px;font-family:inherit;
+  -webkit-appearance:none;appearance:none;
+  border:1px solid var(--border);
+}
+input:focus,select:focus,textarea:focus{outline:1.5px solid var(--accent)}
+textarea{resize:none;min-height:72px}
+::placeholder{color:var(--text-muted)}
+.field-select{position:relative}
+.field-select select{padding-right:36px}
+.field-select::after{
+  content:"";position:absolute;right:14px;top:50%;
+  transform:translateY(-60%) rotate(45deg);
+  width:7px;height:7px;
+  border-right:1.5px solid var(--text-muted);
+  border-bottom:1.5px solid var(--text-muted);
+  pointer-events:none;
+}
+
+/* ── CARD ────────────────────────────────────────────────────────────────── */
+.card{
+  background:var(--surface-1);border-radius:var(--radius-lg);
+  border:1px solid var(--border);overflow:hidden;
+  margin:0 16px;
+}
+.card+.card{margin-top:10px}
+.card-pad{padding:16px}
+
+/* ── ROW ─────────────────────────────────────────────────────────────────── */
+.row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;cursor:pointer;
+  transition:background .1s;
+}
+.row+.row{border-top:1px solid var(--border)}
+.row:active{background:var(--surface-2)}
+.row-name{font-size:15px;font-weight:500;display:flex;align-items:center;gap:10px}
+.row-sub{font-size:12px;color:var(--text-muted);margin-top:2px}
+.row-right{text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.row-price{font-family:var(--font-display);font-size:15px;font-weight:600}
+.chevron{color:var(--text-muted);font-size:15px}
+
+/* ── CLIENTS (GAP-C1) ────────────────────────────────────────────────────── */
+.cl-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12.5px;flex-shrink:0}
+.cl-discount-badge{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-tint);padding:4px 10px;border-radius:100px}
+.cl-discount-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:14px 16px}
+
+/* ── ICON BADGE ──────────────────────────────────────────────────────────── */
+.ib{
+  width:30px;height:30px;border-radius:9px;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:15px;flex-shrink:0;
+}
+.ib.blue{background:var(--accent-tint);color:var(--accent)}
+.ib.green{background:var(--green-tint);color:var(--green)}
+.ib.orange{background:var(--accent-tint);color:var(--accent)}
+.ib.red{background:var(--red-tint);color:var(--red)}
+.ib.purple{background:var(--purple-tint);color:var(--purple)}
+.ib.gray{background:var(--surface-2);color:var(--text-muted)}
+
+/* ── SEGMENTED CONTROL ───────────────────────────────────────────────────── */
+.segmented{
+  display:flex;background:var(--surface-1);border-radius:100px;padding:3px;
+  margin:0 16px 14px;border:1px solid var(--border);
+}
+.seg{
+  flex:1;text-align:center;padding:8px 0;
+  font-size:13px;font-weight:600;color:var(--text-secondary);
+  border-radius:100px;cursor:pointer;transition:all .15s;
+}
+.seg.active{background:var(--accent-gradient);color:#fff}
+
+/* ── МОЯ СМЕНА: раскрывающийся список машин по дням ──────────────────────── */
+.my-stats-day-cars{margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.my-stats-car-row{display:flex;justify-content:space-between;padding:6px 0;font-size:13px;color:var(--text-secondary)}
+.my-stats-car-row span:last-child{font-weight:600;color:var(--text)}
+
+/* ── ДОNUT ───────────────────────────────────────────────────────────────── */
+.donut-wrap{display:flex;align-items:center;gap:22px;padding:18px 16px}
+.donut{width:110px;height:110px;border-radius:50%;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center}
+.donut::after{content:"";position:absolute;inset:14px;background:var(--surface-1);border-radius:50%}
+.donut .center{position:relative;z-index:1;text-align:center}
+.donut .center b{font-family:var(--font-display);font-size:13px;display:block;font-weight:600}
+.donut .center span{font-size:10px;color:var(--text-muted)}
+.legend{flex:1}
+.legend .item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:12px}
+.legend .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.legend .item b{margin-left:auto;font-weight:700}
+
+/* ── WORKER CARD ─────────────────────────────────────────────────────────── */
+.worker-card{padding:14px 16px;cursor:pointer;transition:background .1s}
+.worker-card+.worker-card{border-top:1px solid var(--border)}
+.worker-card:active{background:var(--surface-2)}
+.wc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.wc-info{display:flex;align-items:center;gap:10px}
+.wc-av{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:12px;font-weight:700;flex-shrink:0;
+}
+.wc-name{font-size:14px;font-weight:600}
+.wc-sub{font-size:11px;color:var(--text-muted);margin-top:1px}
+.wc-sal{font-family:var(--font-display);font-size:16px;font-weight:600}
+.wc-bar{height:4px;background:var(--surface-2);border-radius:2px;margin-top:2px}
+.wc-bar-fill{height:100%;border-radius:2px;background:var(--accent-gradient);transition:width .4s}
+.wc-pct{font-size:11px;color:var(--text-muted);text-align:right;margin-top:4px}
+
+/* ── ADD WORKER BTN ──────────────────────────────────────────────────────── */
+.add-worker-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  color:var(--accent);font-size:15px;font-weight:600;
+  padding:14px 16px;cursor:pointer;
+}
+.add-worker-btn:active{opacity:.7}
+
+/* ── SETTINGS ────────────────────────────────────────────────────────────── */
+.settings-avatar{
+  width:72px;height:72px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-display);font-size:26px;font-weight:700;margin:0 auto 6px;
+}
+.settings-name{font-family:var(--font-display);font-size:17px;font-weight:600;text-align:center;margin:0 0 2px}
+.settings-role{font-size:13px;color:var(--text-muted);text-align:center;margin:0 0 20px}
+.settings-section{margin:16px 0 0}
+.settings-section-label{
+  font-size:11px;color:var(--text-muted);
+  text-transform:uppercase;letter-spacing:0.05em;font-weight:600;
+  padding:0 20px 8px;
+}
+.settings-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;cursor:pointer;transition:background .1s;
+}
+.settings-row+.settings-row{border-top:1px solid var(--border)}
+.settings-row:active{background:var(--surface-2)}
+.sr-left{display:flex;align-items:center;gap:12px}
+.sr-label{font-size:15px;font-weight:500}
+.sr-right{display:flex;align-items:center;gap:6px;color:var(--text-muted)}
+.sr-right i{font-size:14px}
+.sr-badge{font-size:12px;color:var(--text-muted)}
+
+/* ── BRANCH PICKER ───────────────────────────────────────────────────────── */
+.branch-card{
+  background:var(--surface-1);border-radius:18px;
+  padding:16px;margin:0 16px 10px;
+  cursor:pointer;border:1px solid var(--border);
+  transition:transform .15s,border-color .15s;
+  display:flex;justify-content:space-between;align-items:flex-start;
+}
+.branch-card:active{transform:scale(0.98)}
+.branch-card.selected{border-color:var(--accent)}
+.bc-pin{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--accent);margin-bottom:4px;font-weight:600}
+.bc-amount{font-family:var(--font-display);font-size:20px;font-weight:600;margin:2px 0}
+.bc-sub{font-size:12px;color:var(--text-muted)}
+.bc-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.bc-trend{color:var(--green);font-size:13px}
+.bc-mini-chart{width:80px;height:30px}
+
+/* ── СВАЙП КАРТОЧКА ──────────────────────────────────────────────────────── */
+.swipe-card{
+  background:var(--surface-1);border-radius:16px;padding:16px;
+  position:relative;touch-action:pan-y;border:1px solid var(--border);
+  margin:0 16px;
+}
+.swipe-card .sc-counter{position:absolute;top:12px;right:14px;font-size:11px;color:var(--text-muted)}
+.swipe-card .sc-car{font-family:var(--font-display);font-size:17px;font-weight:600;margin:0 0 3px}
+.swipe-card .sc-sub{font-size:12px;color:var(--text-secondary);margin:0 0 10px}
+.swipe-card .sc-price{font-family:var(--font-display);font-size:24px;font-weight:600}
+.swipe-card .sc-status{
+  display:inline-flex;align-items:center;margin-top:10px;
+  font-size:11px;font-weight:700;padding:3px 10px;border-radius:8px;cursor:pointer;
+}
+.swipe-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin:10px 16px 0}
+.swipe-nav button{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--surface-1);border:1px solid var(--border);
+  color:var(--text);display:flex;align-items:center;justify-content:center;
+}
+.swipe-dots{display:flex;gap:5px}
+.swipe-dots span{width:5px;height:5px;border-radius:50%;background:var(--surface-3)}
+.swipe-dots span.on{background:var(--text)}
+
+/* ── SWIPE TO DELETE ─────────────────────────────────────────────────────── */
+.swipe-item{position:relative;overflow:hidden;border-radius:14px;margin-bottom:8px}
+.swipe-bg{position:absolute;inset:0;background:var(--red);display:flex;align-items:center;justify-content:flex-end;padding-right:20px;border-radius:14px}
+.swipe-bg i{color:#fff;font-size:20px}
+.swipe-fg{position:relative;background:var(--surface-1);border-radius:14px;transition:transform .18s ease;touch-action:pan-y}
+.swipe-fg.dragging{transition:none}
+
+/* ── STATUS BADGE ────────────────────────────────────────────────────────── */
+.status-badge{
+  font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;
+  display:inline-block;margin-top:3px;
+}
+.status-done{background:var(--green-tint);color:var(--green)}
+.status-progress{background:var(--accent-tint);color:var(--accent)}
+
+/* ── REPORT TILES ────────────────────────────────────────────────────────── */
+.tile-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 16px}
+.tile{
+  background:var(--surface-1);border-radius:var(--radius-md);padding:16px 10px;
+  text-align:center;cursor:pointer;border:1px solid var(--border);
+  transition:transform .12s;
+}
+.tile:active{transform:scale(0.96)}
+.tile.primary{background:var(--accent-gradient);border-color:transparent}
+.tile.primary i,.tile.primary p{color:#fff!important}
+.tile i{font-size:22px;color:var(--text-secondary)}
+.tile p{font-size:12px;font-weight:500;color:var(--text-secondary);margin-top:6px}
+
+/* ── CHIP SERVICES ───────────────────────────────────────────────────────── */
+.chip-label{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:13px 16px;cursor:pointer;transition:background .1s;
+}
+.chip-label+.chip-label{border-top:1px solid var(--border)}
+.chip-label.active{background:var(--surface-2)}
+.chip-l{font-size:14px;font-weight:500}
+.chip-r{display:flex;align-items:center;gap:10px}
+.chip-p{font-size:13px;color:var(--text-secondary)}
+.tick{
+  width:22px;height:22px;border-radius:50%;
+  border:1.5px solid var(--border-strong);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:transparent;flex-shrink:0;
+  transition:all .15s;
+}
+.tick.on{background:var(--accent);border-color:var(--accent);color:#fff;transform:scale(1.06)}
+
+/* ── PRESET CHIPS ────────────────────────────────────────────────────────── */
+.preset-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;margin-bottom:14px}
+.preset-row::-webkit-scrollbar{display:none}
+.preset-chip{
+  flex-shrink:0;background:var(--surface-1);border:1px solid var(--border);
+  border-radius:12px;padding:9px 14px;cursor:pointer;transition:transform .12s;
+}
+.preset-chip:active{transform:scale(0.96)}
+.preset-chip .pc-name{font-size:12px;font-weight:600;display:block}
+.preset-chip .pc-count{font-size:10px;color:var(--text-muted)}
+
+/* ── SEARCH ──────────────────────────────────────────────────────────────── */
+.search-wrap{position:relative;margin:0 16px 10px}
+.search-wrap i.ti-search{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px;pointer-events:none}
+.search-wrap input{padding-left:40px;margin-bottom:0}
+.search-wrap .clear-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);font-size:16px;padding:4px;cursor:pointer;display:none}
+.search-wrap.has-value .clear-btn{display:block}
+
+/* ── FILTER CHIPS ────────────────────────────────────────────────────────── */
+.filter-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 16px 4px;margin-bottom:10px}
+.filter-chips::-webkit-scrollbar{display:none}
+.filter-chip{
+  flex-shrink:0;background:var(--surface-1);border-radius:20px;
+  padding:7px 14px;font-size:12px;font-weight:500;color:var(--text-secondary);
+  white-space:nowrap;cursor:pointer;border:1px solid var(--border);transition:all .1s;
+}
+.filter-chip.active{background:var(--text);color:var(--bg);border-color:transparent;font-weight:700}
+
+/* ── HISTORY ─────────────────────────────────────────────────────────────── */
+.hist-row{padding:11px 16px}
+.hist-row+.hist-row{border-top:1px solid var(--border)}
+.hist-top{display:flex;justify-content:space-between;align-items:center;font-size:13px;margin-bottom:3px}
+.hist-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;text-transform:uppercase}
+.hist-badge.add{background:var(--green-tint);color:var(--green)}
+.hist-badge.edit{background:var(--accent-tint);color:var(--accent)}
+.hist-badge.delete{background:var(--red-tint);color:var(--red)}
+.hist-meta{font-size:11px;color:var(--text-muted);margin:1px 0 0}
+
+/* ── SKELETON ────────────────────────────────────────────────────────────── */
+.skeleton{background:var(--surface-1);border-radius:16px;height:56px;margin:0 16px 10px;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.empty{color:var(--text-muted);font-size:14px;text-align:center;padding:32px 16px}
+
+/* ── EMPTY STATE ─────────────────────────────────────────────────────────── */
+.empty-state{text-align:center;padding:40px 24px}
+.empty-state-icon{
+  width:56px;height:56px;border-radius:16px;margin:0 auto 14px;
+  background:var(--accent-tint);color:var(--accent);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+}
+.empty-state-text{color:var(--text-secondary);font-size:14px;line-height:1.4}
+.empty-state .btn{margin-top:16px;width:auto;padding:0 20px;height:44px}
+
+/* Тост теперь общий — рендерится через UI.Toast (ui-kit.js), но у этой
+   страницы своя отдельная тема (:root выше, без theme-plata.css), поэтому
+   стили .ui-toast* объявлены здесь локально, на переменных мини-аппа, а не
+   в общем theme-plata.css (там другие --paper/--ink и т.д.). Также отступ
+   снизу больше, чем на сайте (28px) — учитывает нижнюю таб-панель. */
+.ui-toast-wrap{
+  position:fixed;left:50%;bottom:calc(76px + env(safe-area-inset-bottom));
+  transform:translateX(-50%);z-index:200;display:flex;flex-direction:column-reverse;
+  gap:8px;align-items:center;pointer-events:none;max-width:calc(100vw - 32px);
+}
+.ui-toast{
+  display:flex;align-items:center;gap:8px;background:var(--surface-2);color:var(--text);
+  border:1px solid var(--border-strong);border-radius:14px;padding:10px 16px;
+  font-size:14px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.28);
+  opacity:0;transform:translateY(8px);transition:opacity .18s ease,transform .18s ease;
+  pointer-events:auto;max-width:420px;
+}
+.ui-toast.show{opacity:1;transform:translateY(0)}
+.ui-toast i{font-size:16px;flex-shrink:0}
+.ui-toast .ui-toast-text{flex:1}
+.ui-toast.success i{color:var(--green)}
+.ui-toast.error i{color:var(--red)}
+.ui-toast.warning i{color:var(--orange)}
+.ui-toast.info i{color:var(--purple)}
+.ui-toast-close{
+  background:none;border:none;color:var(--text-secondary);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;padding:2px;border-radius:6px;flex-shrink:0;
+}
+.ui-toast-close:hover{color:var(--text);background:var(--border)}
+
+/* ── BOTTOM SHEET ────────────────────────────────────────────────────────── */
+.sheet-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90;opacity:0;pointer-events:none;transition:opacity .18s}
+.sheet-backdrop.show{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:0;right:0;bottom:0;max-width:460px;margin:0 auto;
+  background:var(--surface-0);border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  padding:8px 8px calc(12px + env(safe-area-inset-bottom));
+  z-index:91;transform:translateY(100%);
+  transition:transform .22s cubic-bezier(.32,.72,0,1);
+  border-top:1px solid var(--border);
+}
+.sheet.show{transform:translateY(0)}
+.sheet .handle{width:36px;height:4px;background:var(--border-strong);border-radius:2px;margin:6px auto 10px}
+.sheet-title{font-size:13px;color:var(--text-muted);text-align:center;padding:0 16px 10px}
+.sheet-action{display:flex;align-items:center;gap:12px;padding:14px 16px;font-size:15px;border-radius:12px;cursor:pointer;font-weight:500;color:var(--text)}
+.sheet-action:active{background:var(--surface-2)}
+.sheet-action.destructive{color:var(--red)}
+.sheet-action i{font-size:19px;width:22px;text-align:center}
+
+/* ── UI.BottomSheet — ввод текста/чисел (PHASE 9, этап 1) ──────────────────
+   ui-kit.js::BottomSheet.create() строит разметку `.ui-sheet-bg/.ui-sheet/
+   .ui-sheet-handle/.ui-sheet-body`, но сам не даёт CSS — на сайте эти классы
+   определены в webapp/static/css/theme-plata.css на переменных --paper/--ink,
+   которых здесь нет (см. комментарий у .ui-toast* выше — тот же принцип).
+   Здесь те же классы объявлены локально на переменных мини-аппа, с тем же
+   визуальным языком, что и already-существующий `.sheet`/`.sheet-backdrop`
+   (action sheet ниже) — так UI.BottomSheet не спорит с уже привычным
+   Telegram-нативным нижним листом, а использует тот же паспарту/радиус/
+   safe-area, что и он. Используется новым inputSheet() ниже — заменяет
+   window.prompt() там, где нужен произвольный текст/число (Telegram WebApp
+   API нативного prompt не имеет, поэтому раньше здесь был браузерный). */
+.ui-sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:none}
+.ui-sheet-bg.open{display:block}
+.ui-sheet{
+  position:fixed;left:0;right:0;bottom:0;max-width:460px;margin:0 auto;
+  background:var(--surface-0);border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  padding:8px 0 calc(12px + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform .22s cubic-bezier(.32,.72,0,1);
+  border-top:1px solid var(--border);
+  display:flex;flex-direction:column;max-height:88vh;
+}
+.ui-sheet-bg.open .ui-sheet{transform:translateY(0)}
+.ui-sheet-handle{width:36px;height:4px;border-radius:2px;background:var(--border-strong);margin:6px auto 10px;flex-shrink:0}
+.ui-sheet-body{flex:1;overflow-y:auto;padding:0 16px 4px}
+@media(prefers-reduced-motion:reduce){.ui-sheet{transition:none}}
+
+/* ── PULL TO REFRESH ─────────────────────────────────────────────────────── */
+.ptr-indicator{display:flex;align-items:center;justify-content:center;height:0;overflow:hidden;color:var(--text-muted);transition:height .15s}
+.ptr-indicator i{font-size:18px;animation:spin .7s linear infinite}
+
+/* ── TAG ROW (сотрудники в настройках) ──────────────────────────────────── */
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px}
+.tag{background:var(--surface-1);border-radius:12px;padding:7px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;border:1px solid var(--border)}
+.tag:active{background:var(--surface-2)}
+.tag .tav{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.tag span{font-size:12px;font-weight:500}
+.tag-add{border:1px dashed var(--border-strong);border-radius:12px;padding:7px 14px;color:var(--text-muted);font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer}
+
+/* ── GROUP LABEL ─────────────────────────────────────────────────────────── */
+.group-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em;padding:14px 16px 8px;font-weight:600}
+
+/* ── THEME SWITCH ────────────────────────────────────────────────────────── */
+.theme-switch{display:flex;background:var(--surface-2);border-radius:11px;padding:3px;gap:2px;margin:0 16px}
+.theme-switch .topt{
+  flex:1;text-align:center;padding:9px;font-size:13px;font-weight:600;
+  color:var(--text-secondary);border-radius:9px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .15s;
+}
+.theme-switch .topt.active{background:var(--surface-0);color:var(--text)}
+
+/* ── SPLIT PAY ───────────────────────────────────────────────────────────── */
+.split-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0}
+.split-row+.split-row{border-top:1px solid var(--border)}
+
+/* ── STAT LABEL ──────────────────────────────────────────────────────────── */
+.stat-label{font-size:12px;color:var(--text-muted);padding:6px 16px}
+
+/* ── TIMELINE ────────────────────────────────────────────────────────────── */
+.timeline{position:relative;padding-left:16px}
+.timeline::before{content:"";position:absolute;left:5px;top:4px;bottom:4px;width:1px;background:var(--border-strong)}
+.tl-item{position:relative;margin-bottom:12px;cursor:pointer}
+.tl-item:last-child{margin-bottom:0}
+.tl-dot{position:absolute;left:-16px;top:4px;width:7px;height:7px;border-radius:50%;background:var(--text-muted)}
+.tl-item:first-child .tl-dot{background:var(--green)}
+.tl-time{font-size:11px;color:var(--text-muted)}
+.tl-name{font-size:13px;font-weight:500;margin:1px 0 0}
+
+/* ── FADE IN ─────────────────────────────────────────────────────────────── */
+[id^="view-"]{animation:fadein .18s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── HOME STAT (для страницы мойщиков) ──────────────────────────────────── */
+.home-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 16px 0}
+.home-stat-box{background:var(--surface-1);border-radius:var(--radius-md);padding:14px 16px;border:1px solid var(--border)}
+.home-stat-box span{font-size:11px;color:var(--text-muted);display:flex;align-items:center;gap:4px;margin-bottom:4px;font-weight:500}
+.home-stat-box b{font-family:var(--font-display);font-size:20px;font-weight:600}
+
+/* ── TREND PILL ─────────────────────────────────────────────────────────── */
+.trend-pill{
+  display:inline-flex;align-items:center;
+  font-size:11px;font-weight:700;
+  padding:3px 8px;border-radius:10px;
+  background:var(--green-tint);color:var(--green);
+}
+.trend-pill.negative{background:var(--red-tint);color:var(--red)}
+
+/* ── REPORTS STAT GRID ───────────────────────────────────────────────────── */
+.rstat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 16px 0}
+.rstat-box{background:var(--surface-1);border-radius:var(--radius-md);padding:14px 16px;border:1px solid var(--border)}
+.rstat-box p:first-child{font-size:12px;color:var(--text-secondary);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.rstat-box p:last-child{font-family:var(--font-display);font-size:19px;font-weight:600}
+
+/* ── EXPENSE SUM ROW ─────────────────────────────────────────────────────── */
+.expenses-header{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:0 4px;
+}
+.expenses-header .sum{font-size:13px;font-weight:700;color:var(--red)}
+
+/* ── РАСХОД TOTAL CARD ───────────────────────────────────────────────────── */
+.total-card{
+  margin:0 16px;background:var(--surface-1);border-radius:16px;
+  padding:14px 16px;border:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.total-card .tl{font-size:14px;color:var(--text-secondary)}
+.total-card .tr{font-family:var(--font-display);font-size:24px;font-weight:600}
+.total-card .tr-input{font-family:var(--font-display);font-size:24px;font-weight:600;background:none;border:0;text-align:right;color:var(--text);width:130px;padding:0}
+.total-card .tr-input:focus{outline:none}
+.total-reset-link{font-size:12px;color:var(--accent);margin-right:8px;cursor:pointer;display:none}
+.total-reset-link.show{display:inline}
+.price-hint{font-size:12px;color:var(--text-secondary);padding:8px 16px 0;line-height:1.4}
+
+/* ── МЕНЮ «ЕЩЁ» — иконка пункта (qb-icon) ─────────────────────────────────── */
+.qb-icon{background:var(--accent-tint);color:var(--accent)}
+
+/* ── REDUCE MOTION ───────────────────────────────────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  .btn,.quick-btn,.preset-chip,.tick,.chip-label,.row,.tile,[id^="view-"]{
+    animation:none!important;transition:opacity .15s linear!important;
+  }
+  .btn:active,.quick-btn:active,.preset-chip:active,.tile:active{transform:none!important}
+}
+
+/* ── MINI APP NAV TRANSITIONS (Phase 4c) ─────────────────────────────────── */
+/* Applied only for the duration of a transition; removed right after via JS
+   cleanup so views return to normal document flow (container height is
+   pinned in px by JS for that window so nothing collapses/jumps). */
+.nav-transitioning{position:absolute;top:0;left:0;right:0}
+@keyframes navInForward{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes navOutForward{from{transform:translateX(0)}to{transform:translateX(-28%)}}
+@keyframes navInBack{from{transform:translateX(-28%)}to{transform:translateX(0)}}
+@keyframes navOutBack{from{transform:translateX(0)}to{transform:translateX(100%)}}
+@keyframes navInFade{from{opacity:0}to{opacity:1}}
+@keyframes navOutFade{from{opacity:1}to{opacity:0}}
+.nav-in-forward{animation:navInForward .26s cubic-bezier(.32,.72,0,1) both}
+.nav-out-forward{animation:navOutForward .26s cubic-bezier(.32,.72,0,1) both}
+.nav-in-back{animation:navInBack .26s cubic-bezier(.32,.72,0,1) both}
+.nav-out-back{animation:navOutBack .26s cubic-bezier(.32,.72,0,1) both}
+.nav-in-fade{animation:navInFade .18s ease both}
+.nav-out-fade{animation:navOutFade .18s ease both}
+@media(prefers-reduced-motion:reduce){
+  .nav-in-forward,.nav-out-forward,.nav-in-back,.nav-out-back,.nav-in-fade,.nav-out-fade{
+    animation:none!important;
+  }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div id="view-home"></div>
+  <div id="view-add" class="hidden"></div>
+  <div id="view-reports" class="hidden"></div>
+  <div id="view-workers" class="hidden"></div>
+  <div id="view-settings" class="hidden"></div>
+</div>
+
+<div class="tabbar">
+  <div class="tab active" id="tab-home" data-tab="home"><i class="ti ti-home"></i>Главная</div>
+  <div class="tab" id="tab-cash" data-tab="cash"><i class="ti ti-cash"></i>Касса</div>
+  <div class="tab" id="tab-cars" data-tab="all-cars"><i class="ti ti-car"></i>Машины</div>
+  <div class="tab" id="tab-finance" data-tab="finance"><i class="ti ti-receipt"></i>Финансы</div>
+  <div class="tab" id="tab-my-stats" data-tab="my-stats"><i class="ti ti-wallet"></i>Моя смена</div>
+  <div class="tab" id="tab-more" data-tab="more"><i class="ti ti-dots"></i>Ещё</div>
+</div>
+
+<script>
+/* ─── INIT ──────────────────────────────────────────────────────────────── */
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
+try{ tg.setHeaderColor("#0A0A0A"); tg.setBackgroundColor("#0A0A0A"); }catch(e){}
+
+window.addEventListener("error", (e) => {
+  const el = document.getElementById("view-home");
+  if(el && !el.innerHTML.trim()){
+    el.innerHTML = `<div class="px" style="padding-top:20px"><p class="empty">Ошибка: ${e.message||"неизвестная"}<br><button class="btn secondary btn-sm" style="margin-top:12px" onclick="location.reload()">Обновить</button></p></div>`;
+  }
+});
+
+const API = "";
+const initData = tg.initData || "";
+const headers = {"Content-Type":"application/json","X-Init-Data":initData};
+
+let CFG = null, ME = null;
+let BRANCH = (tg.initDataUnsafe?.start_param) || null;
+let selectedServices = [], customServices = [];
+
+async function api(path, opts={}) {
+  const res = await fetch(API+path, {...opts, headers:{...headers,...(opts.headers||{})}});
+  if(!res.ok){ tg.showAlert("Ошибка: "+(await res.text())); throw new Error("api"); }
+  const ct = res.headers.get("content-type")||"";
+  return ct.includes("application/json") ? res.json() : res;
+}
+function fmt(n){ return (n||0).toLocaleString("ru-RU")+" ₽"; }
+function haptic(type="light"){ try{ tg.HapticFeedback.impactOccurred(type); }catch(e){} }
+// Тонкая обёртка над общим UI.Toast (ui-kit.js, PHASE 3 — Global
+// Interaction System). Сигнатура toast(text, type) сохранена, чтобы не
+// трогать все ~30 точек вызова ниже; своей DOM/CSS-реализации у страницы
+// больше нет (стили — см. .ui-toast* выше, локальные для мини-аппа).
+function toast(text,type="success"){
+  UI.Toast.show(text, type);
+}
+function initials(name){ return (name||"?").trim().split(/\s+/).map(w=>w[0]).slice(0,2).join("").toUpperCase(); }
+const AVATAR_COLORS = ["#FF5000","#1B8A57","#7A5CFF","#D63A2E","#FF8A00","#0F9E6B","#9B6BFF"];
+function avatarColor(name){ let h=0; for(const c of (name||"")) h=(h*31+c.charCodeAt(0))>>>0; return AVATAR_COLORS[h%AVATAR_COLORS.length]; }
+function paymentLabel(c){
+  if(c.payment_split) return Object.entries(c.payment_split).map(([k,v])=>`${k} ${v}₽`).join(" + ");
+  return c.payment;
+}
+function skeleton(n=3){ return Array(n).fill('<div class="skeleton"></div>').join(""); }
+function emptyState(icon,text,cta){
+  return `<div class="empty-state">
+    <div class="empty-state-icon"><i class="ti ${icon}"></i></div>
+    <div class="empty-state-text">${text}</div>
+    ${cta?`<button class="btn btn-sm" onclick="${cta.onclick}"><i class="ti ${cta.icon||"ti-plus"}"></i>${cta.label}</button>`:""}
+  </div>`;
+}
+
+/* ─── WAVE CHART ─────────────────────────────────────────────────────────── */
+function buildWaveSvg(values, activeIdx, maxVal, lineColor){
+  const w=300,h=44,n=values.length,pad=4;
+  const stepX=(w-pad*2)/(Math.max(n-1,1));
+  const pts=values.map((v,i)=>{
+    const x=pad+i*stepX;
+    const y=h-pad-((v||0)/maxVal)*(h-pad*2);
+    return [x,y];
+  });
+  let d=`M ${pts[0][0]} ${pts[0][1]}`;
+  for(let i=0;i<pts.length-1;i++){
+    const [x0,y0]=pts[i],[x1,y1]=pts[i+1];
+    const mx=(x0+x1)/2;
+    d+=` C ${mx} ${y0}, ${mx} ${y1}, ${x1} ${y1}`;
+  }
+  const areaD = d + ` L ${pts[pts.length-1][0]} ${h} L ${pad} ${h} Z`;
+  const dots=pts.map(([x,y],i)=>i<=activeIdx
+    ?`<circle cx="${x}" cy="${y}" r="${i===activeIdx?4.5:2}" fill="${lineColor}" ${i===activeIdx?`stroke="rgba(255,255,255,0.3)" stroke-width="3"`:""}/>`
+    :"").join("");
+  const gradId=`g${Math.random().toString(36).slice(2,6)}`;
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <defs><linearGradient id="${gradId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${lineColor}" stop-opacity="0.2"/><stop offset="100%" stop-color="${lineColor}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${areaD}" fill="url(#${gradId})"/>
+    <path d="${d}" fill="none" stroke="${lineColor}" stroke-width="2" stroke-linecap="round" opacity="0.9"/>
+    ${dots}
+  </svg>`;
+}
+
+/* ─── ТЕМА ───────────────────────────────────────────────────────────────── */
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme",t);
+  try{ localStorage.setItem("cf_theme",t); }catch(e){}
+  try{
+    if(t==="light"){ tg.setHeaderColor("#F6F6F5"); tg.setBackgroundColor("#F6F6F5"); }
+    else{ tg.setHeaderColor("#0A0A0A"); tg.setBackgroundColor("#0A0A0A"); }
+  }catch(e){}
+}
+function currentTheme(){ return document.documentElement.getAttribute("data-theme")||(tg.colorScheme==="light"?"light":"dark"); }
+window.setTheme=(t)=>{ haptic(); applyTheme(t); const el=document.getElementById("theme-switch"); if(el) el.outerHTML=renderThemeSwitch(); };
+function renderThemeSwitch(){
+  const t=currentTheme();
+  return `<div class="theme-switch" id="theme-switch" style="margin:14px 16px 0">
+    <div class="topt ${t==="dark"?"active":""}" onclick="setTheme('dark')"><i class="ti ti-moon"></i>Тёмная</div>
+    <div class="topt ${t==="light"?"active":""}" onclick="setTheme('light')"><i class="ti ti-sun"></i>Светлая</div>
+  </div>`;
+}
+
+/* ─── LOADING BTN ────────────────────────────────────────────────────────── */
+async function withLoading(btn, fn){
+  if(!btn||btn.classList.contains("loading")) return;
+  btn.classList.add("loading");
+  try{ await fn(); }finally{ btn.classList.remove("loading"); }
+}
+
+/* ─── BOTTOM SHEET ───────────────────────────────────────────────────────── */
+function ensureSheetHost(){
+  if(document.getElementById("sheet-backdrop")) return;
+  document.body.insertAdjacentHTML("beforeend",`<div class="sheet-backdrop" id="sheet-backdrop" onclick="closeSheet()"></div><div class="sheet" id="sheet"></div>`);
+}
+function openSheet(title, actions){
+  ensureSheetHost();
+  const sheet=document.getElementById("sheet");
+  sheet.innerHTML=`<div class="handle"></div><div class="sheet-title">${title}</div>`+
+    actions.map(a=>`<div class="sheet-action ${a.destructive?"destructive":""}" onclick="closeSheet();(${a.fn})()"><i class="ti ${a.icon}"></i>${a.label}</div>`).join("");
+  document.getElementById("sheet-backdrop").classList.add("show");
+  sheet.classList.add("show");
+}
+window.closeSheet=()=>{
+  const s=document.getElementById("sheet"),b=document.getElementById("sheet-backdrop");
+  if(s) s.classList.remove("show");
+  if(b) b.classList.remove("show");
+};
+window.openSheet=openSheet;
+
+/* PHASE 9 (этап 1, Mini App UX-унификация): inputSheet() — общий диалог
+   ввода текста/чисел на UI.BottomSheet (ui-kit.js), заменяет window.prompt()
+   тем же способом, каким Web CRM в своё время заменил свои prompt()'ы на
+   amountDialog()/stockDialog() (workers.html/cash.html, Stage 23 Phase 4/5)
+   — тот же принцип "один общий диалог, отличается только набором полей",
+   только здесь BottomSheet вместо центрированной модалки (Telegram-нативный
+   нижний лист, а не десктопный .modal-bg — см. ROADMAP_V4.md Phase 9:
+   "Do not blindly share desktop CSS").
+   fields: [{id,label,type:"text"|"number"|"select"|"date",defaultValue,placeholder}]
+   Возвращает Promise<object|null> — null при отмене/закрытии, иначе
+   {id: value, ...} с уже выполненной базовой валидацией (see validate). */
+let _inputSheetSeq=0;
+function inputSheet({title,fields,confirmLabel,validate}){
+  return new Promise((resolve)=>{
+    const sheetId="input-sheet-"+(++_inputSheetSeq);
+    const body=document.createElement("div");
+    body.innerHTML=`
+      <div style="font-family:var(--font-display);font-size:17px;font-weight:600;padding:2px 2px 14px">${title}</div>
+      ${fields.map(f=>`
+        <div class="field-wrap" style="padding-left:0;padding-right:0">
+          <div class="field-label">${f.label}</div>
+          ${f.type==="select"?`
+          <div class="field-select">
+            <select id="${sheetId}-${f.id}">
+              ${f.options.map(o=>`<option value="${o.value}" ${o.value===f.defaultValue?"selected":""}>${o.label}</option>`).join("")}
+            </select>
+          </div>`:`
+          <input type="${f.type==='number'?'number':(f.type==='date'?'date':'text')}" id="${sheetId}-${f.id}"
+            value="${f.defaultValue!=null?String(f.defaultValue).replace(/"/g,'&quot;'):''}"
+            placeholder="${f.placeholder||''}" ${f.type==='number'?'inputmode="decimal"':''}>`}
+        </div>`).join("")}
+      <div class="btn-wrap" style="padding-left:0;padding-right:0;display:flex;gap:8px">
+        <button type="button" class="btn secondary" id="${sheetId}-cancel" style="flex:1">Отмена</button>
+        <button type="button" class="btn" id="${sheetId}-save" style="flex:1">${confirmLabel||"Сохранить"}</button>
+      </div>`;
+    let resolved=false;
+    // Каждый вызов получает свой sheetId — BottomSheet.create() кеширует
+    // записи по id (см. ui-kit.js::sheetRegistry), так что новый id на
+    // каждый диалог избегает конфликта с предыдущим уже закрытым листом.
+    // Сам DOM-узел удаляем вручную по завершении анимации закрытия —
+    // ui-kit.js оставляет узел в DOM (только снимает .open), это его
+    // штатное поведение и для Drawer/Modal тоже.
+    const entry=UI.BottomSheet.create(sheetId,{
+      bodyEl:body,
+      onClose:()=>{ if(!resolved){resolved=true;resolve(null);} setTimeout(()=>entry.el.remove(),240); },
+    });
+    function finish(result){ resolved=true; resolve(result); entry.close(); setTimeout(()=>entry.el.remove(),240); }
+    body.querySelector(`#${sheetId}-cancel`).addEventListener("click",()=>finish(null));
+    body.querySelector(`#${sheetId}-save`).addEventListener("click",()=>{
+      const values={};
+      for(const f of fields){
+        const raw=body.querySelector(`#${sheetId}-${f.id}`).value;
+        values[f.id]=f.type==="number"?(raw===""?NaN:parseFloat(raw)):raw.trim();
+      }
+      if(validate){
+        const err=validate(values);
+        if(err){ tg.showAlert(err); return; }
+      }
+      finish(values);
+    });
+    entry.open();
+    requestAnimationFrame(()=>body.querySelector("input")?.focus());
+  });
+}
+
+/* ─── PULL TO REFRESH ────────────────────────────────────────────────────── */
+function attachPullToRefresh(viewId, onRefresh){
+  const el=document.getElementById(viewId);
+  if(!el||el.dataset.ptrBound) return;
+  el.dataset.ptrBound="1";
+  let startY=null,pulling=false;
+  const ind=document.createElement("div");
+  ind.className="ptr-indicator";
+  ind.innerHTML=`<i class="ti ti-loader-2"></i>`;
+  el.prepend(ind);
+  el.addEventListener("touchstart",e=>{ if(el.scrollTop<=0){startY=e.touches[0].clientY;pulling=true;} },{passive:true});
+  el.addEventListener("touchmove",e=>{
+    if(!pulling||startY===null) return;
+    const dy=e.touches[0].clientY-startY;
+    if(dy>0&&el.scrollTop<=0) ind.style.height=Math.min(50,dy*.5)+"px";
+  },{passive:true});
+  el.addEventListener("touchend",async()=>{
+    if(!pulling) return;
+    const h=parseInt(ind.style.height||"0",10);
+    pulling=false;startY=null;
+    if(h>30){haptic("medium");await onRefresh();}
+    ind.style.height="0px";
+  });
+}
+
+/* ─── TABS ───────────────────────────────────────────────────────────────── */
+document.querySelectorAll(".tab").forEach(t=>t.addEventListener("click",()=>{ haptic(); switchTab(t.dataset.tab, undefined, "tab"); }));
+function switchTab(name, editNum){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===name));
+  document.querySelectorAll("[id^=view-]").forEach(v=>v.classList.add("hidden"));
+  const viewEl=document.getElementById("view-"+name);
+  if(viewEl) viewEl.classList.remove("hidden");
+  if(name==="home") renderHome();
+  if(name==="add") renderAdd(editNum);
+  if(name==="reports") renderReports();
+  if(name==="workers") renderWorkers();
+  if(name==="my-stats") renderMyStats();
+  if(name==="settings") renderSettings();
+  if(name==="schedule") renderScheduleWeek();
+  if(name==="employees") renderEmployees();
+}
+
+async function ensureMe(){
+  // ВАЖНО: ME кэшируется по BRANCH — если запросили ME для одного филиала,
+  // а BRANCH сменился, нельзя переиспользовать старый ответ (иначе роль
+  // "протекает" с одного филиала на другой, например мойщик выглядит
+  // админом там, где он не назначен админом).
+  if(!ME || ME.__branch !== BRANCH){
+    ME = await api(`/api/me?branch=${encodeURIComponent(BRANCH||"")}`);
+    ME.__branch = BRANCH;
+  }
+  // Права считаем СТРОГО по текущему филиалу: владелец или назначенный
+  // админ именно этого филиала. Всё остальное — ограниченный доступ
+  // "мойщика", независимо от того, числится ли человек сотрудником
+  // именно этого филиала (по умолчанию — минимум прав, а не максимум).
+  const isPrivileged = !!ME.is_owner || !!ME.is_branch_admin;
+  document.getElementById("tab-my-stats")?.classList.toggle("hidden", !ME.is_employee);
+  ["tab-home","tab-cash","tab-cars","tab-finance","tab-more"].forEach(id=>{
+    document.getElementById(id)?.classList.toggle("hidden", !isPrivileged);
+  });
+  if(!isPrivileged && document.querySelector(".tab.active")?.dataset.tab!=="my-stats"){
+    switchTab("my-stats");
+  }
+  return ME;
+}
+
+/* ─── BRANCH PICKER ──────────────────────────────────────────────────────── */
+async function ensureBranch(){
+  if(BRANCH) return;
+  const el=document.getElementById("view-home");
+  el.innerHTML=`<div class="topbar"><div><div class="topbar-title">ClaudeFormula 2.0</div><div style="font-size:12px;color:var(--text-muted);margin-top:2px">Выберите филиал</div></div></div>${skeleton(3)}`;
+  try{ CFG=CFG||await api("/api/config"); }
+  catch(e){
+    el.innerHTML=`<div class="topbar"><div><div class="topbar-title">ClaudeFormula 2.0</div></div></div><div style="padding:24px 16px"><p class="empty">Не удалось связаться с сервером.<br>Проверь подключение.</p><div class="btn-wrap"><button class="btn secondary" onclick="location.reload()">Обновить</button></div></div>`;
+    return;
+  }
+  let branchStats = [];
+  try {
+    const r = await api("/api/branches/summary");
+    branchStats = r.branches || [];
+  } catch(e){}
+  const statByBranch = {};
+  branchStats.forEach(b => { statByBranch[b.branch] = b; });
+
+  el.innerHTML=`
+    <div class="topbar"><div><div class="topbar-title">Выбери филиал</div></div></div>
+    <div style="padding:8px 0">
+      ${CFG.branches.map((b)=>{
+        const st = statByBranch[b] || { total: 0, cars: 0, trend: [0,0,0,0,0] };
+        const maxT = Math.max(1, ...st.trend);
+        const pts = st.trend.map((v,i) => `${i*20},${30 - Math.round((v/maxT)*26)}`).join(" ");
+        const trendUp = st.trend[st.trend.length-1] >= (st.trend[0] || 0);
+        return `
+        <div class="branch-card" onclick="pickBranch('${b.replace(/'/g,"\\'")}')">
+          <div>
+            <div class="bc-pin"><i class="ti ti-map-pin"></i>${b}</div>
+            <div class="bc-amount">${fmt(st.total)}</div>
+            <div class="bc-sub">${st.cars} машин сегодня</div>
+          </div>
+          <div class="bc-right">
+            <i class="ti ${trendUp?'ti-trending-up':'ti-trending-down'} bc-trend" style="color:${trendUp?'var(--green)':'var(--red)'}"></i>
+            <svg class="bc-mini-chart" viewBox="0 0 80 30"><polyline points="${pts}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`;
+}
+window.pickBranch=(b)=>{ BRANCH=b; ME=null; haptic("medium"); switchTab("home"); };
+
+/* ─── ГЛАВНАЯ ────────────────────────────────────────────────────────────── */
+async function renderHome(){
+  if(!BRANCH) return ensureBranch();
+  await ensureMe();
+  if(document.querySelector(".tab.active")?.dataset.tab!=="home") return;
+  const el=document.getElementById("view-home");
+  el.innerHTML=`<div class="home-wrap"><div class="home-topbar"><div class="home-who"><div class="home-avatar">${initials(ME?.name||"")}</div><div class="home-who-text"><div class="hi">${greetingWord()}</div><div class="name">${(ME?.name||"").split(/\s+/)[0]||"—"}</div></div></div><div class="home-branch-chip" onclick="switchBranch()"><span>${BRANCH}</span><i class="ti ti-chevron-down"></i></div></div>${skeleton(4)}</div>`;
+  const [{session,summary},{workers,schedule},week]=await Promise.all([
+    api(`/api/session?branch=${encodeURIComponent(BRANCH)}`),
+    api(`/api/workers?branch=${encodeURIComponent(BRANCH)}`),
+    api(`/api/reports/week?branch=${encodeURIComponent(BRANCH)}`).catch(()=>({grand_total:0,days:[]})),
+  ]);
+  const totalSalary=Object.values(summary.washer_salaries||{}).reduce((a,b)=>a+b,0);
+  const avgCheck=session.cars.length?Math.round(summary.total/session.cars.length):0;
+  const now=new Date(), todayIdx=(now.getDay()+6)%7;
+  const byDate={};
+  (week.days||[]).forEach(d=>{byDate[d.date]=d.total;});
+  const weekTotals=[];
+  for(let i=0;i<=todayIdx;i++){
+    const dt=new Date(now); dt.setDate(now.getDate()-(todayIdx-i));
+    const key=dt.toLocaleDateString("ru-RU").split(".").map((p,idx)=>idx<2?p.padStart(2,"0"):p).join(".");
+    weekTotals.push(byDate[key]||0);
+  }
+  const maxVal=Math.max(1,...weekTotals);
+  const waveSvg=buildWaveSvg(weekTotals,todayIdx,maxVal,"#fff");
+
+  const prevAvg=weekTotals.slice(0,-1).reduce((a,b)=>a+b,0)/Math.max(1,weekTotals.length-1);
+  const trendPct=prevAvg>0?Math.round(((summary.total-prevAvg)/prevAvg)*100):null;
+  const trendBadge=trendPct===null?"":
+    `<div class="home-hero-badge${trendPct<0?" negative":""}"><i class="ti ${trendPct<0?"ti-trending-down":"ti-trending-up"}" style="font-size:12px"></i>${trendPct>=0?"+":""}${trendPct}%</div>`;
+
+  const workingCount=workers.filter(w=>schedule?.[w]?.working!==false).length;
+  const teamHtml=workers.slice(0,6).map(w=>{
+    const working=schedule?.[w]?.working!==false;
+    const col=avatarColor(w);
+    const salary=(summary.washer_salaries||{})[w]||0;
+    return `<div class="home-member" onclick="uiWorkerQuick('${w.replace(/'/g,"\\'")}')">
+      <div class="av" style="background:linear-gradient(140deg,${col}33,${col}11);color:${col}">${initials(w)}<span class="dot${working?"":" off"}"></span></div>
+      <div class="nm">${w}</div>
+      <div class="amt">${fmt(salary)}</div>
+    </div>`;
+  }).join("");
+  const moreTeam=workers.length>6?`<div class="home-member more" onclick="switchTab('workers')"><div class="av"><i class="ti ti-dots"></i></div><div class="nm">Ещё</div></div>`:"";
+
+  const recentRows=session.cars.length?session.cars.slice().reverse().slice(0,4).map(c=>{
+    const paid=c.payment!=="Долг"&&c.payment!=="unpaid";
+    return `<div class="row" onclick="switchTab('cash')">
+      <div class="home-row-ic"><i class="ti ti-car"></i></div>
+      <div class="home-row-mid"><div class="home-row-title">${c.num||c.brand||"Машина"}${c.service?" · "+c.service:""}</div><div class="home-row-sub">${c.washer||""}${c.time?" · "+c.time:""}</div></div>
+      <div class="home-row-right"><div class="home-row-price">${fmt(c.total||0)}</div><span class="pill ${paid?"ok":"wip"}">${paid?"Оплачено":"В работе"}</span></div>
+    </div>`;
+  }).join(""):"";
+
+  el.innerHTML=`
+    <div class="home-wrap">
+      <div class="home-topbar">
+        <div class="home-who">
+          <div class="home-avatar">${initials(ME?.name||"")}</div>
+          <div class="home-who-text"><div class="hi">${greetingWord()}</div><div class="name">${(ME?.name||"").split(/\s+/)[0]||"—"}</div></div>
+        </div>
+        <div class="home-branch-chip" onclick="switchBranch()"><span>${BRANCH}</span><i class="ti ti-chevron-down"></i></div>
+      </div>
+
+      <div class="hero-glass home-hero">
+        <div class="home-hero-top">
+          <div class="home-hero-label">Выручка сегодня</div>
+          ${trendBadge}
+        </div>
+        <div class="home-hero-sum">${(summary.total||0).toLocaleString("ru-RU")} <span>₽</span></div>
+        <div class="home-hero-sub">${session.cars.length} машин${workers.length?" · "+workingCount+" мойщик"+(workingCount===1?"":workingCount<5?"а":"ов")+" на смене":""}</div>
+        <div class="home-hero-wave">${waveSvg}</div>
+      </div>
+
+      <div class="home-stats">
+        <div class="glass-card home-stat"><div class="ic"><i class="ti ti-car"></i></div><div class="val">${session.cars.length}</div><div class="lab">Машин</div></div>
+        <div class="glass-card home-stat"><div class="ic"><i class="ti ti-receipt-2"></i></div><div class="val">${avgCheck.toLocaleString("ru-RU")}</div><div class="lab">Средний чек</div></div>
+        <div class="glass-card home-stat"><div class="ic"><i class="ti ti-credit-card-pay"></i></div><div class="val">${totalSalary.toLocaleString("ru-RU")}</div><div class="lab">Выплаты</div></div>
+      </div>
+
+      <div class="home-section">
+        <div class="home-section-head"><h2>Действия</h2></div>
+        <div class="home-actions">
+          <div class="action-tile" onclick="switchTab('add')"><div class="sq b1"><i class="ti ti-square-rounded-plus"></i></div><div class="lab">Добавить<br>машину</div></div>
+          <div class="action-tile" onclick="switchTab('cash')"><div class="sq b2"><i class="ti ti-cash"></i></div><div class="lab">Касса</div></div>
+          <div class="action-tile" onclick="switchTab('workers')"><div class="sq b3"><i class="ti ti-users"></i></div><div class="lab">Сотрудники</div></div>
+          <div class="action-tile" onclick="switchTab('reports')"><div class="sq b4"><i class="ti ti-chart-bar"></i></div><div class="lab">Отчёты</div></div>
+        </div>
+      </div>
+
+      <div class="home-section">
+        <div class="home-section-head"><h2>Сегодня в мойке</h2><a onclick="switchTab('cash')">Все машины</a></div>
+        ${session.cars.length
+          ?`<div class="glass-card home-list">${recentRows}</div>`
+          :emptyState("ti-car","Сегодня ещё не было ни одной машины",{label:"Добавить машину",onclick:"switchTab('add')"})}
+      </div>
+
+      ${workers.length?`<div class="home-section">
+        <div class="home-section-head"><h2>На смене</h2></div>
+        <div class="home-team">${teamHtml}${moreTeam}</div>
+      </div>`:""}
+    </div>
+  `;
+  attachPullToRefresh("view-home",renderHome);
+}
+function greetingWord(){
+  const h=new Date().getHours();
+  if(h<5) return "Доброй ночи";
+  if(h<12) return "С добрым утром";
+  if(h<18) return "Добрый день";
+  return "Добрый вечер";
+}
+
+/* ─── КАССА (операции смены — вынесено из «Главной») ─────────────────────── */
+async function renderCash(){
+  if(!BRANCH) return ensureBranch();
+  await ensureMe();
+  const el=document.getElementById("view-cash");
+  el.innerHTML=`<div class="topbar"><div><div class="topbar-title">Касса</div><div class="topbar-sub">${BRANCH}</div></div></div>${skeleton(4)}`;
+  const {session,summary}=await api(`/api/session?branch=${encodeURIComponent(BRANCH)}`);
+  el.innerHTML=`
+    <div class="topbar"><div><div class="topbar-title">Касса</div><div class="topbar-sub">${BRANCH} · сегодня</div></div></div>
+
+    <div class="total-card"><div class="tl">Выручка за смену</div><div class="tr">${fmt(summary.total)}</div></div>
+
+    <div class="shift-bar">
+      <i class="ti ti-clock"></i>
+      <div class="sb-body">
+        <div class="sb-text">До закрытия смены</div>
+        <div class="sb-sub">осталось ${Math.max(0,15-session.cars.length)} машин</div>
+        <div class="sb-track"><div class="sb-fill" style="width:${Math.min(100,Math.round(session.cars.length/15*100))}%"></div></div>
+      </div>
+    </div>
+
+    <div class="section-label">Операции сегодня<span class="see-all" onclick="switchTab('all-cars')">Все машины</span></div>
+    <div id="home-swipe-wrap"></div>
+
+    <div class="btn-wrap"><button class="btn btn-sm" onclick="switchTab('add')"><i class="ti ti-plus"></i>Новая машина</button></div>
+    ${(ME.is_owner||ME.is_branch_admin)?(session.day_open===false
+      ?`<div class="btn-wrap" style="padding-top:0"><button class="btn" onclick="openShift()"><i class="ti ti-lock-open"></i>Открыть смену</button></div>`
+      :`<div class="btn-wrap" style="padding-top:0"><button class="btn danger-outline" onclick="startNewDay()">Закрыть смену / новый день</button></div>`
+    ):""}
+  `;
+  HOME_CARS=session.cars.slice().reverse();
+  HOME_IDX=0;
+  renderHomeSwipeCard();
+  attachPullToRefresh("view-cash",renderCash);
+}
+
+let HOME_CARS=[],HOME_IDX=0;
+window.toggleHomeCarStatus=async(num,cur)=>{
+  haptic("medium");
+  const next=cur==="done"?"in_progress":"done";
+  try{
+    await api(`/api/car/${encodeURIComponent(BRANCH)}/${num}/status`,{method:"PATCH",body:JSON.stringify({status:next})});
+    const car=HOME_CARS.find(c=>c.num===num);
+    if(car) car.status=next;
+    renderHomeSwipeCard();
+  }catch(e){}
+};
+function renderHomeSwipeCard(){
+  const wrap=document.getElementById("home-swipe-wrap");
+  if(!wrap) return;
+  if(!HOME_CARS.length){wrap.innerHTML=emptyState("ti-car","Сегодня ещё не было ни одной машины",{label:"Добавить машину",onclick:"switchTab('add')"});return;}
+  if(HOME_IDX<0) HOME_IDX=HOME_CARS.length-1;
+  if(HOME_IDX>=HOME_CARS.length) HOME_IDX=0;
+  const c=HOME_CARS[HOME_IDX];
+  const dots=HOME_CARS.slice(0,8).map((_,i)=>`<span class="${i===HOME_IDX?"on":""}"></span>`).join("");
+  const cStatus=c.status||"done";
+  const isDone=cStatus==="done";
+  const statusLabel=isDone?"Оплачено":"В работе";
+  const statusColor=isDone?"#1FAE73":"#FF5000";
+  wrap.innerHTML=`
+    <div class="swipe-card" id="home-swipe-el">
+      <span class="sc-counter">${HOME_IDX+1}/${HOME_CARS.length}</span>
+      <p class="sc-car">${c.car||"Машина"}</p>
+      <p class="sc-sub">${c.employee} · ${c.service}</p>
+      <p class="sc-price">${fmt(c.price)}</p>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+        <span class="sc-status" style="background:${statusColor}22;color:${statusColor}" onclick="toggleHomeCarStatus(${c.num},'${cStatus}')">${statusLabel}</span>
+        <span style="font-size:12px;color:var(--text-muted);cursor:pointer" onclick="uiCarQuick(${c.num})">Удалить</span>
+      </div>
+    </div>
+    <div class="swipe-nav">
+      <button onclick="homeSwipeStep(-1)"><i class="ti ti-chevron-left"></i></button>
+      <div class="swipe-dots">${dots}</div>
+      <button onclick="homeSwipeStep(1)"><i class="ti ti-chevron-right"></i></button>
+    </div>`;
+  const el=document.getElementById("home-swipe-el");
+  let startX=null;
+  el.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;});
+  el.addEventListener("touchend",e=>{
+    if(startX===null) return;
+    const dx=e.changedTouches[0].clientX-startX;
+    if(Math.abs(dx)>40) homeSwipeStep(dx<0?1:-1);
+    startX=null;
+  });
+}
+window.homeSwipeStep=(dir)=>{haptic();HOME_IDX+=dir;renderHomeSwipeCard();};
+
+window.uiWorkerQuick=async(name)=>{
+  const {schedule}=await api(`/api/workers?branch=${encodeURIComponent(BRANCH)}`);
+  const stats=await api(`/api/employee-stats?branch=${encodeURIComponent(BRANCH)}&name=${encodeURIComponent(name)}&period=today`).catch(()=>null);
+  const cnt=stats?.cars||0;
+  const sal=stats?.total||0;
+  const advance=stats?.advance||0;
+  const remaining=stats?.remaining!==undefined?stats.remaining:sal-advance;
+  const roleLine=stats?.roles?.length?stats.roles.join(", "):"";
+  const sched=schedule?.[name]?.schedule;
+  const working=schedule?.[name]?.working!==false;
+  const schedLine=sched?`График: ${sched.work}/${sched.rest} · ${working?"работает":"отдыхает 🌙"}`:"График не задан";
+  const advanceLine=advance?`\nАванс сегодня: -${fmt(advance)} · остаток ${fmt(remaining)}`:"";
+  tg.showPopup({
+    title:name,
+    message:`${roleLine?roleLine+"\n":""}${cnt} машин · к выплате ${fmt(sal)}${advanceLine}\n${schedLine}`,
+    buttons:[{id:"schedule",type:"default",text:"График работы"},{id:"advance",type:"default",text:"Выдать аванс"},{id:"cancel",type:"cancel"}],
+  },(id)=>{
+    if(id==="schedule") uiSetSchedule(name);
+    if(id==="advance") uiGiveAdvance(name);
+  });
+};
+window.uiGiveAdvance=async(name)=>{
+  const r=await inputSheet({title:`Аванс: ${name}`,fields:[{id:"amount",label:"Сумма (₽)",type:"number",defaultValue:2000}],
+    confirmLabel:"Выдать",
+    validate:(v)=>(!v.amount||v.amount<=0)?"Введи корректную сумму":null});
+  if(!r) return;
+  const amount=Math.round(r.amount);
+  api("/api/advance",{method:"POST",body:JSON.stringify({branch:BRANCH,name,amount})})
+    .then(()=>{haptic("medium");toast("Аванс выдан");})
+    .catch(()=>{tg.showAlert("Не удалось выдать аванс. Проверь права администратора филиала.");});
+};
+window.uiCarQuick=(num)=>{
+  tg.showConfirm("Удалить эту машину?",async(ok)=>{
+    if(!ok) return;
+    haptic("medium");
+    await api(`/api/car/${encodeURIComponent(BRANCH)}/${num}`,{method:"DELETE"});
+    HOME_IDX=Math.max(0,HOME_IDX-1);
+    switchTab(document.querySelector(".tab.active")?.dataset.tab||"home");
+  });
+};
+function refreshFinanceCtx(){
+  const t=document.querySelector(".tab.active")?.dataset.tab;
+  if(t==="finance") renderFinance(); else renderHome();
+}
+window.uiAddExpense=async()=>{
+  const r=await inputSheet({title:"Новый расход",fields:[
+    {id:"name",label:"Название",type:"text"},
+    {id:"amount",label:"Сумма (₽)",type:"number",defaultValue:500},
+  ],confirmLabel:"Добавить",
+  validate:(v)=>!v.name?"Введите название":(!v.amount||v.amount<=0)?"Введи корректную сумму":null});
+  if(!r) return;
+  const amount=Math.round(r.amount);
+  api("/api/expense",{method:"POST",body:JSON.stringify({branch:BRANCH,name:r.name,amount})})
+    .then(()=>{haptic("medium");toast("Расход добавлен");refreshFinanceCtx();}).catch(()=>{});
+};
+window.delExpense=async(idx)=>{
+  tg.showConfirm("Удалить расход?",async(ok)=>{
+    if(!ok) return;
+    haptic("medium");
+    await api(`/api/expense/${encodeURIComponent(BRANCH)}/${idx}`,{method:"DELETE"});
+    toast("Расход удалён");
+    refreshFinanceCtx();
+  });
+};
+window.uiAddIncome=async()=>{
+  const r=await inputSheet({title:"Новый доход",fields:[
+    {id:"name",label:"Название",type:"text"},
+    {id:"amount",label:"Сумма (₽)",type:"number",defaultValue:500},
+    {id:"payment",label:"Способ оплаты",type:"select",defaultValue:"нал",options:[
+      {value:"нал",label:"Наличные"},{value:"visa",label:"Visa"},{value:"безнал",label:"Безнал"},{value:"split",label:"Разделить"},
+    ]},
+  ],confirmLabel:"Добавить",
+  validate:(v)=>!v.name?"Введите название":(!v.amount||v.amount<=0)?"Введи корректную сумму":null});
+  if(!r) return;
+  const amount=Math.round(r.amount);
+  if(r.payment==="split"){ uiAddIncomeSplit(r.name,amount); return; }
+  api("/api/income",{method:"POST",body:JSON.stringify({branch:BRANCH,name:r.name,amount,payment:r.payment})})
+    .then(()=>{haptic("medium");toast("Доход добавлен");refreshFinanceCtx();}).catch(()=>{tg.showAlert("Не удалось сохранить доход");});
+};
+window.uiAddIncomeSplit=async(name,amount)=>{
+  const r=await inputSheet({title:`Разделить оплату · ${fmt(amount)}₽`,fields:[
+    {id:"cash",label:"Наличными (₽)",type:"number",defaultValue:0},
+    {id:"visa",label:"По Visa (₽)",type:"number",defaultValue:0},
+    {id:"beznal",label:"Безналом (₽)",type:"number",defaultValue:0},
+  ],confirmLabel:"Сохранить",
+  validate:(v)=>{
+    const cash=v.cash||0,visa=v.visa||0,beznal=v.beznal||0;
+    if(cash<0||visa<0||beznal<0) return "Суммы не могут быть отрицательными";
+    if(!cash&&!visa&&!beznal) return "Укажи хотя бы одну сумму";
+    return null;
+  }});
+  if(!r) return;
+  const cash=Math.round(r.cash||0),visa=Math.round(r.visa||0),beznal=Math.round(r.beznal||0);
+  const split={};
+  if(cash) split["нал"]=cash;
+  if(visa) split["visa"]=visa;
+  if(beznal) split["безнал"]=beznal;
+  const total=cash+visa+beznal;
+  api("/api/income",{method:"POST",body:JSON.stringify({branch:BRANCH,name,amount:total,payment_split:split})})
+    .then(()=>{haptic("medium");refreshFinanceCtx();}).catch(()=>{tg.showAlert("Не удалось сохранить доход");});
+};
+window.delIncome=async(idx)=>{
+  tg.showConfirm("Удалить доход?",async(ok)=>{
+    if(!ok) return;
+    haptic("medium");
+    await api(`/api/income/${encodeURIComponent(BRANCH)}/${idx}`,{method:"DELETE"});
+    toast("Доход удалён");
+    refreshFinanceCtx();
+  });
+};
+window.startNewDay=()=>{
+  tg.showConfirm("Закрыть смену и начать новый день? Касса уйдёт в архив.",async(ok)=>{
+    if(!ok) return;
+    try{await api(`/api/newday?branch=${encodeURIComponent(BRANCH)}`,{method:"POST"});}
+    catch(e){return;}
+    haptic("medium");toast("Смена закрыта");switchTab("home");
+  });
+};
+window.openShift=async()=>{
+  haptic("medium");
+  try{await api(`/api/openday?branch=${encodeURIComponent(BRANCH)}`,{method:"POST"});}
+  catch(e){return;}
+  toast("Смена открыта");renderCash();
+};
+window.downloadPdf=()=>window.open(`/api/reports/pdf?branch=${encodeURIComponent(BRANCH)}`,"_blank");
+window.downloadXlsx=()=>window.open(`/api/reports/xlsx?branch=${encodeURIComponent(BRANCH)}`,"_blank");
+window.delCar=async(num)=>{
+  tg.showConfirm("Удалить машину?",async(ok)=>{
+    if(!ok) return;
+    haptic("medium");
+    await api(`/api/car/${encodeURIComponent(BRANCH)}/${num}`,{method:"DELETE"});
+    toast("Машина удалена");
+    if(!document.getElementById("view-all-cars").classList.contains("hidden")) renderAllCars();
+    else switchTab("home");
+  });
+};
+
+/* ─── ДОБАВЛЕНИЕ МАШИНЫ ──────────────────────────────────────────────────── */
+let EDIT_CAR_NUM=null;
+let manualTotalEdited=false;   // GAP-M12: ручная правка "Стоимости" (в т.ч. применённая скидка клиента)
+let addCarSelectedClient=null; // клиент, найденный по телефону при добавлении/редактировании машины
+async function renderAdd(editNum){
+  const el=document.getElementById("view-add");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  CFG=CFG||await api("/api/config");
+  const [{workers,schedule},{presets}]=await Promise.all([
+    api(`/api/workers?branch=${encodeURIComponent(BRANCH)}`),
+    api(`/api/presets?branch=${encodeURIComponent(BRANCH)}`).catch(()=>({presets:[]})),
+  ]);
+  EDIT_CAR_NUM=editNum||null;
+  manualTotalEdited=false;
+  addCarSelectedClient=null;
+  let editCar=null;
+  if(EDIT_CAR_NUM){
+    const {session}=await api(`/api/session?branch=${encodeURIComponent(BRANCH)}`);
+    editCar=session.cars.find(c=>c.num===EDIT_CAR_NUM);
+    if(!editCar) EDIT_CAR_NUM=null;
+  }
+  selectedServices=editCar?[...editCar.service_keys]:[];
+  customServices=editCar?editCar.custom_services.map(c=>({...c})):[];
+  el.innerHTML=`
+    <div class="back-header">
+      <div class="back-btn" onclick="switchTab(${EDIT_CAR_NUM?"'all-cars'":"'home'"})"><i class="ti ti-chevron-left"></i></div>
+      <span class="back-header-title">${EDIT_CAR_NUM?"Изменить машину":"Новая машина"}</span>
+    </div>
+    <div style="padding:0 0 20px">
+      ${!EDIT_CAR_NUM&&presets.length?`
+        <div class="field-wrap" style="padding-bottom:6px">
+          <div class="field-label">Быстрые пресеты</div>
+          <div class="preset-row">
+            ${presets.map(p=>`<div class="preset-chip" onclick="applyPreset('${p.name.replace(/'/g,"\\'")}')"><span class="pc-name">${p.name}</span><span class="pc-count">${p.service_keys.length+p.custom_services.length} усл.</span></div>`).join("")}
+          </div>
+        </div>`:""}
+      <div class="field-wrap"><div class="field-label">Марка машины</div><input id="f-car" placeholder="Camry" value="${editCar?.car||""}"></div>
+      <div class="field-wrap"><div class="field-label">Телефон клиента (необязательно)</div><input id="f-phone" placeholder="+7..." value="${editCar?.phone||""}"></div>
+      <div class="price-hint" id="f-discount-hint" style="display:none"></div>
+      <div class="field-wrap"><div class="field-label">Имя клиента (необязательно)</div><input id="f-client-name" placeholder="Например, Дарья" value=""></div>
+      <div class="field-wrap"><div class="field-label">Тип кузова</div><div class="field-select"><select id="f-body">${CFG.body_types.map(b=>`<option value="${b.key}" ${editCar?.body_type===b.key?"selected":""}>${b.name}</option>`).join("")}</select></div></div>
+      <div class="field-wrap" style="padding-bottom:6px"><div class="field-label">Услуги</div></div>
+      <div class="card" id="f-services"></div>
+      <div class="btn-wrap" style="padding-top:8px"><button class="btn ghost btn-sm" onclick="addCustomService()"><i class="ti ti-plus"></i>Своя услуга</button></div>
+      <div id="f-custom"></div>
+      ${!EDIT_CAR_NUM?`<div class="btn-wrap" style="padding-top:0"><button class="btn ghost btn-sm" onclick="uiSavePreset()"><i class="ti ti-bookmark-plus"></i>Сохранить как пресет</button></div>`:""}
+      <div class="field-wrap" style="margin-top:4px"><div class="field-label">Мойщик</div><div class="field-select"><select id="f-emp">${workers.length?workers.slice().sort((a,b)=>{const wa=schedule?.[a]?.working!==false,wb=schedule?.[b]?.working!==false;return wb-wa;}).map(w=>{const working=schedule?.[w]?.working!==false;return `<option value="${w}" ${editCar?.employee===w?"selected":""}>${w}${working?"":" (отдыхает)"}</option>`;}).join(""):`<option value="">Нет сотрудников</option>`}</select></div></div>
+      <div class="field-wrap"><div class="field-label">Способ оплаты</div><div class="field-select"><select id="f-payment" ${editCar?.payment_split?"disabled":""}>
+        ${CFG.payment_types.map(p=>`<option ${editCar?.payment===p?"selected":""}>${p}</option>`).join("")}
+      </select></div></div>
+      <div class="field-wrap" style="padding-bottom:4px">
+        <div style="display:flex;justify-content:space-between;align-items:center;background:var(--surface-1);border-radius:14px;padding:14px 16px;cursor:pointer;border:0.5px solid var(--border)" onclick="toggleSplitRow()">
+          <span style="font-size:15px;font-weight:500">Раздельная оплата</span>
+          <input type="checkbox" id="f-split-toggle" ${editCar?.payment_split?"checked":""} style="width:18px;height:18px;accent-color:var(--accent);pointer-events:none">
+        </div>
+      </div>
+      <div id="f-split-wrap"></div>
+      <div class="field-wrap"><div class="field-label">Комментарий</div><textarea id="f-comment" placeholder="Комментарий (необязательно)">${editCar?.comment||""}</textarea></div>
+      <div class="total-card">
+        <span class="tl">Стоимость</span>
+        <span><span class="total-reset-link" id="f-total-reset" onclick="resetTotalOverride()">Сбросить</span><input class="tr-input" id="f-total" type="number" inputmode="numeric" oninput="onTotalManualInput()"></span>
+      </div>
+      <div class="btn-wrap" style="margin-top:4px"><button class="btn" id="f-submit" onclick="submitCar()">${EDIT_CAR_NUM?"Сохранить изменения":"Добавить машину"}</button></div>
+    </div>`;
+  renderServiceChips();
+  document.getElementById("f-body").addEventListener("change",renderServiceChips);
+  if(editCar?.payment_split){renderSplitInputs();Object.entries(editCar.payment_split).forEach(([method,val])=>{const inp=document.querySelector(`.split-input[data-method="${method}"]`);if(inp) inp.value=val;});}
+  manualTotalEdited=!!(editCar&&editCar.price_override!=null);
+  updateTotal();
+  if(editCar) document.getElementById("f-total").value=editCar.price; // updateTotal мог перезаписать при manualTotalEdited=false
+  const phoneInp=document.getElementById("f-phone");
+  let phoneLookupTimer=null;
+  phoneInp.addEventListener("input",()=>{
+    addCarSelectedClient=null;
+    clearTimeout(phoneLookupTimer);
+    const phone=phoneInp.value.trim();
+    if(phone.replace(/\D/g,"").length<10){hideDiscountHint();return;}
+    phoneLookupTimer=setTimeout(()=>{
+      api(`/api/clients/${encodeURIComponent(phone)}`).then(c=>{
+        if(phoneInp.value.trim()!==phone) return; // телефон уже поменяли, ответ устарел
+        if(c){
+          addCarSelectedClient=c;
+          const nameEl=document.getElementById("f-client-name");
+          if(c.name&&nameEl&&!nameEl.value) nameEl.value=c.name;
+          applyClientDiscountSuggestion(c);
+        }else{
+          hideDiscountHint();
+        }
+      }).catch(()=>{});
+    },400);
+  });
+  if(editCar?.phone) phoneInp.dispatchEvent(new Event("input"));
+}
+function hideDiscountHint(){const h=document.getElementById("f-discount-hint");if(h) h.style.display="none";}
+// Постоянная скидка клиента (GAP-M12, единая модель скидок): при
+// обнаружении клиента по телефону с discount_percent просто показываем
+// подсказку — сумму не трогаем. Скидка применяется автоматически на
+// бэкенде при сохранении машины (см. sessions.apply_client_loyalty_discount):
+// "Стоимость" остаётся полной ценой (от неё считается зарплата мойщика и
+// база % администратора), а сама скидка появится отдельной строкой
+// «Лояльность» в кассе — как и разовая ручная скидка.
+function applyClientDiscountSuggestion(client){
+  const hint=document.getElementById("f-discount-hint");
+  if(!hint) return;
+  if(!client||!client.discount_percent){hint.style.display="none";return;}
+  const base=calcCarTotal();
+  const discountAmount=Math.round(base*client.discount_percent/100);
+  hint.textContent=`Постоянная скидка клиента ${client.discount_percent}% (−${fmt(discountAmount)}₽) применится автоматически отдельной строкой «Лояльность» после сохранения. Сумму менять не нужно.`;
+  hint.style.display="block";
+}
+window.resetTotalOverride=()=>{
+  manualTotalEdited=false;
+  document.getElementById("f-total-reset").classList.remove("show");
+  updateTotal();
+};
+window.onTotalManualInput=()=>{
+  manualTotalEdited=true;
+  document.getElementById("f-total-reset").classList.toggle("show",parseInt(document.getElementById("f-total").value||"0",10)!==calcCarTotal());
+  updateSplitHintM12();
+};
+window.applyPreset=(name)=>{
+  api(`/api/presets?branch=${encodeURIComponent(BRANCH)}`).then(({presets})=>{
+    const p=presets.find(x=>x.name===name);if(!p) return;
+    haptic("medium");
+    selectedServices=[...p.service_keys];customServices=p.custom_services.map(c=>({...c}));
+    renderServiceChips();renderCustomList();
+  });
+};
+window.uiSavePreset=async()=>{
+  if(!selectedServices.length&&!customServices.length) return tg.showAlert("Сначала выбери услуги");
+  const r=await inputSheet({title:"Название пресета",fields:[{id:"name",label:"Название",type:"text"}],
+    validate:(v)=>!v.name?"Введите название":null});
+  if(!r) return;
+  try{await api("/api/presets",{method:"POST",body:JSON.stringify({branch:BRANCH,name:r.name,service_keys:selectedServices,custom_services:customServices})});haptic("medium");tg.showAlert("Пресет сохранён ✓");}catch(e){}
+};
+function renderServiceChips(){
+  const bodyType=document.getElementById("f-body").value;
+  const wrap=document.getElementById("f-services");
+  if(!wrap) return;
+  wrap.innerHTML=CFG.services.map(s=>{
+    const price=s.prices[bodyType]??Object.values(s.prices)[0];
+    const active=selectedServices.includes(s.key);
+    return `<div class="chip-label ${active?"active":""}" data-key="${s.key}" onclick="toggleService('${s.key}')">
+      <span class="chip-l">${s.name}</span>
+      <span class="chip-r"><span class="chip-p">${price}₽</span><span class="tick ${active?"on":""}"><i class="ti ti-check" style="font-size:12px"></i></span></span>
+    </div>`;
+  }).join("");
+  updateTotal();
+}
+window.toggleService=(key)=>{
+  haptic();
+  selectedServices=selectedServices.includes(key)?selectedServices.filter(k=>k!==key):[...selectedServices,key];
+  renderServiceChips();
+};
+window.addCustomService=async()=>{
+  const r=await inputSheet({title:"Своя услуга",fields:[
+    {id:"name",label:"Название",type:"text"},
+    {id:"price",label:"Цена (₽)",type:"number",defaultValue:1000},
+    {id:"percent",label:"Процент мойщику (%)",type:"number",defaultValue:30},
+  ],confirmLabel:"Добавить",
+  validate:(v)=>!v.name?"Введите название":(!v.price||v.price<0)?"Введи корректную цену":(isNaN(v.percent)||v.percent<0||v.percent>100)?"Процент должен быть от 0 до 100":null});
+  if(!r) return;
+  customServices.push({name:r.name,price:Math.round(r.price),percent:r.percent});renderCustomList();
+};
+function renderCustomList(){
+  const wrap=document.getElementById("f-custom");
+  if(!customServices.length){wrap.innerHTML="";updateTotal();return;}
+  wrap.innerHTML=`<div class="card" style="margin-top:10px">`+customServices.map((c,i)=>`
+    <div class="expense-row">
+      <div><div class="expense-name">${c.name}</div><div style="font-size:11px;color:var(--text-muted)">${c.percent}% мойщику</div></div>
+      <div class="expense-right"><span style="font-size:14px;font-weight:700">${c.price}₽</span><span class="expense-del" onclick="removeCustom(${i})">Убрать</span></div>
+    </div>`).join("")+`</div>`;
+  updateTotal();
+}
+window.removeCustom=(i)=>{customServices.splice(i,1);renderCustomList();};
+window.toggleSplitRow=()=>{const cb=document.getElementById("f-split-toggle");cb.checked=!cb.checked;haptic();toggleSplit();};
+window.toggleSplit=()=>{const on=document.getElementById("f-split-toggle").checked;document.getElementById("f-payment").disabled=on;renderSplitInputs();};
+function renderSplitInputs(){
+  const wrap=document.getElementById("f-split-wrap");
+  const on=document.getElementById("f-split-toggle").checked;
+  if(!on){wrap.innerHTML="";return;}
+  wrap.innerHTML=`<div class="card card-pad" style="margin:0 16px 12px">
+    ${CFG.payment_types.map(p=>`
+      <div class="split-row">
+        <span style="font-size:14px;font-weight:500">${p}</span>
+        <input type="number" inputmode="numeric" class="split-input" data-method="${p}" placeholder="0" style="width:110px;margin:0;text-align:right;padding:8px 12px" oninput="updateTotal()">
+      </div>`).join("")}
+    <p id="f-split-hint" style="font-size:12px;margin:8px 0 0;font-weight:500"></p>
+  </div>`;
+  updateTotal();
+}
+function getSplitValues(){
+  return [...document.querySelectorAll(".split-input")].reduce((acc,inp)=>{
+    const v=parseInt(inp.value||"0",10);if(v) acc[inp.dataset.method]=v;return acc;
+  },{});
+}
+function calcCarTotal(){
+  const bodyType=document.getElementById("f-body")?.value;
+  let total=selectedServices.reduce((sum,k)=>{
+    const s=CFG.services.find(s=>s.key===k);
+    return sum+(s.prices[bodyType]??Object.values(s.prices)[0]);
+  },0);
+  total+=customServices.reduce((sum,c)=>sum+c.price,0);
+  return total;
+}
+function updateTotal(){
+  const calc=calcCarTotal();
+  const totalEl=document.getElementById("f-total");
+  if(totalEl&&!manualTotalEdited) totalEl.value=calc;
+  const resetLink=document.getElementById("f-total-reset");
+  if(resetLink) resetLink.classList.toggle("show",manualTotalEdited&&parseInt(totalEl?.value||"0",10)!==calc);
+  updateSplitHintM12();
+}
+function updateSplitHintM12(){
+  const total=parseInt(document.getElementById("f-total")?.value||"0",10);
+  const hint=document.getElementById("f-split-hint");
+  if(document.getElementById("f-split-toggle")?.checked&&hint){
+    const sum=Object.values(getSplitValues()).reduce((a,b)=>a+b,0);
+    const diff=total-sum;
+    hint.textContent=diff===0?"Сумма сходится ✓":`Осталось: ${fmt(diff)}`;
+    hint.style.color=diff===0?"var(--green)":"var(--red)";
+  }
+}
+window.submitCar=async()=>{
+  const btn=document.getElementById("f-submit");
+  if(!selectedServices.length&&!customServices.length) return tg.showAlert("Выбери хотя бы одну услугу");
+  const emp=document.getElementById("f-emp").value;
+  if(!emp) return tg.showAlert("Сначала добавь сотрудника");
+  const isSplit=document.getElementById("f-split-toggle").checked;
+  const total=parseInt(document.getElementById("f-total").value||"0",10);
+  if(total<0) return tg.showAlert("Итоговая сумма не может быть отрицательной");
+  let paymentSplit=null;
+  if(isSplit){
+    paymentSplit=getSplitValues();
+    const sum=Object.values(paymentSplit).reduce((a,b)=>a+b,0);
+    if(!Object.keys(paymentSplit).length) return tg.showAlert("Укажи суммы по способам оплаты");
+    if(sum!==total) return tg.showAlert(`Сумма оплаты (${sum}₽) ≠ стоимости (${total}₽)`);
+  }
+  await withLoading(btn,async()=>{
+    const body={
+      branch:BRANCH,employee:emp,
+      body_type:document.getElementById("f-body").value,
+      service_keys:selectedServices,custom_services:customServices,
+      car:document.getElementById("f-car").value,
+      phone:document.getElementById("f-phone").value.trim(),
+      client_name:document.getElementById("f-client-name").value.trim(),
+      payment:isSplit?"Раздельно":document.getElementById("f-payment").value,
+      payment_split:paymentSplit,
+      comment:document.getElementById("f-comment").value,
+    };
+    if(manualTotalEdited&&total!==calcCarTotal()){
+      body.price_override=total;
+    }else if(EDIT_CAR_NUM){
+      body.clear_price_override=true;
+    }
+    if(EDIT_CAR_NUM){
+      await api(`/api/car/${encodeURIComponent(BRANCH)}/${EDIT_CAR_NUM}`,{method:"PUT",body:JSON.stringify(body)});
+      haptic("medium");toast("Изменения сохранены");switchTab("all-cars");
+    }else{
+      await api("/api/car",{method:"POST",body:JSON.stringify(body)});
+      haptic("medium");toast("Машина добавлена");switchTab("home");
+    }
+  });
+};
+
+/* ─── ОТЧЁТЫ ─────────────────────────────────────────────────────────────── */
+async function renderReports(){
+  const el=document.getElementById("view-reports");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  await ensureMe();
+  el.innerHTML=`<div class="topbar" style="align-items:center"><div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Отчёты</div></div>${skeleton(3)}`;
+  const [today,week]=await Promise.all([
+    api(`/api/reports/today?branch=${encodeURIComponent(BRANCH)}`),
+    api(`/api/reports/week?branch=${encodeURIComponent(BRANCH)}`),
+  ]);
+  const dayLetters=["Пн","Вт","Ср","Чт","Пт","Сб","Вс"];
+  const now=new Date(),todayIdx=(now.getDay()+6)%7;
+  const byDate={};
+  (week.days||[]).forEach(d=>{byDate[d.date]=d.total;});
+  const weekTotals=[];
+  for(let i=0;i<=todayIdx;i++){
+    const dt=new Date(now);dt.setDate(now.getDate()-(todayIdx-i));
+    const key=dt.toLocaleDateString("ru-RU").split(".").map((p,idx)=>idx<2?p.padStart(2,"0"):p).join(".");
+    weekTotals.push(byDate[key]||0);
+  }
+  const maxVal=Math.max(1,...weekTotals);
+  const revenueWave=buildWaveSvg(weekTotals,todayIdx,maxVal,"#fff");
+  const carsToday=today.session.cars.length;
+  const avgCheck=carsToday?Math.round(today.summary.grand_total/carsToday):0;
+  const yestTotal=week.days.length?week.days[week.days.length-1]?.total||0:0;
+  const trendRevenue=yestTotal>0?Math.round(((today.summary.grand_total-yestTotal)/yestTotal)*100):null;
+  const trendAvg=yestTotal>0?Math.round(((avgCheck-yestTotal/Math.max(1,week.days.length-1))/Math.max(1,yestTotal/Math.max(1,week.days.length-1)))*100):null;
+
+  const weekBarSvg=(()=>{
+    const vals=weekTotals;
+    const max=Math.max(1,...vals);
+    const bw=30,gap=8,h=50;
+    const total=vals.length*(bw+gap)-gap;
+    return `<svg viewBox="0 0 ${Math.max(total,220)} ${h}" style="width:100%;height:${h}px;overflow:visible">
+      ${vals.map((v,i)=>{
+        const bh=Math.max(4,Math.round(v/max*(h-6)));
+        const x=i*(bw+gap);
+        const active=i===vals.length-1;
+        return `<rect x="${x}" y="${h-bh}" width="${bw}" height="${bh}" rx="6" fill="${active?"var(--accent)":"rgba(255,255,255,0.12)"}"/>
+        <text x="${x+bw/2}" y="${h+12}" text-anchor="middle" font-size="9" fill="${active?"var(--text)":"var(--text-muted)"}">${dayLetters[i]}</text>`;
+      }).join("")}
+    </svg>`;
+  })();
+
+  el.innerHTML=`
+    <div class="topbar">
+      <div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Отчёты</div>
+      <div class="bell-btn" onclick="uiAddExpense()"><i class="ti ti-calendar-event"></i></div>
+    </div>
+
+    <div class="segmented">
+      <div class="seg active" onclick="">Сегодня</div>
+      <div class="seg" onclick="switchTab('workers')">Неделя</div>
+      <div class="seg" onclick="openMonthReport()">Месяц</div>
+    </div>
+
+    <div class="hero-card">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="hc-label">Выручка сегодня</div>
+        ${trendRevenue!==null?`<span class="trend-pill ${trendRevenue<0?"negative":""}">${trendRevenue>=0?"+":""}${trendRevenue}% от вчера</span>`:""}
+      </div>
+      <div class="hc-amount">${fmt(today.summary.grand_total)}</div>
+      <div class="wave-chart">${revenueWave}</div>
+    </div>
+
+    <div class="hero-card green-card" style="margin-top:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="hc-label">Средний чек</div>
+        ${trendAvg!==null?`<span class="trend-pill ${trendAvg<0?"negative":""}">${trendAvg>=0?"+":""}${trendAvg}% от вчера</span>`:""}
+      </div>
+      <div class="hc-amount">${fmt(avgCheck)}</div>
+      <div class="wave-chart">${buildWaveSvg(weekTotals.map(v=>v||1),todayIdx,maxVal,"#fff")}</div>
+    </div>
+
+    <div class="rstat-grid">
+      <div class="rstat-box">
+        <p><i class="ti ti-cash"></i>Наличные</p>
+        <p>${fmt(today.summary.cash)}</p>
+      </div>
+      <div class="rstat-box">
+        <p><i class="ti ti-credit-card"></i>Карта</p>
+        <p>${fmt(today.summary.visa+today.summary.beznal)}</p>
+      </div>
+    </div>
+
+    <div class="section-label">Расходы<span style="color:var(--red);font-size:13px;font-weight:700">-${fmt(today.summary.total_expenses||0)}</span></div>
+    <div class="card">
+      ${(today.session.expenses||[]).length
+        ?(today.session.expenses||[]).map(e=>`<div class="expense-row"><span class="expense-name">${e.name}</span><span class="expense-amount">-${fmt(e.amount)}</span></div>`).join("")
+        :`<p class="empty" style="padding:14px">Расходов нет</p>`}
+      ${today.session.expenses?.length?`<div class="expense-row"><span style="font-weight:600;color:var(--text-secondary)">Шеф</span><span class="expense-amount">-${fmt(today.summary.total_expenses||0)}</span></div>`:""}
+    </div>
+
+    <div class="section-label">Доходы<span style="color:var(--green);font-size:13px;font-weight:700">+${fmt(today.summary.total_incomes||0)}</span></div>
+    <div class="card">
+      ${(today.session.incomes||[]).length
+        ?(today.session.incomes||[]).map(inc=>`<div class="expense-row"><span class="expense-name">${inc.name}</span><span class="expense-amount" style="color:var(--green)">+${fmt(inc.amount)}</span></div>`).join("")
+        :`<p class="empty" style="padding:14px">Доходов нет</p>`}
+    </div>
+
+    <div class="section-label">Сравнение с вчера</div>
+    <div class="card card-pad" style="padding-bottom:20px">${weekBarSvg}</div>
+
+    <div class="section-label">Инструменты</div>
+    <div class="tile-grid">
+      <div class="tile" onclick="switchTab('day-report')"><i class="ti ti-chart-donut"></i><p>Общий отчёт</p></div>
+      <div class="tile" onclick="openMonthReport()"><i class="ti ti-calendar-event"></i><p>За месяц</p></div>
+      ${ME.is_owner?`<div class="tile" onclick="openAllReport()"><i class="ti ti-building-store"></i><p>Все филиалы</p></div>`:`<div></div>`}
+      <div class="tile primary" onclick="downloadPdf()"><i class="ti ti-file-type-pdf"></i><p>Скачать PDF</p></div>
+      <div class="tile" onclick="downloadXlsx()"><i class="ti ti-file-spreadsheet"></i><p>Excel</p></div>
+    </div>
+
+    <div class="section-label">Операции сегодня</div>
+    <div class="op-list">
+      ${today.session.cars.length
+        ?today.session.cars.slice().reverse().slice(0,8).map(c=>`
+          <div class="op-row" onclick="uiCarQuick(${c.num})">
+            <div class="op-dot ${c.status==='in_progress'?'orange':''}"></div>
+            <div class="op-info">
+              <p class="op-name">${c.car||"Машина"} · ${c.service}</p>
+              <p class="op-meta">${c.employee} · ${c.time||""}</p>
+            </div>
+            <span class="op-price">${fmt(c.price)}</span>
+          </div>`).join("")
+        :`<p class="empty">Машин пока нет</p>`}
+    </div>
+
+    <div class="section-label">За неделю (${week.from||""} – ${week.to||""})</div>
+    <div class="card">
+      ${week.days?.length?week.days.map(d=>`
+        <div class="row">
+          <div><p class="row-name">${d.date}</p><p class="row-sub">${d.cars} машин</p></div>
+          <p class="row-price">${fmt(d.total)}</p>
+        </div>`).join(""):`<p class="empty">Архив пуст</p>`}
+    </div>
+    <div style="height:20px"></div>
+  `;
+  attachPullToRefresh("view-reports",renderReports);
+}
+window.openMonthReport=async()=>{
+  const inp=await inputSheet({title:"Отчёт за месяц",fields:[{id:"month",label:"Месяц (например: июнь)",type:"text"}],
+    validate:(v)=>!v.month?"Введите месяц":null});
+  if(!inp) return;
+  const month=inp.month;
+  try{
+    const r=await api(`/api/reports/month?branch=${encodeURIComponent(BRANCH)}&month=${encodeURIComponent(month)}`);
+    const lines=Object.entries(r.by_worker).map(([emp,weeks])=>`${emp}: ${Object.values(weeks).reduce((a,b)=>a+b,0)} ₽`).join("\n")||"Нет данных";
+    tg.showAlert(`${month} ${r.year}\nИтого: ${fmt(r.grand_total)}\n\n${lines}`);
+  }catch(e){}
+};
+window.openAllReport=async()=>{
+  try{
+    const r=await api("/api/reports/allreport");
+    const lines=r.branches.map(b=>`${b.branch}: ${fmt(b.total)} (${b.cars} машин)`).join("\n")||"Нет данных";
+    tg.showAlert(`Все филиалы\nИтого: ${fmt(r.grand_total)}\n\n${lines}`);
+  }catch(e){}
+};
+
+/* ─── ОБЩИЙ ОТЧЁТ (день) ────────────────────────────────────────────────── */
+async function renderDayReport(){
+  const el=document.getElementById("view-day-report");
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('reports')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Общий отчёт (сегодня)</span></div>${skeleton(2)}`;
+  const r=await api(`/api/reports/today?branch=${encodeURIComponent(BRANCH)}`);
+  const s=r.summary;
+  const parts=[
+    {name:"Наличные",val:s.cash,color:"#1B8A57"},
+    {name:"Безнал",val:s.beznal,color:"#8A8680"},
+    {name:"Карта",val:s.visa,color:"#FF5000"},
+  ].filter(p=>p.val>0);
+  const total=parts.reduce((a,p)=>a+p.val,0)||1;
+  let acc=0;
+  const gradient=parts.map(p=>{const from=acc/total*360;acc+=p.val;const to=acc/total*360;return `${p.color} ${from}deg ${to}deg`;}).join(", ")||"#3A3A3A 0deg 360deg";
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('reports')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Общий отчёт (сегодня)</span></div>
+    <div style="padding:0 0 20px">
+      <div class="hero-card"><div class="hc-label">Итого за сегодня</div><div class="hc-amount">${fmt(s.grand_total)}</div><div class="hc-sub">${r.session.cars.length} машин</div></div>
+      <div class="card" style="margin-top:14px">
+        <div class="donut-wrap">
+          <div class="donut" style="background:conic-gradient(${gradient})"><div class="center"><b>${fmt(s.grand_total)}</b><span>Всего</span></div></div>
+          <div class="legend">${parts.map(p=>`<div class="item"><span class="dot" style="background:${p.color}"></span>${p.name}<b>${fmt(p.val)}</b></div>`).join("")||`<p class="empty">Нет данных</p>`}</div>
+        </div>
+      </div>
+      <div class="section-label">По услугам</div>
+      <div class="card">${r.top_services?.length?r.top_services.map(([name,count])=>`<div class="row"><span class="row-name">${name}</span><span style="font-size:13px;color:var(--text-muted)">${count} раз</span></div>`).join(""):`<p class="empty">Нет данных</p>`}</div>
+      <div class="btn-wrap"><button class="btn" onclick="downloadPdf()"><i class="ti ti-file-type-pdf"></i>Скачать PDF</button></div>
+    </div>`;
+}
+
+/* ─── ВСЕ МАШИНЫ ─────────────────────────────────────────────────────────── */
+let ALL_CARS=[],ALL_CARS_FILTER_EMP="",ALL_LOYALTY=[];
+async function renderAllCars(){
+  const el=document.getElementById("view-all-cars");
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('home')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Все машины</span></div>${skeleton(4)}`;
+  const {session}=await api(`/api/session?branch=${encodeURIComponent(BRANCH)}`);
+  ALL_CARS=session.cars.slice().reverse();
+  ALL_LOYALTY=session.loyalty||[];
+  const workers=[...new Set(ALL_CARS.map(c=>c.employee).filter(Boolean))];
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('home')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Все машины</span></div>
+    <div style="padding:0 0 20px">
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input id="cars-search" placeholder="Поиск по марке или мойщику" oninput="filterAllCars()">
+        <i class="ti ti-x clear-btn" onclick="clearCarsSearch()"></i>
+      </div>
+      ${workers.length?`<div class="filter-chips" id="cars-filter-chips">
+        <div class="filter-chip ${!ALL_CARS_FILTER_EMP?"active":""}" onclick="setCarsEmpFilter('')">Все</div>
+        ${workers.map(w=>`<div class="filter-chip ${ALL_CARS_FILTER_EMP===w?"active":""}" onclick="setCarsEmpFilter('${w.replace(/'/g,"\\'")}')">  ${w}</div>`).join("")}
+      </div>`:""}
+      <div id="cars-list" style="padding:0 16px"></div>
+      <div class="btn-wrap"><button class="btn btn-sm" onclick="switchTab('add')"><i class="ti ti-plus"></i>Новая машина</button></div>
+    </div>`;
+  renderCarsList();
+  attachPullToRefresh("view-all-cars",renderAllCars);
+}
+window.setCarsEmpFilter=(w)=>{haptic();ALL_CARS_FILTER_EMP=w;renderCarsList();};
+window.clearCarsSearch=()=>{document.getElementById("cars-search").value="";filterAllCars();};
+window.filterAllCars=()=>renderCarsList();
+window.toggleCarStatus=async(num,cur)=>{
+  haptic("medium");
+  const next=cur==="done"?"in_progress":"done";
+  try{
+    await api(`/api/car/${encodeURIComponent(BRANCH)}/${num}/status`,{method:"PATCH",body:JSON.stringify({status:next})});
+    const car=ALL_CARS.find(c=>c.num===num);if(car) car.status=next;renderCarsList();
+  }catch(e){}
+};
+function renderCarsList(){
+  const wrap=document.getElementById("cars-list");
+  const searchWrap=document.querySelector(".search-wrap");
+  const q=(document.getElementById("cars-search")?.value||"").trim().toLowerCase();
+  if(searchWrap) searchWrap.classList.toggle("has-value",!!q);
+  let list=ALL_CARS;
+  if(ALL_CARS_FILTER_EMP) list=list.filter(c=>c.employee===ALL_CARS_FILTER_EMP);
+  if(q) list=list.filter(c=>(c.car||"").toLowerCase().includes(q)||(c.employee||"").toLowerCase().includes(q));
+  if(!list.length){
+    wrap.innerHTML=ALL_CARS.length
+      ?emptyState("ti-search-off","Ничего не найдено по этому запросу")
+      :emptyState("ti-car","Здесь появятся машины, как только добавишь первую",{label:"Новая машина",onclick:"switchTab('add')"});
+    return;
+  }
+  wrap.innerHTML=list.map(c=>{
+    const status=c.status||"done",isDone=status==="done";
+    const discount=ALL_LOYALTY.filter(l=>l.car_num===c.num).reduce((s,l)=>s+(l.discount||0),0);
+    return `<div class="swipe-item" data-num="${c.num}">
+      <div class="swipe-bg" onclick="delCar(${c.num})"><i class="ti ti-trash"></i></div>
+      <div class="swipe-fg">
+        <div class="row" data-longpress-num="${c.num}">
+          <div><p class="row-name">${c.time?c.time+" · ":""}${c.car||"Машина"} · ${c.service}</p><p class="row-sub">${c.employee} · ${paymentLabel(c)}${discount?` · скидка ${fmt(discount)}`:""}</p></div>
+          <div class="row-right">
+            <p class="row-price">${fmt(c.price)}</p>
+            <span class="status-badge ${isDone?"status-done":"status-progress"}" onclick="event.stopPropagation();toggleCarStatus(${c.num},'${status}')">${isDone?"Оплачено":"В работе"}</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+  wrap.querySelectorAll(".swipe-item").forEach(item=>bindSwipeToDelete(item));
+  wrap.querySelectorAll("[data-longpress-num]").forEach(row=>bindLongPress(row,()=>openCarQuickMenu(parseInt(row.dataset.longpressNum,10))));
+}
+function bindSwipeToDelete(item){
+  const fg=item.querySelector(".swipe-fg"),num=parseInt(item.dataset.num,10);
+  let startX=null,dx=0,dragging=false,moved=false;
+  fg.addEventListener("touchstart",e=>{startX=e.touches[0].clientX;dragging=true;fg.classList.add("dragging");moved=false;});
+  fg.addEventListener("touchmove",e=>{
+    if(!dragging) return;dx=e.touches[0].clientX-startX;
+    if(Math.abs(dx)>6) moved=true;
+    if(dx<0) fg.style.transform=`translateX(${Math.max(dx,-84)}px)`;
+  });
+  fg.addEventListener("touchend",()=>{
+    dragging=false;fg.classList.remove("dragging");
+    if(dx<-50) fg.style.transform="translateX(-84px)";
+    else fg.style.transform="translateX(0)";dx=0;
+  });
+  fg.addEventListener("click",e=>{if(moved){e.stopPropagation();e.preventDefault();}});
+}
+function bindLongPress(el,onLongPress){
+  let timer=null,moved=false,startX=0,startY=0;
+  const clear=()=>{if(timer){clearTimeout(timer);timer=null;}};
+  el.addEventListener("touchstart",e=>{moved=false;startX=e.touches[0].clientX;startY=e.touches[0].clientY;timer=setTimeout(()=>{if(!moved){haptic("medium");onLongPress();}},480);},{passive:true});
+  el.addEventListener("touchmove",e=>{if(Math.abs(e.touches[0].clientX-startX)>10||Math.abs(e.touches[0].clientY-startY)>10){moved=true;clear();}},{passive:true});
+  el.addEventListener("touchend",clear);el.addEventListener("touchcancel",clear);
+}
+window.openCarQuickMenu=(num)=>{
+  const c=ALL_CARS.find(x=>x.num===num);if(!c) return;
+  const discount=ALL_LOYALTY.filter(l=>l.car_num===num).reduce((s,l)=>s+(l.discount||0),0);
+  openSheet(`${c.car||"Машина"} · ${fmt(c.price)}`,[
+    {icon:"ti-pencil",label:"Изменить",fn:`()=>switchTab('add',${num})`},
+    {icon:"ti-discount-2",label:discount?`Скидка: ${fmt(discount)} (изменить)`:"Добавить скидку",fn:`()=>editCarLoyalty(${num})`},
+    {icon:"ti-trash",label:"Удалить",destructive:true,fn:`()=>delCar(${num})`},
+  ]);
+};
+window.editCarLoyalty=async(num)=>{
+  const existing=ALL_LOYALTY.map((l,idx)=>({...l,idx})).filter(l=>l.car_num===num);
+  const currentTotal=existing.reduce((s,l)=>s+(l.discount||0),0);
+  const r=await inputSheet({title:"Скидка по машине",fields:[{id:"amount",label:"Скидка (₽), 0 — убрать",type:"number",defaultValue:currentTotal||0}],
+    confirmLabel:"Сохранить",
+    validate:(v)=>(isNaN(v.amount)||v.amount<0)?"Сумма не может быть отрицательной":null});
+  if(!r) return;
+  const amount=Math.round(r.amount)||0;
+  haptic("medium");
+  try{
+    // Убираем старые записи скидки по этой машине и (если нужно) добавляем новую —
+    // так один car_num всегда соответствует ОДНОЙ актуальной скидке, без дублей.
+    for(const l of existing.slice().reverse()){
+      await api(`/api/loyalty/${encodeURIComponent(BRANCH)}/${l.idx}`,{method:"DELETE"});
+    }
+    if(amount>0){
+      await api("/api/loyalty",{method:"POST",body:JSON.stringify({branch:BRANCH,car_num:num,discount:amount})});
+    }
+    toast(amount>0?"Скидка сохранена":"Скидка удалена");
+    renderAllCars();
+  }catch(e){ tg.showAlert(e.message||"Не удалось сохранить скидку"); }
+};
+
+/* ─── ИСТОРИЯ ────────────────────────────────────────────────────────────── */
+async function renderHistory(){
+  const el=document.getElementById("view-history");
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('settings')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">История кассы</span></div>${skeleton(4)}`;
+  const {entries}=await api(`/api/history?branch=${encodeURIComponent(BRANCH)}`).catch(()=>({entries:[]}));
+  const labels={add:"Добавлено",edit:"Изменено",delete:"Удалено"};
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('settings')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">История кассы</span></div>
+    <div style="padding:0 0 20px">
+      <div class="card">
+        ${entries.length?entries.map(e=>`
+          <div class="hist-row">
+            <div class="hist-top"><span><b>${e.actor_name}</b></span><span class="hist-badge ${e.action}">${labels[e.action]||e.action}</span></div>
+            <p class="hist-meta">${e.details||""}</p>
+            <p class="hist-meta">${e.at}</p>
+          </div>`).join(""):emptyState("ti-history","Здесь появится история изменений кассы")}
+      </div>
+    </div>`;
+}
+
+/* ─── МОЙЩИКИ ────────────────────────────────────────────────────────────── */
+async function renderWorkers(){
+  const el=document.getElementById("view-workers");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  el.innerHTML=`<div class="topbar" style="align-items:center"><div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Мойщики</div></div>${skeleton(3)}`;
+  const [{session,summary},{workers,schedule}]=await Promise.all([
+    api(`/api/session?branch=${encodeURIComponent(BRANCH)}`),
+    api(`/api/workers?branch=${encodeURIComponent(BRANCH)}`),
+  ]);
+  const totalSalary=Object.values(summary.washer_salaries||{}).reduce((a,b)=>a+b,0);
+  const maxSal=Math.max(1,...workers.map(w=>summary.washer_salaries?.[w]||0));
+
+  el.innerHTML=`
+    <div class="topbar">
+      <div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Мойщики</div>
+    </div>
+
+    <div class="btn-wrap" style="padding-top:0">
+      <button class="btn secondary btn-sm" onclick="switchTab('schedule')"><i class="ti ti-calendar-week"></i>График работы</button>
+      <button class="btn secondary btn-sm" onclick="switchTab('employees')"><i class="ti ti-users-group"></i>Все сотрудники</button>
+    </div>
+
+    <div class="home-stat-row">
+      <div class="home-stat-box">
+        <span><i class="ti ti-credit-card-pay"></i>К выплате сегодня</span>
+        <b>${fmt(totalSalary)}</b>
+      </div>
+      <div class="home-stat-box">
+        <span><i class="ti ti-users"></i>Мойщиков сегодня</span>
+        <b>${workers.length}</b>
+      </div>
+    </div>
+
+    <div class="section-label">${BRANCH} · сегодня</div>
+    <div class="card">
+      ${workers.length?workers.slice().sort((a,b)=>(summary.washer_salaries?.[b]||0)-(summary.washer_salaries?.[a]||0)).map(w=>{
+        const cnt=session.cars.filter(c=>c.employee===w).length;
+        const sal=summary.washer_salaries?.[w]||0;
+        const earned=Object.values(summary.washer_totals||{}).find?summary.washer_totals?.[w]||0:0;
+        const working=schedule?.[w]?.working!==false;
+        const col=avatarColor(w);
+        const pct=maxSal>0?Math.round(sal/maxSal*100):0;
+        return `<div class="worker-card" onclick="uiWorkerQuick('${w.replace(/'/g,"\\'")}')">
+          <div class="wc-top">
+            <div class="wc-info">
+              <div class="wc-av" style="background:${col}22;color:${col}">${initials(w)}</div>
+              <div>
+                <div class="wc-name">${w}${working?"":" 🌙"}</div>
+                <div class="wc-sub">${cnt} машин</div>
+              </div>
+            </div>
+            <div class="wc-sal">${fmt(sal)}</div>
+          </div>
+          <div class="wc-bar"><div class="wc-bar-fill" style="width:${pct}%"></div></div>
+          <div class="wc-pct">${pct}%</div>
+        </div>`;
+      }).join(""):emptyState("ti-users","Пока нет ни одного мойщика",{label:"Добавить мойщика",onclick:"uiAddWorker()"})}
+      <div class="add-worker-btn" onclick="uiAddWorker()"><i class="ti ti-plus"></i>Добавить мойщика</div>
+    </div>
+    <div style="height:20px"></div>
+  `;
+  attachPullToRefresh("view-workers",renderWorkers);
+}
+
+/* ─── МОЯ СМЕНА (личный кабинет мойщика) ─────────────────────────────────── */
+let MY_STATS_PERIOD = "today";
+let MY_STATS_DAYS = [];
+let MY_DAY_CARS_INDEX = null;
+window.uiOpenMyDayCars=(i)=>{ haptic(); MY_DAY_CARS_INDEX=i; switchTab("my-day-cars"); };
+async function renderMyStats(){
+  const el=document.getElementById("view-my-stats");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  el.innerHTML=`<div class="topbar"><div class="topbar-title">Моя смена</div></div>${skeleton(3)}`;
+
+  let data;
+  try{
+    data = await api(`/api/my-employee-stats?branch=${encodeURIComponent(BRANCH)}&period=${MY_STATS_PERIOD}`);
+  }catch(e){
+    el.innerHTML=`<div class="topbar"><div class="topbar-title">Моя смена</div></div><div style="padding:24px 16px"><p class="empty">Не удалось загрузить данные.<br>Убедись, что тебя добавили сотрудником филиала.</p></div>`;
+    return;
+  }
+
+  const periods=[["today","Сегодня"],["week","Неделя"],["month","Месяц"]];
+  const tabsHtml=`<div class="segmented">${periods.map(([k,label])=>
+    `<div class="seg${MY_STATS_PERIOD===k?" active":""}" onclick="uiMyStatsPeriod('${k}')">${label}</div>`
+  ).join("")}</div>`;
+
+  const roleRowsHtml=Object.entries(data.by_role||{}).map(([role,amount])=>`
+    <div class="worker-card"><div class="wc-top">
+      <div class="wc-info"><div><div class="wc-name">${role[0].toUpperCase()+role.slice(1)}</div></div></div>
+      <div class="wc-sal">${fmt(amount)}</div>
+    </div></div>`).join("");
+
+  MY_STATS_DAYS = data.days||[];
+  const dayRowsHtml=MY_STATS_DAYS.slice().reverse().map((d,revI)=>{
+    const i = MY_STATS_DAYS.length-1-revI;
+    const carsCount = d.cars||0;
+    return `
+    <div class="worker-card"${carsCount?` onclick="uiOpenMyDayCars(${i})"`:""}${carsCount?` style="cursor:pointer"`:""}>
+      <div class="wc-top">
+        <div class="wc-info"><div>
+          <div class="wc-name">${d.date}</div>
+          <div class="wc-sub">${Object.entries(d.roles).map(([r,a])=>`${r}: ${fmt(a)}`).join(" · ")}${carsCount?` · ${carsCount} машин`:""}</div>
+        </div></div>
+        <div class="wc-sal">${fmt(d.total)}</div>
+        ${carsCount?`<i class="ti ti-chevron-right" style="color:var(--text-faint);margin-left:8px"></i>`:""}
+      </div>
+    </div>`;
+  }).join("");
+
+  el.innerHTML=`
+    <div class="topbar">
+      <div><div class="topbar-title">Моя смена</div><div class="topbar-sub">${data.name} · ${data.roles.join(", ")}${MY_STATS_PERIOD!=="today"?` · ${data.from} – ${data.to}`:""}</div></div>
+    </div>
+    ${tabsHtml}
+    <div class="home-stat-row">
+      <div class="home-stat-box">
+        <span><i class="ti ti-wallet"></i>Общий заработок</span>
+        <b>${fmt(data.total)}</b>
+      </div>
+      <div class="home-stat-box">
+        <span><i class="ti ti-car"></i>Машин</span>
+        <b>${data.cars}</b>
+      </div>
+    </div>
+    ${data.shifts?`<div class="home-stat-row">
+      <div class="home-stat-box"><span><i class="ti ti-calendar"></i>Смен</span><b>${data.shifts}</b></div>
+      <div class="home-stat-box"><span><i class="ti ti-chart-bar"></i>Средняя за смену</span><b>${fmt(data.avg_per_shift)}</b></div>
+    </div>`:""}
+    ${data.advance?`<div class="home-stat-row">
+      <div class="home-stat-box"><span><i class="ti ti-cash-banknote"></i>Аванс</span><b style="color:var(--red,#e33)">-${fmt(data.advance)}</b></div>
+      <div class="home-stat-box"><span><i class="ti ti-wallet"></i>Остаток к выплате</span><b>${fmt(data.remaining)}</b></div>
+    </div>`:""}
+    <div class="section-label">Разбивка по ролям</div>
+    <div class="card">${roleRowsHtml||`<p class="empty">За этот период данных нет</p>`}</div>
+    <div class="section-label">По дням</div>
+    <div class="card">${dayRowsHtml||`<p class="empty">За этот период данных нет</p>`}</div>
+    ${(data.advances&&data.advances.length)?`
+    <div class="section-label">Авансы за период</div>
+    <div class="card">${data.advances.slice().reverse().map(a=>`
+      <div class="worker-card"><div class="wc-top">
+        <div class="wc-info"><div><div class="wc-name">${a.date}</div></div></div>
+        <div class="wc-sal" style="color:var(--red,#e33)">-${fmt(a.amount)}</div>
+      </div></div>`).join("")}</div>`:""}
+    <div style="height:20px"></div>
+  `;
+  attachPullToRefresh("view-my-stats",renderMyStats);
+}
+window.uiMyStatsPeriod=(p)=>{ MY_STATS_PERIOD=p; haptic(); renderMyStats(); };
+window.uiToggleMyStatsDay=(i)=>{ haptic(); document.getElementById(`my-stats-day-${i}`)?.classList.toggle("hidden"); };
+
+/* ─── МОЯ СМЕНА: машины за конкретный день (клик по дате) ────────────────── */
+function renderMyDayCars(){
+  const el=document.getElementById("view-my-day-cars");
+  const d=MY_STATS_DAYS[MY_DAY_CARS_INDEX];
+  if(!d){
+    el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('my-stats')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Машины за день</span></div><div style="padding:24px 16px"><p class="empty">Данные не найдены</p></div>`;
+    return;
+  }
+  const cars=d.car_list||[];
+  const rowsHtml=cars.length?cars.map(c=>`
+    <div class="op-row">
+      <div class="op-info">
+        <p class="op-name">${c.car||"Машина"} · ${c.service||""}</p>
+        <p class="op-meta">${c.time||""}${c.payment?` · ${c.payment}`:""}</p>
+      </div>
+      <span class="op-price">${fmt(c.price)}</span>
+    </div>`).join(""):`<p class="empty" style="padding:20px">В этот день машин нет</p>`;
+
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('my-stats')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">${d.date} · ${d.cars} машин</span></div>
+    <div class="home-stat-row" style="padding:0 16px 14px">
+      <div class="home-stat-box"><span><i class="ti ti-car"></i>Машин</span><b>${d.cars}</b></div>
+      <div class="home-stat-box"><span><i class="ti ti-wallet"></i>Заработано</span><b>${fmt(d.total)}</b></div>
+    </div>
+    <div class="section-label">Список машин</div>
+    <div class="op-list">${rowsHtml}</div>
+    <div style="height:20px"></div>
+  `;
+}
+
+/* ─── ВСЕ СОТРУДНИКИ (сводка по ролям для админа) ────────────────────────── */
+let EMPLOYEES_PERIOD = "today";
+async function renderEmployees(){
+  const el=document.getElementById("view-employees");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('workers')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Все сотрудники</span></div>${skeleton(3)}`;
+
+  let data;
+  try{
+    data = await api(`/api/employees-stats?branch=${encodeURIComponent(BRANCH)}&period=${EMPLOYEES_PERIOD}`);
+  }catch(e){
+    el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('workers')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Все сотрудники</span></div><div style="padding:24px 16px"><p class="empty">Не удалось загрузить данные.</p></div>`;
+    return;
+  }
+
+  const periods=[["today","Сегодня"],["week","Неделя"],["month","Месяц"]];
+  const tabsHtml=`<div class="segmented">${periods.map(([k,label])=>
+    `<div class="seg${EMPLOYEES_PERIOD===k?" active":""}" onclick="uiEmployeesPeriod('${k}')">${label}</div>`
+  ).join("")}</div>`;
+
+  const employees=data.employees||[];
+  const cardsHtml=employees.length?employees.map(emp=>{
+    const col=avatarColor(emp.name);
+    const roleRows=Object.entries(emp.by_role||{}).map(([role,amount])=>
+      `<div class="wc-sub" style="display:flex;justify-content:space-between"><span>${role[0].toUpperCase()+role.slice(1)}</span><span>${fmt(amount)}</span></div>`
+    ).join("");
+    return `<div class="worker-card">
+      <div class="wc-top">
+        <div class="wc-info">
+          <div class="wc-av" style="background:${col}22;color:${col}">${initials(emp.name)}</div>
+          <div>
+            <div class="wc-name">${emp.name}</div>
+            <div class="wc-sub">${(emp.roles||[]).join(", ")} · ${emp.shifts} смен · ${emp.cars} машин</div>
+          </div>
+        </div>
+        <div class="wc-sal">${fmt(emp.total)}</div>
+      </div>
+      ${roleRows?`<div style="margin-top:8px;padding-top:8px;border-top:0.5px solid var(--border)">${roleRows}</div>`:""}
+    </div>`;
+  }).join(""):`<p class="empty">За этот период данных нет</p>`;
+
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('workers')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Все сотрудники</span></div>
+    <div style="padding:0 0 20px">
+      ${tabsHtml}
+      <div class="home-stat-row">
+        <div class="home-stat-box">
+          <span><i class="ti ti-wallet"></i>Всего выплат</span>
+          <b>${fmt(data.grand_total)}</b>
+        </div>
+        <div class="home-stat-box">
+          <span><i class="ti ti-users"></i>Сотрудников</span>
+          <b>${employees.length}</b>
+        </div>
+      </div>
+      <div class="section-label">${data.from} – ${data.to}</div>
+      <div class="card">${cardsHtml}</div>
+    </div>`;
+  attachPullToRefresh("view-employees",renderEmployees);
+}
+window.uiEmployeesPeriod=(p)=>{ EMPLOYEES_PERIOD=p; haptic(); renderEmployees(); };
+
+/* ─── ГРАФИК НА НЕДЕЛЮ ───────────────────────────────────────────────────── */
+async function renderScheduleWeek(){
+  const el=document.getElementById("view-schedule");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('workers')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">График на неделю</span></div>${skeleton(3)}`;
+  const data=await api(`/api/schedule/week?branch=${encodeURIComponent(BRANCH)}`);
+  const workers=Object.keys(data.workers);
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('workers')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">График на неделю</span></div>
+    <div style="padding:0 0 20px">
+      <div class="section-label">${BRANCH} · Пн ${data.day_labels[0]} — Вс ${data.day_labels[6]}</div>
+      <div class="card card-pad" style="overflow-x:auto">
+        ${!workers.length?`<p class="empty">Мойщиков пока нет</p>`:`
+        <div style="display:grid;grid-template-columns:70px repeat(7,28px);gap:4px;align-items:center;margin-bottom:10px">
+          <span></span>
+          ${data.weekday_labels.map((d,i)=>`<span style="text-align:center;font-size:10px;color:var(--text-muted)">${d}<br><span style="font-size:8px">${data.day_labels[i]}</span></span>`).join("")}
+        </div>
+        ${workers.map(w=>{
+          const col=avatarColor(w);
+          return `<div style="display:grid;grid-template-columns:70px repeat(7,28px);gap:4px;align-items:center;padding:8px 0;border-top:0.5px solid var(--border)">
+            <span style="font-size:12px;font-weight:500;display:flex;align-items:center;gap:5px;overflow:hidden">
+              <span style="width:20px;height:20px;border-radius:50%;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:${col}22;color:${col}">${initials(w)}</span>
+              <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${w}</span>
+            </span>
+            ${data.workers[w].map(working=>`<div style="width:22px;height:22px;border-radius:7px;margin:0 auto;background:${working?"var(--accent)":"var(--surface-2)"};display:flex;align-items:center;justify-content:center">${working?'<i class="ti ti-check" style="font-size:11px;color:#fff"></i>':""}</div>`).join("")}
+          </div>`;}).join("")}
+        `}
+      </div>
+      <p style="font-size:11px;color:var(--text-muted);padding:10px 16px">Синим — рабочие дни. Без графика — мойщик доступен всегда.</p>
+    </div>`;
+}
+
+/* ─── НАСТРОЙКИ ──────────────────────────────────────────────────────────── */
+async function renderSettings(){
+  const el=document.getElementById("view-settings");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  el.innerHTML=`<div class="topbar" style="align-items:center"><div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Настройки</div></div>${skeleton(2)}`;
+  await ensureMe();
+  if(!ME.is_owner&&!ME.is_branch_admin){
+    el.innerHTML=`<div class="topbar" style="align-items:center"><div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Настройки</div></div><div style="padding:20px 16px"><p class="empty">Доступно только администратору</p></div>`;
+    return;
+  }
+  const {workers}=await api(`/api/workers?branch=${encodeURIComponent(BRANCH)}`);
+  const ownerName=ME.name||"Салим";
+  const col=avatarColor(ownerName);
+  el.innerHTML=`
+    <div class="topbar" style="align-items:center"><div class="back-btn" style="margin-right:8px" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><div class="topbar-title">Настройки</div></div>
+    <div style="padding:8px 0 20px">
+      <div style="text-align:center;margin-bottom:8px;padding:8px">
+        <div class="settings-avatar" style="background:${col}22;color:${col}">${initials(ownerName)}</div>
+        <p class="settings-name">${ownerName}</p>
+        <p class="settings-role">${ME.is_owner?"Владелец":ME.is_branch_admin?"Администратор":"Мойщик"}</p>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-label">Филиал</div>
+        <div class="card">
+          <div class="settings-row" onclick="switchBranch()">
+            <div class="sr-left"><div class="ib blue"><i class="ti ti-building-store"></i></div><span class="sr-label">Филиалы</span></div>
+            <div class="sr-right"><span class="sr-badge">${BRANCH}</span><i class="ti ti-chevron-right"></i></div>
+          </div>
+          <div class="settings-row" onclick="switchTab('workers')">
+            <div class="sr-left"><div class="ib green"><i class="ti ti-users"></i></div><span class="sr-label">Сотрудники</span></div>
+            <div class="sr-right"><i class="ti ti-chevron-right"></i></div>
+          </div>
+          <div class="settings-row" onclick="switchTab('reports')">
+            <div class="sr-left"><div class="ib orange"><i class="ti ti-list-details"></i></div><span class="sr-label">Услуги и цены</span></div>
+            <div class="sr-right"><i class="ti ti-chevron-right"></i></div>
+          </div>
+          <div class="settings-row" onclick="uiAddExpense&&uiAddExpense()">
+            <div class="sr-left"><div class="ib red"><i class="ti ti-receipt"></i></div><span class="sr-label">Расходы</span></div>
+            <div class="sr-right"><i class="ti ti-chevron-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <div class="settings-section-label">Система</div>
+        <div class="card">
+          <div class="settings-row">
+            <div class="sr-left"><div class="ib purple"><i class="ti ti-bell"></i></div><span class="sr-label">Уведомления</span></div>
+            <div class="sr-right"><i class="ti ti-chevron-right"></i></div>
+          </div>
+          <div class="settings-row">
+            <div class="sr-left"><div class="ib blue"><i class="ti ti-shield"></i></div><span class="sr-label">Безопасность</span></div>
+            <div class="sr-right"><i class="ti ti-chevron-right"></i></div>
+          </div>
+          <div class="settings-row" onclick="switchTab('history')">
+            <div class="sr-left"><div class="ib gray"><i class="ti ti-history"></i></div><span class="sr-label">История кассы</span></div>
+            <div class="sr-right"><i class="ti ti-chevron-right"></i></div>
+          </div>
+          <div class="settings-row">
+            <div class="sr-left"><div class="ib gray"><i class="ti ti-info-circle"></i></div><span class="sr-label">О приложении</span></div>
+            <div class="sr-right"><span class="sr-badge">v2.0</span><i class="ti ti-chevron-right"></i></div>
+          </div>
+        </div>
+      </div>
+
+      ${ME.is_owner?`
+      <div class="settings-section">
+        <div class="settings-section-label">Администрирование</div>
+        <div class="card">
+          <div class="settings-row" onclick="uiSetBranchAdmin()"><div class="sr-left"><div class="ib blue"><i class="ti ti-shield-star"></i></div><span class="sr-label">Назначить админа</span></div><div class="sr-right"><i class="ti ti-chevron-right"></i></div></div>
+          <div class="settings-row" onclick="uiAddUser()"><div class="sr-left"><div class="ib green"><i class="ti ti-lock-access"></i></div><span class="sr-label">Добавить доступ</span></div><div class="sr-right"><i class="ti ti-chevron-right"></i></div></div>
+          <div class="settings-row" onclick="uiRemoveUser()"><div class="sr-left"><div class="ib red"><i class="ti ti-lock-open"></i></div><span class="sr-label">Убрать доступ</span></div><div class="sr-right"><i class="ti ti-chevron-right"></i></div></div>
+          <div class="settings-row" onclick="uiListUsers()"><div class="sr-left"><div class="ib purple"><i class="ti ti-users"></i></div><span class="sr-label">Пользователи</span></div><div class="sr-right"><i class="ti ti-chevron-right"></i></div></div>
+        </div>
+      </div>`:""}
+
+      ${renderThemeSwitch()}
+
+      <div style="padding:14px 16px 0">
+        <button class="btn-logout" onclick="switchBranch()">Выйти из аккаунта</button>
+      </div>
+
+      <div class="group-label">Сотрудники (${workers.length})</div>
+      <div class="tag-row">
+        ${workers.map(w=>{const col=avatarColor(w);return `<div class="tag" onclick="uiWorkerRow('${w.replace(/'/g,"\\'")}')"><span class="tav" style="background:${col}22;color:${col}">${initials(w)}</span><span>${w}</span></div>`;}).join("")}
+        <div class="tag-add" onclick="uiAddWorker()"><i class="ti ti-plus" style="font-size:13px"></i>Добавить</div>
+      </div>
+    </div>
+  `;
+}
+
+/* ─── WORKERS HEADER MENU ────────────────────────────────────────────────── */
+window.uiWorkersMenu=()=>{
+  tg.showPopup({
+    title:"Мойщики",message:"Что хочешь сделать?",
+    buttons:[
+      {id:"schedule",type:"default",text:"График работы"},
+      {id:"add",type:"default",text:"Добавить мойщика"},
+      {id:"cancel",type:"cancel"},
+    ],
+  },(id)=>{
+    if(id==="schedule") switchTab("schedule");
+    else if(id==="add") uiAddWorker();
+  });
+};
+
+/* ─── WORKER ACTIONS ─────────────────────────────────────────────────────── */
+window.uiWorkerRow=(name)=>{
+  tg.showPopup({
+    title:name,message:"Что сделать с сотрудником?",
+    buttons:[
+      {id:"schedule",type:"default",text:"График работы"},
+      {id:"admin",type:"default",text:"Назначить админом"},
+      {id:"remove",type:"destructive",text:"Удалить"},
+      {id:"cancel",type:"cancel"},
+    ],
+  },async(id)=>{
+    if(id==="remove"){
+      try{await api(`/api/workers/${encodeURIComponent(BRANCH)}/${encodeURIComponent(name)}`,{method:"DELETE"});haptic("medium");toast("Мойщик удалён");renderSettings();}catch(e){}
+    }else if(id==="admin"){
+      const r=await inputSheet({title:"Назначить админом",fields:[{id:"tgid",label:`Telegram ID для ${name}`,type:"number"}],
+        confirmLabel:"Назначить",
+        validate:(v)=>(!v.tgid||v.tgid<=0||!Number.isInteger(v.tgid))?"Введите корректный Telegram ID":null});
+      if(!r) return;
+      try{await api("/api/branch-admin",{method:"POST",body:JSON.stringify({branch:BRANCH,user_id:r.tgid})});haptic("medium");tg.showAlert("Админ назначен");}catch(e){}
+    }else if(id==="schedule"){uiSetSchedule(name);}
+  });
+};
+/* PHASE 9 (этап 4): было 2 последовательных prompt() — паттерн "3/1" (с
+   ручным парсингом /^(\d+)\s*\/\s*(\d+)$/) и дата начала свободным текстом
+   "ГГГГ-ММ-ДД". Теперь один трёхпольный inputSheet(): work_days/rest_days
+   как number-поля (парсинг регуляркой больше не нужен — сразу целые числа)
+   и start_date как новый type:"date" (нативный браузерный date-picker
+   вместо текста, который надо было набирать вручную в ровно нужном
+   формате). Семантика "пусто = сброс графика" сохранена: оба числовых
+   поля пустые одновременно = сброс (то же значение, что раньше означало
+   пустая строка целиком); частично пустой ввод — ошибка валидации, а не
+   тихое поведение. */
+window.uiSetSchedule=async(name)=>{
+  const refresh=()=>{ const t=document.querySelector(".tab.active")?.dataset.tab||"home"; switchTab(t); };
+  const r=await inputSheet({title:`График для ${name}`,fields:[
+    {id:"work_days",label:"Рабочих дней подряд",type:"number",defaultValue:3,placeholder:"3"},
+    {id:"rest_days",label:"Выходных дней подряд",type:"number",defaultValue:1,placeholder:"1"},
+    {id:"start_date",label:"Дата начала",type:"date",defaultValue:new Date().toISOString().slice(0,10)},
+  ],confirmLabel:"Сохранить",
+  validate:(v)=>{
+    const workEmpty=isNaN(v.work_days),restEmpty=isNaN(v.rest_days);
+    if(workEmpty&&restEmpty) return null; // оба пустых = сброс графика (см. комментарий выше)
+    if(workEmpty||restEmpty) return "Заполните оба числовых поля или очистите оба, чтобы сбросить график";
+    if(!Number.isInteger(v.work_days)||v.work_days<1) return "Рабочих дней: целое число от 1";
+    if(!Number.isInteger(v.rest_days)||v.rest_days<0) return "Выходных дней: целое число от 0";
+    if(!v.start_date) return "Укажите дату начала";
+    return null;
+  }});
+  if(!r) return;
+  if(isNaN(r.work_days)&&isNaN(r.rest_days)){
+    api(`/api/schedule/${encodeURIComponent(BRANCH)}/${encodeURIComponent(name)}`,{method:"DELETE"})
+      .then(()=>{haptic("medium");tg.showAlert("График сброшен");refresh();}).catch(()=>{});
+    return;
+  }
+  api("/api/schedule",{method:"POST",body:JSON.stringify({branch:BRANCH,name,work_days:r.work_days,rest_days:r.rest_days,start_date:r.start_date})})
+    .then(()=>{haptic("medium");tg.showAlert(`График ${r.work_days}/${r.rest_days} установлен`);refresh();}).catch(()=>{});
+};
+window.switchBranch=()=>{BRANCH=null;ME=null;switchTab("home");};
+window.uiAddWorker=async()=>{
+  const r=await inputSheet({title:"Новый мойщик",fields:[{id:"name",label:"Имя мойщика",type:"text",placeholder:"Имя"}],
+    confirmLabel:"Добавить",
+    validate:(v)=>(!v.name)?"Введите имя":null});
+  if(!r) return;
+  try{await api("/api/workers",{method:"POST",body:JSON.stringify({branch:BRANCH,name:r.name})});haptic("medium");toast("Мойщик добавлен");renderWorkers();}catch(e){}
+};
+window.uiSetBranchAdmin=async()=>{
+  const r=await inputSheet({title:"Новый админ филиала",fields:[{id:"tgid",label:"Telegram ID",type:"number"}],
+    confirmLabel:"Назначить",
+    validate:(v)=>(!v.tgid||v.tgid<=0||!Number.isInteger(v.tgid))?"Введите корректный Telegram ID":null});
+  if(!r) return;
+  try{await api("/api/branch-admin",{method:"POST",body:JSON.stringify({branch:BRANCH,user_id:r.tgid})});haptic("medium");tg.showAlert("Админ назначен");}catch(e){}
+};
+window.uiAddUser=async()=>{
+  const r=await inputSheet({title:"Выдать доступ",fields:[
+    {id:"tgid",label:"Telegram ID",type:"number"},
+    {id:"name",label:"Имя пользователя",type:"text"},
+  ],confirmLabel:"Выдать доступ",
+  validate:(v)=>(!v.tgid||v.tgid<=0||!Number.isInteger(v.tgid))?"Введите корректный Telegram ID":null});
+  if(!r) return;
+  const name=r.name.trim()||"Без имени";
+  try{await api("/api/users",{method:"POST",body:JSON.stringify({user_id:r.tgid,name})});haptic("medium");tg.showAlert("Доступ выдан");}catch(e){}
+};
+window.uiRemoveUser=async()=>{
+  const r=await inputSheet({title:"Отозвать доступ",fields:[{id:"tgid",label:"Telegram ID",type:"number"}],
+    confirmLabel:"Отозвать",
+    validate:(v)=>(!v.tgid||v.tgid<=0||!Number.isInteger(v.tgid))?"Введите корректный Telegram ID":null});
+  if(!r) return;
+  try{await api(`/api/users/${r.tgid}`,{method:"DELETE"});haptic("medium");tg.showAlert("Доступ отозван");}catch(e){}
+};
+window.uiListUsers=async()=>{
+  try{const {users}=await api("/api/users");const lines=users.map(u=>`${u.name} — ${u.user_id}`).join("\n")||"Список пуст";tg.showAlert(lines);}catch(e){}
+};
+
+/* ─── ФИНАНСЫ (новый раздел) ─────────────────────────────────────────────── */
+async function renderFinance(){
+  if(!BRANCH) return ensureBranch();
+  const el=document.getElementById("view-finance");
+  el.innerHTML=`<div class="topbar"><div><div class="topbar-title">Финансы</div><div class="topbar-sub">${BRANCH}</div></div></div>${skeleton(4)}`;
+  let session,summary;
+  try{ ({session,summary}=await api(`/api/session?branch=${encodeURIComponent(BRANCH)}`)); }
+  catch(e){ el.innerHTML=`<div class="topbar"><div><div class="topbar-title">Финансы</div></div></div><div class="px" style="padding-top:20px"><p class="empty">Не удалось загрузить данные.</p></div>`; return; }
+  const expenses=session.expenses||[], incomes=session.incomes||[];
+  const net=(summary.total_incomes||0)-(summary.total_expenses||0);
+  el.innerHTML=`
+    <div class="topbar"><div><div class="topbar-title">Финансы</div><div class="topbar-sub">${BRANCH} · сегодня</div></div></div>
+    <div style="display:flex;gap:10px;padding:0 16px 4px">
+      <div class="total-card" style="flex:1;margin:0"><div class="tl">Доходы</div><div class="tr" style="color:var(--green)">+${fmt(summary.total_incomes||0)}</div></div>
+      <div class="total-card" style="flex:1;margin:0"><div class="tl">Расходы</div><div class="tr" style="color:var(--red)">-${fmt(summary.total_expenses||0)}</div></div>
+    </div>
+    <div class="total-card" style="margin-top:10px"><div class="tl">Итог за смену</div><div class="tr" style="color:${net>=0?"var(--green)":"var(--red)"}">${net>=0?"+":""}${fmt(net)}</div></div>
+
+    <div class="section-label"><span>Расходы</span></div>
+    <div class="card">
+      ${expenses.length
+        ?expenses.map((e,i)=>`
+          <div class="expense-row">
+            <span class="expense-name">${e.name}</span>
+            <div class="expense-right">
+              <span class="expense-amount">-${fmt(e.amount)}</span>
+              <span class="expense-del" onclick="delExpense(${i})">Удалить</span>
+            </div>
+          </div>`).join("")
+        :emptyState("ti-receipt-2","Расходов пока нет",{label:"Добавить расход",onclick:"uiAddExpense()"})}
+    </div>
+    <div class="btn-wrap"><button class="btn secondary btn-sm" onclick="uiAddExpense()"><i class="ti ti-plus"></i>Добавить расход</button></div>
+
+    <div class="section-label"><span>Доходы</span></div>
+    <div class="card">
+      ${incomes.length
+        ?incomes.map((inc,i)=>`
+          <div class="expense-row">
+            <span class="expense-name">${inc.name}<span style="color:var(--text-muted);font-weight:400"> · ${inc.payment_split?Object.entries(inc.payment_split).map(([k,v])=>`${k} ${v}₽`).join(" + "):(inc.payment||"нал")}</span></span>
+            <div class="expense-right">
+              <span class="expense-amount" style="color:var(--green)">+${fmt(inc.amount)}</span>
+              <span class="expense-del" onclick="delIncome(${i})">Удалить</span>
+            </div>
+          </div>`).join("")
+        :emptyState("ti-cash","Доходов пока нет",{label:"Добавить доход",onclick:"uiAddIncome()"})}
+    </div>
+    <div class="btn-wrap"><button class="btn secondary btn-sm" onclick="uiAddIncome()"><i class="ti ti-plus"></i>Добавить доход</button></div>
+    <div class="btn-wrap"><button class="btn btn-sm" onclick="switchTab('reports')"><i class="ti ti-chart-bar"></i>Отчёты за период</button></div>
+  `;
+  attachPullToRefresh("view-finance",renderFinance);
+}
+
+/* ─── ФИЛИАЛЫ (новый раздел, для владельца) ──────────────────────────────── */
+async function renderBranchesAdmin(){
+  const el=document.getElementById("view-branches");
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Филиалы</span></div>${skeleton(3)}`;
+  if(!(ME?.is_owner)){
+    el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Филиалы</span></div><div class="px" style="padding-top:20px"><p class="empty">Доступно только владельцу.</p></div>`;
+    return;
+  }
+  let branchStats=[];
+  try{ const r=await api("/api/branches/summary"); branchStats=r.branches||[]; }catch(e){}
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Филиалы</span></div>
+    <div style="padding:8px 0">
+      ${branchStats.length?branchStats.map(b=>`
+        <div class="branch-card" onclick="pickBranch('${b.branch.replace(/'/g,"\\'")}')">
+          <div>
+            <div class="bc-pin"><i class="ti ti-map-pin"></i>${b.branch}</div>
+            <div class="bc-amount">${fmt(b.total||0)}</div>
+            <div class="bc-sub">${b.cars||0} машин сегодня</div>
+          </div>
+        </div>`).join(""):`<div class="px"><p class="empty">Нет данных по филиалам</p></div>`}
+    </div>`;
+}
+
+/* ─── ЕЩЁ (меню остальных разделов) ──────────────────────────────────────── */
+/* ─── ЗАПИСЬ (BOOKING) ────────────────────────────────────────────────────
+   Мобильная агенда дня (не полная сетка/drag-n-drop, как на сайте —
+   на телефоне это неудобно). Переиспользует те же /api/bookings*
+   эндпоинты, что и booking.html на сайте. См. GAP-B1 в PROJECT_BRAIN. */
+const BK_STATUS_LABEL={waiting:"Ожидание",confirmed:"Подтверждено",arrived:"Клиент приехал",no_show:"Не пришёл",in_progress:"В работе",done:"Оплачено"};
+const BK_STATUS_PILL={waiting:"muted",confirmed:"wip",arrived:"ok",no_show:"bad",in_progress:"wip",done:"ok"};
+let BK_DATE=null, BK_BOXES=[], BK_LIST=[], BK_EDIT_ID=null, bkServices=[];
+function bkTodayStr(){ const d=new Date(); return `${String(d.getDate()).padStart(2,"0")}.${String(d.getMonth()+1).padStart(2,"0")}.${d.getFullYear()}`; }
+function bkDateToInput(ddmmyyyy){ const [d,m,y]=ddmmyyyy.split("."); return `${y}-${m}-${d}`; }
+function bkInputToDate(yyyymmdd){ const [y,m,d]=yyyymmdd.split("-"); return `${d}.${m}.${y}`; }
+function bkShiftDate(ddmmyyyy,days){ const [d,m,y]=ddmmyyyy.split(".").map(Number); const dt=new Date(y,m-1,d); dt.setDate(dt.getDate()+days); return `${String(dt.getDate()).padStart(2,"0")}.${String(dt.getMonth()+1).padStart(2,"0")}.${dt.getFullYear()}`; }
+function bkDateLabel(ddmmyyyy){
+  if(ddmmyyyy===bkTodayStr()) return "Сегодня, "+ddmmyyyy.slice(0,5);
+  const [d,m,y]=ddmmyyyy.split(".").map(Number);
+  return new Date(y,m-1,d).toLocaleDateString("ru-RU",{day:"numeric",month:"long",weekday:"short"});
+}
+function bkServiceSummary(b){
+  const names=(b.service_keys||[]).map(k=>CFG?.services?.find(s=>s.key===k)?.name).filter(Boolean);
+  const custom=(b.custom_services||[]).map(c=>c.name);
+  const all=[...names,...custom];
+  return all.length?all.join(", "):"Без услуг";
+}
+async function renderBooking(){
+  const el=document.getElementById("view-booking");
+  if(!BRANCH){el.innerHTML=`<div class="px" style="padding-top:20px"><p class="empty">Сначала выбери филиал</p></div>`;return;}
+  if(!BK_DATE) BK_DATE=bkTodayStr();
+  CFG=CFG||await api("/api/config");
+  el.innerHTML=`
+    <div class="back-header">
+      <div class="back-btn" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div>
+      <span class="back-header-title">Запись</span>
+      ${(ME.is_owner||ME.is_branch_admin)?`<div class="back-btn" style="margin-left:auto" onclick="uiBoxesMenu()"><i class="ti ti-settings"></i></div>`:""}
+    </div>
+    <div class="bk-daynav">
+      <div class="bk-daynav-btn" onclick="bkGoDate(-1)"><i class="ti ti-chevron-left"></i></div>
+      <div class="bk-daynav-date">${bkDateLabel(BK_DATE)}<input type="date" id="bk-date-input" value="${bkDateToInput(BK_DATE)}" onchange="bkPickDate(this.value)"></div>
+      <div class="bk-daynav-btn" onclick="bkGoDate(1)"><i class="ti ti-chevron-right"></i></div>
+    </div>
+    <div id="bk-list">${skeleton(3)}</div>
+    <div class="bk-fab" onclick="bkOpenForm(null)"><i class="ti ti-plus"></i></div>`;
+  try{
+    const r=await api(`/api/bookings?branch=${encodeURIComponent(BRANCH)}&date=${encodeURIComponent(BK_DATE)}`);
+    BK_BOXES=r.boxes||[]; BK_LIST=r.bookings||[];
+  }catch(e){ BK_BOXES=[]; BK_LIST=[]; }
+  const wrap=document.getElementById("bk-list");
+  if(!wrap) return;
+  if(!BK_BOXES.length){
+    wrap.innerHTML=(ME.is_owner||ME.is_branch_admin)
+      ?emptyState("ti-door","Нет ни одного бокса — добавь первый через значок настроек вверху")
+      :emptyState("ti-door","Боксы ещё не настроены");
+    return;
+  }
+  wrap.innerHTML=BK_BOXES.map(box=>{
+    const items=BK_LIST.filter(b=>b.box===box.box).sort((a,b)=>a.start_time.localeCompare(b.start_time));
+    return `
+      <div class="card" style="padding:2px 0 4px">
+        <div class="bk-box-head"><div class="n">${box.box}</div><div class="name">${box.name}</div></div>
+        ${items.length?items.map(b=>`
+          <div class="bk-appt" onclick="bkOpenSheet(${b.id})">
+            <div class="bk-appt-time">${b.start_time}</div>
+            <div class="bk-appt-body">
+              <div class="bk-appt-title">${b.client_name||b.car||"Без имени"}</div>
+              <div class="bk-appt-sub">${b.employee?b.employee+" · ":""}${bkServiceSummary(b)}${b.phone?" · "+b.phone:""}${b.prepayment?.status==="paid"?" · Предоплата ✅":""}</div>
+            </div>
+            <div class="bk-appt-status"><span class="pill ${BK_STATUS_PILL[b.status]||"muted"}">${BK_STATUS_LABEL[b.status]||b.status}</span></div>
+          </div>`).join(""):`<div class="bk-empty-box">Свободно</div>`}
+      </div>`;
+  }).join("");
+}
+window.bkGoDate=(delta)=>{ haptic(); BK_DATE=bkShiftDate(BK_DATE,delta); renderBooking(); };
+window.bkPickDate=(val)=>{ BK_DATE=bkInputToDate(val); renderBooking(); };
+window.bkOpenForm=(id)=>{ haptic("medium"); BK_EDIT_ID=id; switchTab("booking-form"); };
+window.bkOpenSheet=(id)=>{
+  const b=BK_LIST.find(x=>x.id===id); if(!b) return;
+  haptic();
+  const actions=[{icon:"ti-pencil",label:"Изменить",fn:"()=>bkOpenForm("+id+")"}];
+  if(["waiting"].includes(b.status)) actions.push({icon:"ti-circle-check",label:"Подтвердить",fn:"()=>bkSetStatus("+id+",'confirmed')"});
+  if(["waiting","confirmed"].includes(b.status)){
+    actions.push({icon:"ti-car",label:"Клиент приехал",fn:"()=>bkSetStatus("+id+",'arrived')"});
+    actions.push({icon:"ti-user-x",label:"Не пришёл",fn:"()=>bkSetStatus("+id+",'no_show')"});
+  }
+  // GAP-PAY1: предоплата доступна, пока запись не оплачена и не отменена,
+  // и уже подтверждённую предоплату повторно не предлагаем.
+  if(!["done","no_show"].includes(b.status) && b.prepayment?.status!=="paid"){
+    actions.push({icon:"ti-credit-card",label:"Оплатить онлайн (предоплата)",fn:"()=>bkPayOnline("+id+")"});
+  }
+  actions.push({icon:"ti-trash",label:"Удалить запись",destructive:true,fn:"()=>bkDelete("+id+")"});
+  const prepaidNote=b.prepayment?.status==="paid"?` · Предоплата ${fmt(b.prepayment.amount)} ✅`:"";
+  openSheet(`${b.start_time}–${b.end_time} · ${b.client_name||b.car||"Без имени"}${prepaidNote}`,actions);
+};
+window.bkSetStatus=async(id,status)=>{
+  try{
+    const r=await api(`/api/bookings/${id}/status`,{method:"PATCH",body:JSON.stringify({status})});
+    haptic("medium");
+    if(r.car_created) toast(`Машина №${r.car_created} добавлена в кассу`);
+    else if(r.car_note) toast(r.car_note,"error");
+    else toast("Статус обновлён");
+    renderBooking();
+  }catch(e){}
+};
+window.bkDelete=async(id)=>{
+  tg.showConfirm("Удалить запись?",async(ok)=>{
+    if(!ok) return;
+    try{ await api(`/api/bookings/${id}`,{method:"DELETE"}); haptic("medium"); toast("Запись удалена"); renderBooking(); }catch(e){}
+  });
+};
+/* ─── ОНЛАЙН-ОПЛАТА / ПРЕДОПЛАТА ЗАПИСИ (GAP-PAY1) ──────────────────────────
+   По прецеденту авансов/скидок (GAP-A1/GAP-M12) — сумма через window.prompt,
+   дальнейшие действия через tg.showPopup. Провайдер (боевой/мок) выбирается
+   бэкендом автоматически — фронтенд просто получает ссылку и показывает её. */
+window.bkPayOnline=async(id)=>{
+  const b=BK_LIST.find(x=>x.id===id); if(!b) return;
+  const r=await inputSheet({title:"Предоплата записи",fields:[{id:"amount",label:"Сумма предоплаты (₽)",type:"number",defaultValue:b.price||""}],
+    confirmLabel:"Продолжить",
+    validate:(v)=>(!v.amount||v.amount<=0)?"Некорректная сумма":null});
+  if(!r) return;
+  const amount=Math.round(r.amount);
+  let payment;
+  try{
+    const r=await api("/api/payments",{method:"POST",body:JSON.stringify({
+      branch:BRANCH, purpose:"advance", amount, booking_id:id,
+      phone:b.phone||"", client_name:b.client_name||"",
+      description:`Предоплата записи ${b.client_name||b.car||""}`.trim(),
+    })});
+    payment=r.payment;
+  }catch(e){ return; }
+  bkShowPaymentSheet(payment);
+};
+window.bkShowPaymentSheet=(payment)=>{
+  const buttons=[{id:"open",type:"default",text:"Открыть ссылку на оплату"}];
+  buttons.push(CFG.payment_mock
+    ?{id:"confirm",type:"default",text:"✅ Я получил оплату (тест)"}
+    :{id:"check",type:"default",text:"Проверить статус"});
+  buttons.push({id:"cancel",type:"cancel"});
+  tg.showPopup({title:`Оплата ${fmt(payment.amount)}`,
+    message:"Отправьте ссылку клиенту любым способом (мессенджер/звонок)",buttons},async(choice)=>{
+    if(choice==="open") window.open(payment.confirmation_url,"_blank");
+    else if(choice==="confirm"){
+      try{ await api(`/api/payments/${payment.id}/mock-confirm`,{method:"POST"}); haptic("medium"); toast("Оплата подтверждена (тест)"); renderBooking(); }catch(e){}
+    }else if(choice==="check"){
+      try{
+        const fresh=await api(`/api/payments/${payment.id}`);
+        if(fresh.status==="succeeded"){ haptic("medium"); toast("Оплачено"); renderBooking(); }
+        else{ toast("Пока не оплачено"); bkShowPaymentSheet(payment); }
+      }catch(e){}
+    }
+  });
+};
+async function renderBookingForm(id){
+  const el=document.getElementById("view-booking-form");
+  CFG=CFG||await api("/api/config");
+  let editing=null;
+  if(id){ editing=BK_LIST.find(b=>b.id===id)||null; }
+  bkServices=editing?[...(editing.service_keys||[])]:[];
+  const date=editing?.date||BK_DATE||bkTodayStr();
+  const now=new Date();
+  const defStart=`${String(now.getHours()).padStart(2,"0")}:${String(Math.ceil(now.getMinutes()/15)*15%60).padStart(2,"0")}`;
+  let workers=[];
+  try{ workers=(await api(`/api/workers?branch=${encodeURIComponent(BRANCH)}`)).workers||[]; }catch(e){}
+  el.innerHTML=`
+    <div class="back-header">
+      <div class="back-btn" onclick="switchTab('booking')"><i class="ti ti-chevron-left"></i></div>
+      <span class="back-header-title">${editing?"Изменить запись":"Новая запись"}</span>
+    </div>
+    <div style="padding:0 0 20px">
+      <div class="field-wrap"><div class="field-label">Бокс</div><div class="field-select"><select id="bk-f-box">
+        ${BK_BOXES.map(bx=>`<option value="${bx.box}" ${(editing?editing.box:BK_BOXES[0]?.box)===bx.box?"selected":""}>${bx.name}</option>`).join("")}
+      </select></div></div>
+      <div class="field-wrap"><div class="field-label">Сотрудник (необязательно)</div><div class="field-select"><select id="bk-f-employee">
+        <option value="">— не выбран —</option>
+        ${workers.map(w=>`<option value="${w}" ${editing?.employee===w?"selected":""}>${w}</option>`).join("")}
+      </select></div></div>
+      <div class="field-wrap" style="display:flex;gap:10px">
+        <div style="flex:1"><div class="field-label">Начало</div><input type="time" id="bk-f-start" step="900" value="${editing?.start_time||defStart}"></div>
+        <div style="flex:1"><div class="field-label">Окончание</div><input type="time" id="bk-f-end" step="900" value="${editing?.end_time||""}"></div>
+      </div>
+      <div class="field-wrap"><div class="field-label">Тип кузова</div><div class="field-select"><select id="bk-f-body">${CFG.body_types.map(bt=>`<option value="${bt.key}" ${editing?.body_type===bt.key?"selected":""}>${bt.name}</option>`).join("")}</select></div></div>
+      <div class="field-wrap" style="padding-bottom:6px"><div class="field-label">Услуги</div></div>
+      <div class="card" id="bk-f-services"></div>
+      <div class="field-wrap" style="margin-top:4px"><div class="field-label">Имя клиента (необязательно)</div><input id="bk-f-name" placeholder="Например, Дарья" value="${editing?.client_name||""}"></div>
+      <div class="field-wrap"><div class="field-label">Телефон клиента (необязательно)</div><input id="bk-f-phone" placeholder="+7..." value="${editing?.phone||""}"></div>
+      <div class="field-wrap"><div class="field-label">Комментарий</div><textarea id="bk-f-comment" placeholder="Комментарий (необязательно)">${editing?.comment||""}</textarea></div>
+      <div class="btn-wrap" style="margin-top:4px"><button class="btn" id="bk-f-submit" onclick="bkSubmit(${id||"null"},'${date}')">${editing?"Сохранить изменения":"Добавить запись"}</button></div>
+      ${editing?`<div class="btn-wrap" style="padding-top:0"><button class="btn ghost btn-sm" style="color:var(--red)" onclick="bkDelete(${id});switchTab('booking')"><i class="ti ti-trash"></i>Удалить запись</button></div>`:""}
+    </div>`;
+  bkRenderServiceChips();
+  document.getElementById("bk-f-body").addEventListener("change",bkRenderServiceChips);
+  if(!editing){
+    const startInp=document.getElementById("bk-f-start");
+    startInp.addEventListener("change",()=>{
+      const endInp=document.getElementById("bk-f-end");
+      if(!endInp.value && startInp.value){
+        const [h,m]=startInp.value.split(":").map(Number);
+        const total=h*60+m+30;
+        endInp.value=`${String(Math.floor(total/60)%24).padStart(2,"0")}:${String(total%60).padStart(2,"0")}`;
+      }
+    });
+  }
+}
+function bkRenderServiceChips(){
+  const bodyType=document.getElementById("bk-f-body").value;
+  const wrap=document.getElementById("bk-f-services");
+  if(!wrap) return;
+  wrap.innerHTML=CFG.services.map(s=>{
+    const price=s.prices[bodyType]??Object.values(s.prices)[0];
+    const active=bkServices.includes(s.key);
+    return `<div class="chip-label ${active?"active":""}" data-key="${s.key}" onclick="bkToggleService('${s.key}')">
+      <span class="chip-l">${s.name}</span>
+      <span class="chip-r"><span class="chip-p">${price}₽</span><span class="tick ${active?"on":""}"><i class="ti ti-check" style="font-size:12px"></i></span></span>
+    </div>`;
+  }).join("");
+}
+window.bkToggleService=(key)=>{ haptic(); bkServices=bkServices.includes(key)?bkServices.filter(k=>k!==key):[...bkServices,key]; bkRenderServiceChips(); };
+window.bkSubmit=async(id,date)=>{
+  const box=parseInt(document.getElementById("bk-f-box").value,10);
+  const start_time=document.getElementById("bk-f-start").value;
+  const end_time=document.getElementById("bk-f-end").value;
+  if(!start_time||!end_time) return tg.showAlert("Укажи время начала и окончания");
+  const payload={
+    branch:BRANCH, date, box, start_time, end_time,
+    employee:document.getElementById("bk-f-employee").value, body_type:document.getElementById("bk-f-body").value,
+    service_keys:bkServices,
+    phone:document.getElementById("bk-f-phone").value.trim(),
+    client_name:document.getElementById("bk-f-name").value.trim(),
+    comment:document.getElementById("bk-f-comment").value.trim(),
+  };
+  const btn=document.getElementById("bk-f-submit"); if(btn){btn.disabled=true;}
+  try{
+    const r=id?await api(`/api/bookings/${id}`,{method:"PATCH",body:JSON.stringify(payload)}):await api("/api/bookings",{method:"POST",body:JSON.stringify(payload)});
+    haptic("medium");
+    if(r.car_created) toast(`Машина №${r.car_created} добавлена в кассу`);
+    else toast(id?"Запись изменена":"Запись добавлена");
+    switchTab("booking");
+  }catch(e){ if(btn) btn.disabled=false; }
+};
+
+/* ─── БОКСЫ (независимая сущность, GAP-BOX1) ────────────────────────────────
+   Управление списком боксов филиала — доступно только владельцу/админу
+   филиала. По прецеденту GAP-A1/GAP-C1 ввод названия — через
+   window.prompt(), без отдельной модалки. */
+window.uiBoxesMenu=()=>{
+  haptic();
+  const buttons=BK_BOXES.map(bx=>({id:"box_"+bx.box,type:"default",text:bx.name}));
+  buttons.push({id:"add",type:"default",text:"+ Добавить бокс"});
+  buttons.push({id:"cancel",type:"cancel"});
+  tg.showPopup({title:"Боксы",message:"Выбери бокс или добавь новый",buttons},(id)=>{
+    if(id==="add") uiAddBox();
+    else if(id&&id.startsWith("box_")) uiBoxRow(parseInt(id.slice(4),10));
+  });
+};
+window.uiAddBox=async()=>{
+  const r=await inputSheet({title:"Новый бокс",fields:[{id:"name",label:"Название",type:"text",defaultValue:"Бокс "+(BK_BOXES.length+1)}],
+    validate:(v)=>!v.name?"Введите название":null});
+  if(!r) return;
+  try{ await api("/api/boxes",{method:"POST",body:JSON.stringify({branch:BRANCH,name:r.name})}); haptic("medium"); toast("Бокс добавлен"); renderBooking(); }
+  catch(e){}
+};
+window.uiBoxRow=(boxId)=>{
+  const box=BK_BOXES.find(b=>b.box===boxId); if(!box) return;
+  tg.showPopup({
+    title:box.name,message:"Что сделать с боксом?",
+    buttons:[
+      {id:"rename",type:"default",text:"Переименовать"},
+      {id:"remove",type:"destructive",text:"Удалить"},
+      {id:"cancel",type:"cancel"},
+    ],
+  },async(id)=>{
+    if(id==="rename"){
+      const r=await inputSheet({title:"Переименовать бокс",fields:[{id:"name",label:"Название",type:"text",defaultValue:box.name}],
+        validate:(v)=>!v.name?"Введите название":null});
+      if(!r) return;
+      try{ await api(`/api/boxes/${encodeURIComponent(BRANCH)}/${boxId}`,{method:"PATCH",body:JSON.stringify({name:r.name})}); haptic("medium"); toast("Бокс переименован"); renderBooking(); }
+      catch(e){}
+    }else if(id==="remove"){
+      try{ await api(`/api/boxes/${encodeURIComponent(BRANCH)}/${boxId}`,{method:"DELETE"}); haptic("medium"); toast("Бокс удалён"); renderBooking(); }
+      catch(e){}
+    }
+  });
+};
+
+/* ─── КЛИЕНТЫ (CRM-лайт, GAP-C1) ───────────────────────────────────────────
+   Директория клиентов сети, доступная сотруднику из mini app — то же,
+   что даёт clients.html на сайте. Переиспользует те же эндпоинты без
+   изменений бэкенда: GET /api/clients (список), GET/PUT /api/clients/{phone}
+   (карточка/редактирование), PUT|DELETE /api/clients/{phone}/discount
+   (постоянная скидка). С GAP-M12 (10.08.2026) постоянная скидка сведена
+   в одну модель с разовой скидкой на машину (/api/loyalty, доступна в
+   «Все машины») — при добавлении машины клиенту с discount_percent
+   бэкенд сам создаёт запись в session["loyalty"], см.
+   sessions.apply_client_loyalty_discount(). */
+let CL_LIST=[], CL_DETAIL_PHONE=null, CL_DETAIL=null;
+// Сегменты (GAP-CRM1, паритет с сайтом — clients.html; та же формулировка,
+// тот же принцип "чистая фильтрация уже загруженного /api/clients,
+// без нового бэкенда"). Рассылки по-прежнему не входят — ждут решения
+// владельца по каналу уведомлений, см. GAP-NOTIFY1.
+const CL_SEGMENTS=[
+  {id:"all",label:"Все"},
+  {id:"inactive30",label:"Не были 30+ дней"},
+  {id:"new",label:"Новые (1 визит)"},
+  {id:"no_visits",label:"Без визитов"},
+  {id:"discount",label:"Постоянная скидка"},
+  {id:"top10",label:"Топ-10 по чеку"},
+];
+let CL_SEGMENT="all";
+function clParseRuDate(s){
+  if(!s) return null;
+  const parts=s.split(".");
+  if(parts.length!==3) return null;
+  const [d,m,y]=parts.map(Number);
+  if(!d||!m||!y) return null;
+  return new Date(y,m-1,d);
+}
+function clApplySegment(list,segment){
+  switch(segment){
+    case "inactive30":{
+      const now=new Date();
+      return list.filter(c=>{ const d=clParseRuDate(c.last_visit); return d&&(now-d)/86400000>=30; });
+    }
+    case "new": return list.filter(c=>c.visit_count===1);
+    case "no_visits": return list.filter(c=>c.visit_count===0);
+    case "discount": return list.filter(c=>c.discount_percent!=null);
+    case "top10": return list.slice().sort((a,b)=>(b.total_spent||0)-(a.total_spent||0)).slice(0,10);
+    default: return list;
+  }
+}
+window.setClSegment=(id)=>{haptic();CL_SEGMENT=id;renderClSegmentChips();renderClientsList();};
+function clFormatPhone(phone){
+  if(phone && phone.length===11) return `+${phone[0]} ${phone.slice(1,4)} ${phone.slice(4,7)}-${phone.slice(7,9)}-${phone.slice(9,11)}`;
+  return phone||"—";
+}
+async function renderClients(){
+  const el=document.getElementById("view-clients");
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Клиенты</span></div>${skeleton(4)}`;
+  try{
+    const r=await api("/api/clients");
+    CL_LIST=r.clients||[];
+  }catch(e){ CL_LIST=[]; }
+  el.innerHTML=`
+    <div class="back-header"><div class="back-btn" onclick="switchTab('more')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Клиенты</span></div>
+    <div style="padding:0 0 20px">
+      <div class="search-wrap">
+        <i class="ti ti-search"></i>
+        <input id="cl-search" placeholder="Поиск по телефону или имени" oninput="clFilter()">
+        <i class="ti ti-x clear-btn" onclick="clClearSearch()"></i>
+      </div>
+      <div class="filter-chips" id="cl-filter-chips"></div>
+      <div id="cl-list" style="padding:0 16px"></div>
+    </div>`;
+  renderClSegmentChips();
+  renderClientsList();
+  attachPullToRefresh("view-clients",renderClients);
+}
+window.clClearSearch=()=>{ document.getElementById("cl-search").value=""; clFilter(); };
+window.clFilter=()=>renderClientsList();
+function renderClSegmentChips(){
+  const wrap=document.getElementById("cl-filter-chips");
+  if(!wrap) return;
+  wrap.innerHTML=CL_SEGMENTS.map(s=>
+    `<div class="filter-chip ${s.id===CL_SEGMENT?"active":""}" onclick="setClSegment('${s.id}')">${s.label}</div>`
+  ).join("");
+}
+function renderClientsList(){
+  const wrap=document.getElementById("cl-list");
+  const searchWrap=document.querySelector(".search-wrap");
+  const q=(document.getElementById("cl-search")?.value||"").trim().toLowerCase();
+  if(searchWrap) searchWrap.classList.toggle("has-value",!!q);
+  const qDigits=q.replace(/\D/g,"");
+  let list=clApplySegment(CL_LIST,CL_SEGMENT);
+  if(q) list=list.filter(c=>(qDigits&&c.phone.includes(qDigits))||(c.name||"").toLowerCase().includes(q));
+  if(!list.length){
+    wrap.innerHTML=(CL_SEGMENT==="all"&&!q)
+      ?emptyState("ti-address-book","Клиенты появятся сами, как только при добавлении машины укажут телефон")
+      :emptyState("ti-search-off","Никого не найдено — попробуйте другой сегмент или запрос");
+    return;
+  }
+  wrap.innerHTML=`<div class="card" style="padding:0">${list.map(c=>{
+    const col=avatarColor(c.name||c.phone);
+    return `<div class="row" onclick="clOpenDetail('${c.phone}')">
+      <div class="row-name">
+        <span class="cl-av" style="background:${col}22;color:${col}">${initials(c.name)}</span>
+        <div><div>${c.name||"Без имени"}</div><div class="row-sub" style="margin-top:2px">${clFormatPhone(c.phone)}${c.discount_percent?` · скидка ${c.discount_percent}%`:""}</div></div>
+      </div>
+      <div class="row-right"><p class="row-price" style="color:var(--green)">${fmt(c.total_spent)}</p><p class="row-sub">${c.visit_count} визит(ов)</p></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+window.clOpenDetail=(phone)=>{ haptic(); CL_DETAIL_PHONE=phone; switchTab("client-detail"); };
+async function renderClientDetail(phone){
+  const el=document.getElementById("view-client-detail");
+  if(!phone){ switchTab("clients"); return; }
+  el.innerHTML=`<div class="back-header"><div class="back-btn" onclick="switchTab('clients')"><i class="ti ti-chevron-left"></i></div><span class="back-header-title">Клиент</span></div>${skeleton(3)}`;
+  let c;
+  try{ c=await api(`/api/clients/${encodeURIComponent(phone)}`); }
+  catch(e){ switchTab("clients"); return; }
+  CL_DETAIL=c;
+  const col=avatarColor(c.name||c.phone);
+  const cars=(c.cars||[]).join(", ")||"—";
+  const visits=(c.visits||[]).slice().reverse();
+  el.innerHTML=`
+    <div class="back-header">
+      <div class="back-btn" onclick="switchTab('clients')"><i class="ti ti-chevron-left"></i></div>
+      <span class="back-header-title">Клиент</span>
+      <div class="back-btn" style="margin-left:auto" onclick="clOpenMenu('${phone}')"><i class="ti ti-dots"></i></div>
+    </div>
+    <div style="padding:0 16px 4px;display:flex;align-items:center;gap:12px">
+      <span class="cl-av" style="width:52px;height:52px;font-size:18px;background:${col}22;color:${col}">${initials(c.name)}</span>
+      <div><div style="font-size:17px;font-weight:600">${c.name||"Без имени"}</div><div class="row-sub">${clFormatPhone(c.phone)}</div></div>
+    </div>
+    <div class="rstat-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="rstat-box"><p>Визитов</p><p>${c.visit_count}</p></div>
+      <div class="rstat-box"><p>Потрачено</p><p>${fmt(c.total_spent)}</p></div>
+      <div class="rstat-box"><p>Посл. визит</p><p style="font-size:14px">${c.last_visit||"—"}</p></div>
+    </div>
+    <div class="section-label"><span>Постоянная скидка</span></div>
+    <div class="card">
+      <div class="cl-discount-row">
+        ${c.discount_percent
+          ?`<span class="cl-discount-badge"><i class="ti ti-discount-2"></i>${c.discount_percent}% на все услуги</span><span style="color:var(--red);font-size:13px;font-weight:700;cursor:pointer" onclick="clRemoveDiscount('${phone}')">Удалить</span>`
+          :`<span class="row-sub">Не установлена</span><span style="color:var(--accent);font-size:13px;font-weight:700;cursor:pointer" onclick="clSetDiscount('${phone}')">Установить</span>`}
+      </div>
+    </div>
+    <div class="section-label"><span>Машины</span></div>
+    <div class="card card-pad" style="font-size:13px;color:var(--text-secondary)">${cars}</div>
+    <div class="section-label"><span>История визитов</span></div>
+    <div class="card">
+      ${visits.length?visits.map(v=>`
+        <div class="row" style="cursor:default">
+          <div><p class="row-name" style="font-size:13px;font-weight:500">${v.date} · ${v.branch}</p><p class="row-sub">${v.car||"—"}</p></div>
+          <p class="row-price" style="color:var(--green)">${fmt(v.total)}</p>
+        </div>`).join(""):`<p class="empty" style="padding:16px">Визитов пока нет</p>`}
+    </div>`;
+}
+window.clOpenMenu=(phone)=>{
+  haptic();
+  openSheet("Клиент",[
+    {icon:"ti-pencil",label:"Изменить имя/машины",fn:`()=>clEditInfo('${phone}')`},
+    {icon:"ti-discount-2",label:CL_DETAIL?.discount_percent?"Изменить скидку":"Установить скидку",fn:`()=>clSetDiscount('${phone}')`},
+    ...(CL_DETAIL?.discount_percent?[{icon:"ti-discount-off",label:"Удалить скидку",destructive:true,fn:`()=>clRemoveDiscount('${phone}')`}]:[]),
+  ]);
+};
+window.clEditInfo=async(phone)=>{
+  const r=await inputSheet({title:"Карточка клиента",fields:[
+    {id:"name",label:"Имя",type:"text",defaultValue:CL_DETAIL?.name||""},
+    {id:"cars",label:"Машины (через запятую)",type:"text",defaultValue:(CL_DETAIL?.cars||[]).join(", ")},
+  ]});
+  if(!r) return;
+  const cars=r.cars.split(",").map(s=>s.trim()).filter(Boolean);
+  haptic("medium");
+  try{
+    await api(`/api/clients/${encodeURIComponent(phone)}`,{method:"PUT",body:JSON.stringify({name:r.name.trim(),cars})});
+    toast("Карточка клиента обновлена");
+    renderClientDetail(phone);
+  }catch(e){}
+};
+window.clSetDiscount=async(phone)=>{
+  const r=await inputSheet({title:"Постоянная скидка клиента",fields:[{id:"val",label:"Скидка, % (1–100)",type:"number",defaultValue:CL_DETAIL?.discount_percent||""}],
+    confirmLabel:"Сохранить",
+    validate:(v)=>(!v.val||v.val<=0||v.val>100)?"Укажите скидку от 1 до 100%":null});
+  if(!r) return;
+  const val=r.val;
+  haptic("medium");
+  try{
+    await api(`/api/clients/${encodeURIComponent(phone)}/discount`,{method:"PUT",body:JSON.stringify({percent:val})});
+    toast("Скидка сохранена");
+    renderClientDetail(phone);
+  }catch(e){}
+};
+window.clRemoveDiscount=(phone)=>{
+  tg.showConfirm("Убрать постоянную скидку клиента?",async(ok)=>{
+    if(!ok) return;
+    haptic("medium");
+    try{
+      await api(`/api/clients/${encodeURIComponent(phone)}/discount`,{method:"DELETE"});
+      toast("Скидка удалена");
+      renderClientDetail(phone);
+    }catch(e){}
+  });
+};
+
+function renderMore(){
+  const el=document.getElementById("view-more");
+  const isOwner=!!ME?.is_owner;
+  const groups=[
+    {title:"Расписание",items:[
+      {icon:"ti-calendar-event",label:"Запись",tab:"booking"},
+    ]},
+    {title:"Клиенты",items:[
+      {icon:"ti-address-book",label:"Клиенты",tab:"clients"},
+    ]},
+    {title:"Аналитика",items:[
+      {icon:"ti-chart-bar",label:"Отчёты",tab:"reports"},
+      {icon:"ti-history",label:"История изменений",tab:"history"},
+    ]},
+    {title:"Команда",items:[
+      {icon:"ti-users",label:"Мойщики",tab:"workers"},
+      {icon:"ti-calendar",label:"График смен",tab:"schedule"},
+    ]},
+    {title:"Система",items:[
+      ...(isOwner?[{icon:"ti-building-store",label:"Филиалы",tab:"branches"}]:[]),
+      {icon:"ti-settings",label:"Настройки",tab:"settings"},
+    ]},
+  ];
+  el.innerHTML=`
+    <div class="topbar"><div><div class="topbar-title">Ещё</div><div class="topbar-sub">${BRANCH||""}</div></div></div>
+    ${groups.map(g=>`
+      <div class="section-label"><span>${g.title}</span></div>
+      <div class="card" style="padding:4px 0">
+        ${g.items.map(it=>`
+          <div class="row" onclick="switchTab('${it.tab}')" style="cursor:pointer">
+            <div class="qb-icon" style="width:34px;height:34px;border-radius:10px;background:var(--accent-tint);color:var(--accent);display:flex;align-items:center;justify-content:center"><i class="ti ${it.icon}"></i></div>
+            <span style="flex:1;margin-left:10px">${it.label}</span>
+            <i class="ti ti-chevron-right" style="color:var(--text-muted)"></i>
+          </div>`).join("")}
+      </div>`).join("")}
+  `;
+}
+
+/* ─── ДОПОЛНИТЕЛЬНЫЕ ЭКРАНЫ (виртуальные роуты новой навигации) ──────────── */
+document.getElementById("view-home").insertAdjacentHTML("afterend",
+  `<div id="view-cash" class="hidden"></div><div id="view-day-report" class="hidden"></div><div id="view-all-cars" class="hidden"></div><div id="view-history" class="hidden"></div><div id="view-schedule" class="hidden"></div><div id="view-my-stats" class="hidden"></div><div id="view-my-day-cars" class="hidden"></div><div id="view-employees" class="hidden"></div><div id="view-finance" class="hidden"></div><div id="view-more" class="hidden"></div><div id="view-branches" class="hidden"></div><div id="view-booking" class="hidden"></div><div id="view-booking-form" class="hidden"></div><div id="view-clients" class="hidden"></div><div id="view-client-detail" class="hidden"></div>`
+);
+const _switchTab=switchTab;
+// Виртуальные роуты: экран не в основном наборе switchTab, но должен
+// открываться как полноценный раздел (в т.ч. по клику в нижнем меню).
+// activeTabName — на какой пункт нижнего меню подсвечиваться для этого роута
+// (например «Ещё» подсвечивается и для history/schedule/employees, потому
+// что физически они открываются ИЗ раздела «Ещё»).
+const VIRTUAL_ROUTES={
+  "day-report":{view:"view-day-report",render:()=>renderDayReport(),activeTab:"more"},
+  "all-cars":{view:"view-all-cars",render:()=>renderAllCars(),activeTab:"all-cars"},
+  "cash":{view:"view-cash",render:()=>renderCash(),activeTab:"cash"},
+  "history":{view:"view-history",render:()=>renderHistory(),activeTab:"more"},
+  "schedule":{view:"view-schedule",render:()=>renderScheduleWeek(),activeTab:"more"},
+  "employees":{view:"view-employees",render:()=>renderEmployees(),activeTab:"more"},
+  "my-day-cars":{view:"view-my-day-cars",render:()=>renderMyDayCars(),activeTab:"my-stats"},
+  "finance":{view:"view-finance",render:()=>renderFinance(),activeTab:"finance"},
+  "branches":{view:"view-branches",render:()=>renderBranchesAdmin(),activeTab:"more"},
+  "more":{view:"view-more",render:()=>renderMore(),activeTab:"more"},
+  "booking":{view:"view-booking",render:()=>renderBooking(),activeTab:"more"},
+  "booking-form":{view:"view-booking-form",render:()=>renderBookingForm(BK_EDIT_ID),activeTab:"more"},
+  "clients":{view:"view-clients",render:()=>renderClients(),activeTab:"more"},
+  "client-detail":{view:"view-client-detail",render:()=>renderClientDetail(CL_DETAIL_PHONE),activeTab:"more"},
+};
+switchTab=function(name,editNum){
+  const route=VIRTUAL_ROUTES[name];
+  if(route){
+    document.querySelectorAll(".tab").forEach(t=>t.classList.toggle("active",t.dataset.tab===route.activeTab));
+    document.querySelectorAll("[id^=view-]").forEach(v=>v.classList.add("hidden"));
+    document.getElementById(route.view).classList.remove("hidden");
+    route.render();
+    return;
+  }
+  _switchTab(name,editNum);
+};
+
+/* ─── MINI APP NAV TRANSITIONS + BACK STACK (Stage 4c) ────────────────────
+   Единственная точка входа для SPA-переходов внутри Mini App. Оборачивает
+   уже готовый switchTab (со всеми его слоями выше), не трогая ни один из
+   ~сотни существующих вызовов switchTab(...) по коду — они как звали
+   switchTab(name[, editNum]), так и зовут, ничего не меняли на местах
+   вызова. Единственное исключение — сама кнопка таббара (см. выше),
+   которая теперь явно помечает переход как "tab" (боковой, не вложенный).
+
+   Модель: NAV_STACK — история вложенных ("drill-in") экранов с момента
+   последнего приземления на таб. Переход на экран, которого нет в стеке —
+   push (вперёд, въезд справа). Переход на экран, который уже есть в
+   стеке — pop до него (назад, выезд вправо). Переход по клику на таббар —
+   всегда сброс стека и простой fade (табы не иерархичны друг другу).
+   BackButton Telegram показывается, только когда есть куда возвращаться
+   внутри приложения (глубина стека > 1), и не подменяет системное
+   поведение в остальных случаях. ────────────────────────────────────── */
+let NAV_STACK=["home"];
+const NAV_REDUCED_MOTION=!!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+function navCurrentViewEl(){ return document.querySelector("[id^=view-]:not(.hidden)"); }
+function navUpdateBackButton(){
+  try{ if(NAV_STACK.length>1) tg.BackButton.show(); else tg.BackButton.hide(); }catch(e){}
+}
+try{
+  tg.BackButton.onClick(()=>{
+    if(NAV_STACK.length>1){ haptic(); switchTab(NAV_STACK[NAV_STACK.length-2]); }
+  });
+}catch(e){}
+
+const _switchTabNav=switchTab;
+switchTab=function(name,editNum,navHint){
+  let direction;
+  if(navHint==="tab"){
+    NAV_STACK=[name];
+    direction="fade";
+  } else {
+    const idx=NAV_STACK.lastIndexOf(name);
+    if(idx===-1){ NAV_STACK.push(name); direction="forward"; }
+    else if(idx===NAV_STACK.length-1){ direction="none"; }
+    else { NAV_STACK=NAV_STACK.slice(0,idx+1); direction="back"; }
+  }
+
+  const prevEl=navCurrentViewEl();
+  if(NAV_REDUCED_MOTION||!prevEl||direction==="none"){
+    _switchTabNav(name,editNum);
+    navUpdateBackButton();
+    return;
+  }
+
+  const prevId=prevEl.id;
+  const containerEl=prevEl.parentElement;
+  const pinnedHeight=containerEl?containerEl.getBoundingClientRect().height:0;
+
+  _switchTabNav(name,editNum);
+
+  const nextEl=document.getElementById("view-"+name)||navCurrentViewEl();
+  if(!nextEl||nextEl.id===prevId){ navUpdateBackButton(); return; }
+
+  const inClass=direction==="forward"?"nav-in-forward":direction==="back"?"nav-in-back":"nav-in-fade";
+  const outClass=direction==="forward"?"nav-out-forward":direction==="back"?"nav-out-back":"nav-out-fade";
+
+  if(containerEl) containerEl.style.minHeight=pinnedHeight+"px";
+  prevEl.classList.remove("hidden");
+  prevEl.classList.add("nav-transitioning",outClass);
+  nextEl.classList.add("nav-transitioning",inClass);
+
+  let cleaned=false;
+  const cleanup=()=>{
+    if(cleaned) return;
+    cleaned=true;
+    prevEl.classList.add("hidden");
+    prevEl.classList.remove("nav-transitioning",outClass);
+    nextEl.classList.remove("nav-transitioning",inClass);
+    if(containerEl) containerEl.style.minHeight="";
+  };
+  nextEl.addEventListener("animationend",cleanup,{once:true});
+  setTimeout(cleanup,340); // safety net if animationend doesn't fire (e.g. tab hidden mid-anim)
+
+  navUpdateBackButton();
+};
+
+switchTab("home");
+</script>
+</body>
+</html>

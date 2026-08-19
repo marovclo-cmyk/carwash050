@@ -1,0 +1,4248 @@
+{
+  "Карла Маркса": [
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_5a1a283aafc146e486acec44",
+      "at": "15.08.2026 10:41:18"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:41:18"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "15.08.2026 10:41:18"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_840e33aaa4804fb995fdc597",
+      "at": "15.08.2026 10:41:18"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:41:25"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "15.08.2026 10:41:25"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:41:26"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:19"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:19"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "15.08.2026 10:44:19"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:44:20"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:21"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "15.08.2026 10:44:21"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:21"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:44:21"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:44:21"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_43240acb968e479da7586dec",
+      "at": "15.08.2026 10:44:25"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_73f59f00a87f42a693d29750",
+      "at": "15.08.2026 10:44:26"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_b6a6d23dc6b944008962925e",
+      "at": "15.08.2026 10:44:26"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_c05e3613937d4d098e8965fc",
+      "at": "15.08.2026 10:44:26"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:44:27"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "15.08.2026 10:44:27"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_5047362e7c144069b099869e",
+      "at": "15.08.2026 10:44:27"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:44:34"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "15.08.2026 10:44:34"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:44:35"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:26"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:26"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:26"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:27"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:27"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:55:28"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:29"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:55:29"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:29"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "15.08.2026 10:55:29"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:29"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 10:55:30"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 10:55:30"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_71cf9ca2f14e4562b5f58156",
+      "at": "15.08.2026 10:55:33"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_698411810c184784b41ac530",
+      "at": "15.08.2026 10:55:34"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_63b94095b058460a85f6f6fe",
+      "at": "15.08.2026 10:55:34"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_500f3c35becf4f219e893e1b",
+      "at": "15.08.2026 10:55:34"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:55:35"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "15.08.2026 10:55:35"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_c25f3484e9f84ddc8799a636",
+      "at": "15.08.2026 10:55:35"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:55:41"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "15.08.2026 10:55:41"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 10:55:42"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:40"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:41"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:41"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:42"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:42"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "15.08.2026 11:01:42"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:43"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:01:43"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:43"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:43"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:43"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:01:43"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:01:44"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_0e7f11519400450293c5d9c8",
+      "at": "15.08.2026 11:01:48"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_209936fdcf934276af1b4b49",
+      "at": "15.08.2026 11:01:49"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_21d94fb141474bce9843fe16",
+      "at": "15.08.2026 11:01:49"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_fadc85dce1d446ce99808f3e",
+      "at": "15.08.2026 11:01:49"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:01:49"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "15.08.2026 11:01:49"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_8f1a17945aed4bb7b233ecc5",
+      "at": "15.08.2026 11:01:49"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:01:57"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "15.08.2026 11:01:57"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:01:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:48"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:49"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:49"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:50"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:50"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "15.08.2026 11:08:50"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:08:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:52"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "15.08.2026 11:08:52"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:52"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:08:52"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:08:52"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_9bbf63ddb49c4960b7704e03",
+      "at": "15.08.2026 11:08:55"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_e9760b6c932041dbb207bf8d",
+      "at": "15.08.2026 11:08:56"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_c2c3e4b663664142b9261470",
+      "at": "15.08.2026 11:08:56"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_6dd28df7c2cf4c61b18473a4",
+      "at": "15.08.2026 11:08:56"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:08:57"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "15.08.2026 11:08:57"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_c21bb464311d41a185eda078",
+      "at": "15.08.2026 11:08:57"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:09:04"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "15.08.2026 11:09:04"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:09:04"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:16"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "15.08.2026 11:34:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:17"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:34:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "15.08.2026 11:34:19"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "15.08.2026 11:34:19"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_13beb58a969f4b26906722f8",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_3a79f493c9da4509bd13fab3",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_c579eb824ec840d091eff6dd",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_040ab8f70cd84beeb28e3de9",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_fcdd4d23c6b2452ebfaeef68",
+      "at": "15.08.2026 11:34:23"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:34:30"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "15.08.2026 11:34:30"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "15.08.2026 11:34:30"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_51676d4ab1e94467aa9aea74",
+      "at": "16.08.2026 08:26:50"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_d90dfcc202ac445e84f130a9",
+      "at": "16.08.2026 08:26:50"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_5f29f300b0a44090b6a44c0f",
+      "at": "16.08.2026 08:26:50"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_41be04d95ee04523816783af",
+      "at": "16.08.2026 08:26:51"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:26:51"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "16.08.2026 08:26:51"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_9ca62105c02340cb8bd13e16",
+      "at": "16.08.2026 08:26:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:53"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:53"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:53"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:54"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "16.08.2026 08:26:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:55"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:26:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:26:57"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:26:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:03"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:03"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:03"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:04"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:04"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:27:05"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:06"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:27:06"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:06"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "16.08.2026 08:27:06"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:06"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:27:07"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:27:07"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_cc9daf203ee24187a1ad30aa",
+      "at": "16.08.2026 08:27:10"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_eee77ee24fa347eabf0e4470",
+      "at": "16.08.2026 08:27:10"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_295be90671df4ac585977c97",
+      "at": "16.08.2026 08:27:11"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_216b8b3b64ab457789aed00e",
+      "at": "16.08.2026 08:27:11"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:27:11"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "16.08.2026 08:27:11"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_a8deadba37674dd583b85379",
+      "at": "16.08.2026 08:27:11"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:27:18"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "16.08.2026 08:27:18"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:27:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:13"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:13"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:14"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:14"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "16.08.2026 08:32:14"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:15"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "16.08.2026 08:32:16"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:16"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "16.08.2026 08:32:16"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "16.08.2026 08:32:16"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_843d77021a694e0dba0dd231",
+      "at": "16.08.2026 08:32:20"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_922845e49dde426d810bd647",
+      "at": "16.08.2026 08:32:20"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_cf1eb8e581654aa991c4eab8",
+      "at": "16.08.2026 08:32:20"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_63ac63ba64994c009fbd09b5",
+      "at": "16.08.2026 08:32:20"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:32:21"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "16.08.2026 08:32:21"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_22ffc3e9052942d99f68ce28",
+      "at": "16.08.2026 08:32:21"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:32:27"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "16.08.2026 08:32:27"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "16.08.2026 08:32:27"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:09"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:10"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:10"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:11"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:11"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "17.08.2026 16:21:11"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "17.08.2026 16:21:12"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:13"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "17.08.2026 16:21:13"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "17.08.2026 16:21:13"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_9b3d99dcef8e4c478ef30e55",
+      "at": "17.08.2026 16:21:16"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_4b1c2db2cde247c1a7151e51",
+      "at": "17.08.2026 16:21:17"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_223f65d10ae04981ae2a7783",
+      "at": "17.08.2026 16:21:17"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_38eac51cdd8b4efd90a95a5f",
+      "at": "17.08.2026 16:21:17"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "17.08.2026 16:21:17"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "17.08.2026 16:21:17"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_cd6a587aa05f4e3e95ce10dd",
+      "at": "17.08.2026 16:21:17"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "17.08.2026 16:21:24"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "17.08.2026 16:21:24"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "17.08.2026 16:21:24"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:05"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:06"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:06"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:08"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:08"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "18.08.2026 06:38:08"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:08"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 06:38:08"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "18.08.2026 06:38:09"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:10"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 06:38:10"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 06:38:10"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_b0b4e2a0564e4dd8aeb29a72",
+      "at": "18.08.2026 06:38:15"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_3507e7dfe9dc4826a446baf5",
+      "at": "18.08.2026 06:38:15"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_33b42e30162e48f1b31aa8a7",
+      "at": "18.08.2026 06:38:16"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_909ec3bb341941d38315d13b",
+      "at": "18.08.2026 06:38:16"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:17"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "18.08.2026 06:38:17"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_ed2369e92e1948ee91c5d458",
+      "at": "18.08.2026 06:38:17"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:25"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 06:38:25"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:26"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:29"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Связка",
+      "at": "18.08.2026 06:38:29"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Р333РР · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 06:38:29"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · С444СС",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 06:38:30"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Связка",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Р333РР · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · С444СС",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 06:38:36"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 06:38:37"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 06:38:37"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 06:38:37"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:54"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:54"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "18.08.2026 07:11:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:57"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "18.08.2026 07:11:58"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:58"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:11:58"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:11:58"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_ea0ee3114aca43a4abea8496",
+      "at": "18.08.2026 07:12:02"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_1827b821dbc14c688da38e94",
+      "at": "18.08.2026 07:12:03"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_4234af8a35094a65a20c3500",
+      "at": "18.08.2026 07:12:03"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_223395d29239408398a605e3",
+      "at": "18.08.2026 07:12:03"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:12:04"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "18.08.2026 07:12:04"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_64f5976246ad436db54def54",
+      "at": "18.08.2026 07:12:04"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:12:10"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 07:12:10"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:12:11"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:12:14"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Связка",
+      "at": "18.08.2026 07:12:14"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Р333РР · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 07:12:14"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:12:14"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · С444СС",
+      "at": "18.08.2026 07:12:15"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 07:12:15"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 07:12:15"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:12:15"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 07:12:15"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 07:12:15"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:13:55"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:13:56"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:13:56"
+    },
+    {
+      "action": "newday",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена закрыта",
+      "at": "18.08.2026 07:13:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:13:56"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:19"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:19"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:19"
+    },
+    {
+      "action": "newday",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена закрыта",
+      "at": "18.08.2026 07:14:19"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:20"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:36"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:36"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:37"
+    },
+    {
+      "action": "newday",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена закрыта",
+      "at": "18.08.2026 07:14:37"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:37"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:48"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:49"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:49"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:50"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:50"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "18.08.2026 07:14:50"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:14:51"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:52"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "18.08.2026 07:14:52"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:52"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:52"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "18.08.2026 07:14:52"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:56"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:57"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:14:57"
+    },
+    {
+      "action": "newday",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена закрыта",
+      "at": "18.08.2026 07:14:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "18.08.2026 07:14:57"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_b96c0df3354a4a8898334c2f",
+      "at": "18.08.2026 07:14:59"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_059bbc693a54434492bcda0e",
+      "at": "18.08.2026 07:14:59"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_a22cbc3129364311b9dfee8a",
+      "at": "18.08.2026 07:14:59"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_55ddfba13b7b4204b06a0544",
+      "at": "18.08.2026 07:15:00"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:15:00"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "18.08.2026 07:15:00"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_4d1f2da98f604a3eaf503905",
+      "at": "18.08.2026 07:15:00"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:15:07"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 07:15:07"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:15:07"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Связка",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Р333РР · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · С444СС",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽",
+      "at": "18.08.2026 07:15:10"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "18.08.2026 07:15:11"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 07:15:11"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "18.08.2026 07:15:11"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:15"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:16"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:44:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:18"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:44:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:18"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "19.08.2026 06:44:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:18"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:19"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:44:19"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:24"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:24"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:24"
+    },
+    {
+      "action": "newday",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена закрыта",
+      "at": "19.08.2026 06:44:24"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:44:25"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_49ecf18fa7e64e73981126af",
+      "at": "19.08.2026 06:44:26"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_623cb7410514469c8e41ed59",
+      "at": "19.08.2026 06:44:26"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_7a912303a1bc47a1a8406b8b",
+      "at": "19.08.2026 06:44:27"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_2a1811da64d340fbb2733741",
+      "at": "19.08.2026 06:44:27"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:27"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "19.08.2026 06:44:27"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_b39b8b89d0424b3f95f13dc0",
+      "at": "19.08.2026 06:44:27"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:34"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "19.08.2026 06:44:34"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:35"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Связка",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Р333РР · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · С444СС",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "19.08.2026 06:44:38"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:55"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 2 · 10:00–11:00 · без имени",
+      "at": "19.08.2026 06:46:56"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:46:57"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:58"
+    },
+    {
+      "action": "booking_status",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · статус → confirmed",
+      "at": "19.08.2026 06:46:58"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:58"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:46:58"
+    },
+    {
+      "action": "booking_delete",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00",
+      "at": "19.08.2026 06:46:58"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:03"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:03"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:03"
+    },
+    {
+      "action": "newday",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена закрыта",
+      "at": "19.08.2026 06:47:03"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Тестов",
+      "at": "19.08.2026 06:47:04"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_bb03aa542bda4ed1aad62b96",
+      "at": "19.08.2026 06:47:05"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_ead0e3dbcdd84fd38f8ad52f",
+      "at": "19.08.2026 06:47:05"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 500₽ · mock_949a8856bfe24fbdb6615a36",
+      "at": "19.08.2026 06:47:06"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "advance · 777₽ · mock_11f87e4ee25a45f29eb4d431",
+      "at": "19.08.2026 06:47:06"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:06"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "А000АА · Тест · 1000₽",
+      "at": "19.08.2026 06:47:06"
+    },
+    {
+      "action": "payment_create",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "car · 1000₽ · mock_ceed2f55b80144e782d6e491",
+      "at": "19.08.2026 06:47:06"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:13"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "машина · Комплексная мойка · 2000₽",
+      "at": "19.08.2026 06:47:13"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:14"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 10:00–11:00 · Клиент Связка",
+      "at": "19.08.2026 06:47:17"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Р333РР · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "19.08.2026 06:47:17"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:17"
+    },
+    {
+      "action": "booking_add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "бокс 1 · 12:00–13:00 · С444СС",
+      "at": "19.08.2026 06:47:18"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽ · из записи №1",
+      "at": "19.08.2026 06:47:18"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "С444СС · Комплексная мойка · 2000₽",
+      "at": "19.08.2026 06:47:18"
+    },
+    {
+      "action": "dayopen",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Смена открыта",
+      "at": "19.08.2026 06:47:18"
+    },
+    {
+      "action": "add",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "19.08.2026 06:47:18"
+    },
+    {
+      "action": "edit",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Т555ТТ · Тест · 900₽",
+      "at": "19.08.2026 06:47:18"
+    }
+  ],
+  "—": [
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "10.08.2026 18:24:57"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "10.08.2026 18:24:57"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "10.08.2026 18:25:47"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "10.08.2026 18:25:47"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "10.08.2026 18:26:51"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "10.08.2026 18:26:51"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "10.08.2026 18:27:15"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "10.08.2026 18:27:15"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "11.08.2026 10:51:42"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "11.08.2026 10:51:42"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "11.08.2026 10:58:18"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "11.08.2026 10:58:18"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "11.08.2026 11:00:35"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "11.08.2026 11:00:35"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "11.08.2026 11:15:41"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "11.08.2026 11:15:41"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "11.08.2026 11:17:32"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "11.08.2026 11:17:32"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "11.08.2026 11:20:13"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "11.08.2026 11:20:13"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 06:07:12"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 06:07:12"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 09:29:26"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 09:29:26"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 09:37:37"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 09:37:37"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:19:11"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:19:11"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:23:47"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:23:47"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:32:09"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:32:09"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:36:11"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:36:11"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:43:15"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:43:15"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:49:40"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:49:40"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 10:51:33"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 10:51:33"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 11:00:55"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 11:00:55"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 11:03:43"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 11:03:43"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 19:42:22"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 19:42:22"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "12.08.2026 19:51:49"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "12.08.2026 19:51:49"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 07:56:39"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 07:56:39"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 07:59:07"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 07:59:07"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 08:05:28"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 08:05:28"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 08:07:36"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 08:07:36"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 08:10:27"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 08:10:27"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 08:14:39"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 08:14:39"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "13.08.2026 08:19:24"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "13.08.2026 08:19:24"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 10:04:29"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 10:04:29"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 10:09:41"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 10:09:42"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 10:19:57"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 10:19:57"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 10:42:08"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 10:42:08"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 10:53:40"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 10:53:40"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 11:00:18"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 11:00:18"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 15:36:02"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 15:36:02"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "14.08.2026 15:39:35"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "14.08.2026 15:39:35"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "15.08.2026 10:41:26"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "15.08.2026 10:41:26"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "15.08.2026 10:44:36"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "15.08.2026 10:44:36"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "15.08.2026 10:55:43"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "15.08.2026 10:55:43"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "15.08.2026 11:01:58"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "15.08.2026 11:01:58"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "15.08.2026 11:09:05"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "15.08.2026 11:09:05"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "15.08.2026 11:34:31"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "15.08.2026 11:34:31"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "16.08.2026 08:27:18"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "16.08.2026 08:27:18"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "16.08.2026 08:32:28"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "16.08.2026 08:32:28"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "17.08.2026 16:21:25"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "17.08.2026 16:21:25"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "18.08.2026 06:38:27"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "18.08.2026 06:38:27"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "18.08.2026 07:12:12"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "18.08.2026 07:12:12"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "18.08.2026 07:15:08"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "18.08.2026 07:15:08"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "19.08.2026 06:44:35"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "19.08.2026 06:44:35"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка 15.0%",
+      "at": "19.08.2026 06:47:15"
+    },
+    {
+      "action": "client_discount",
+      "actor_id": 0,
+      "actor_name": "—",
+      "details": "Клиент Тестов · скидка снята",
+      "at": "19.08.2026 06:47:15"
+    }
+  ]
+}
