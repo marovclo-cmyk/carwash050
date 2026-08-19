@@ -3004,13 +3004,9 @@ window.bkSubmit=async(id,date)=>{
    window.prompt(), без отдельной модалки. */
 window.uiBoxesMenu=()=>{
   haptic();
-  const buttons=BK_BOXES.map(bx=>({id:"box_"+bx.box,type:"default",text:bx.name}));
-  buttons.push({id:"add",type:"default",text:"+ Добавить бокс"});
-  buttons.push({id:"cancel",type:"cancel"});
-  tg.showPopup({title:"Боксы",message:"Выбери бокс или добавь новый",buttons},(id)=>{
-    if(id==="add") uiAddBox();
-    else if(id&&id.startsWith("box_")) uiBoxRow(parseInt(id.slice(4),10));
-  });
+  const actions=BK_BOXES.map(bx=>({icon:"ti-door",label:bx.name,fn:"()=>uiBoxRow("+bx.box+")"}));
+  actions.push({icon:"ti-plus",label:"Добавить бокс",fn:"()=>uiAddBox()"});
+  openSheet("Боксы",actions);
 };
 window.uiAddBox=async()=>{
   const r=await inputSheet({title:"Новый бокс",fields:[{id:"name",label:"Название",type:"text",defaultValue:"Бокс "+(BK_BOXES.length+1)}],
@@ -3021,25 +3017,27 @@ window.uiAddBox=async()=>{
 };
 window.uiBoxRow=(boxId)=>{
   const box=BK_BOXES.find(b=>b.box===boxId); if(!box) return;
-  tg.showPopup({
-    title:box.name,message:"Что сделать с боксом?",
-    buttons:[
-      {id:"rename",type:"default",text:"Переименовать"},
-      {id:"remove",type:"destructive",text:"Удалить"},
-      {id:"cancel",type:"cancel"},
-    ],
-  },async(id)=>{
-    if(id==="rename"){
-      const r=await inputSheet({title:"Переименовать бокс",fields:[{id:"name",label:"Название",type:"text",defaultValue:box.name}],
-        validate:(v)=>!v.name?"Введите название":null});
-      if(!r) return;
-      try{ await api(`/api/boxes/${encodeURIComponent(BRANCH)}/${boxId}`,{method:"PATCH",body:JSON.stringify({name:r.name})}); haptic("medium"); toast("Бокс переименован"); renderBooking(); }
-      catch(e){}
-    }else if(id==="remove"){
-      try{ await api(`/api/boxes/${encodeURIComponent(BRANCH)}/${boxId}`,{method:"DELETE"}); haptic("medium"); toast("Бокс удалён"); renderBooking(); }
-      catch(e){}
-    }
-  });
+  // GAP-BOX1 (хвост): tg.showPopup() ограничен 3 кнопками — при 2+ боксах
+  // меню «бокс1, бокс2, ..., Добавить, Отмена» превышает лимит и попап
+  // просто не открывается. openSheet — свой скроллящийся bottom-sheet без
+  // такого лимита (тот же паттерн, что уже используется в bkOpenSheet).
+  const actions=[
+    {icon:"ti-pencil",label:"Переименовать",fn:"()=>uiRenameBox("+boxId+")"},
+    {icon:"ti-trash",label:"Удалить",destructive:true,fn:"()=>uiRemoveBox("+boxId+")"},
+  ];
+  openSheet(box.name,actions);
+};
+window.uiRenameBox=async(boxId)=>{
+  const box=BK_BOXES.find(b=>b.box===boxId); if(!box) return;
+  const r=await inputSheet({title:"Переименовать бокс",fields:[{id:"name",label:"Название",type:"text",defaultValue:box.name}],
+    validate:(v)=>!v.name?"Введите название":null});
+  if(!r) return;
+  try{ await api(`/api/boxes/${encodeURIComponent(BRANCH)}/${boxId}`,{method:"PATCH",body:JSON.stringify({name:r.name})}); haptic("medium"); toast("Бокс переименован"); renderBooking(); }
+  catch(e){}
+};
+window.uiRemoveBox=async(boxId)=>{
+  try{ await api(`/api/boxes/${encodeURIComponent(BRANCH)}/${boxId}`,{method:"DELETE"}); haptic("medium"); toast("Бокс удалён"); renderBooking(); }
+  catch(e){}
 };
 
 /* ─── КЛИЕНТЫ (CRM-лайт, GAP-C1) ───────────────────────────────────────────
