@@ -62,6 +62,11 @@
   .bf-item input{width:auto;accent-color:var(--orange)}
   .bf-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
   .bf-name{flex:1;font-weight:600;color:var(--ink)}
+  .bm-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--r-sm);background:var(--paper-2);border:1.5px solid var(--line);font-size:12.5px}
+  .bm-item .bf-name{flex:1;font-weight:600;color:var(--ink)}
+  .bm-icon-btn{width:26px;height:26px;border-radius:50%;border:none;background:transparent;color:var(--muted);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;flex-shrink:0}
+  .bm-icon-btn:hover{background:var(--paper-3);color:var(--ink)}
+  .bm-icon-btn.danger:hover{color:var(--red)}
   .bf-off{font-size:10px;color:var(--muted-2);font-weight:700;background:var(--paper-3);padding:2px 7px;border-radius:999px}
 
   /* попап «Масштаб» — вертикальный список опций высоты слота, тот же паттерн, что bf-item */
@@ -122,17 +127,6 @@
   .ds-links a{flex:1;height:34px;border-radius:999px;border:1.5px solid var(--line-strong);display:flex;align-items:center;justify-content:center;font-size:11.5px;font-weight:700;color:var(--ink);text-decoration:none}
   .ds-links a:hover{border-color:var(--orange);color:var(--orange)}
   .ds-links a.disabled{opacity:.4;pointer-events:none}
-
-  /* не на смене сегодня — колонка бокса приглушена, но не скрыта */
-  .gh-col.off-duty{opacity:.6}
-  .gh-col.off-duty .gh-role::after{content:" · не на смене"}
-  /* колонка сотрудника не на смене — диагональная штриховка на всю высоту,
-     как «нерабочее время» в журнале YCLIENTS, вместо плоского затемнения */
-  .gb-col.off-duty{
-    background-image:repeating-linear-gradient(135deg,var(--paper-2) 0 8px,var(--paper) 8px 16px);
-    cursor:not-allowed;
-  }
-  .gb-col.off-duty .empty-slot-hint{display:none}
 
   /* ---------- drag & drop записи (зажать и потянуть — перенос по времени/боксу) ---------- */
   .appt.dragging{opacity:.35}
@@ -432,12 +426,19 @@
           <div class="popover-panel" id="boxFilterPanel">
             <div class="bf-quick">
               <button type="button" class="bf-quick-btn" id="bfAllBtn">Все боксы</button>
-              <button type="button" class="bf-quick-btn" id="bfDutyBtn">На смене сегодня</button>
             </div>
             <div class="bf-list" id="bfList"></div>
           </div>
         </div>
         <div class="tb-sep"></div>
+        <div class="popover-wrap" id="boxManageWrap" style="display:none">
+          <button class="tb-icon-btn" id="boxManageBtn" type="button" title="Управление боксами"><i class="ti ti-door"></i></button>
+          <div class="popover-panel left0" id="boxManagePanel">
+            <div class="ds-title" style="margin-bottom:10px">Боксы</div>
+            <div class="bf-list" id="bmList"></div>
+            <button type="button" class="btn secondary" style="width:100%;margin-top:10px" id="bmAddBtn"><i class="ti ti-plus"></i> Добавить бокс</button>
+          </div>
+        </div>
         <div class="popover-wrap">
           <button class="tb-icon-btn" id="zoomBtn" type="button" title="Масштаб журнала"><i class="ti ti-settings"></i></button>
           <div class="popover-panel left0" id="zoomPanel">
@@ -524,6 +525,14 @@
         <div class="field">
           <label>Бокс</label>
           <select id="fBox"></select>
+        </div>
+
+        <!-- GAP-BOX1 (хвост): сотрудник записи — самостоятельное поле, не
+             выводится из бокса (у бокса больше нет employee, см. buildBoxSelect
+             и buildEmployeeSelect). -->
+        <div class="field">
+          <label>Сотрудник (необязательно)</label>
+          <select id="fEmployee"><option value="">— не выбран —</option></select>
         </div>
 
         <div class="field-row-2">
@@ -758,16 +767,15 @@ if (CW.requireAuth()) {
   const urlBookingParam = new URLSearchParams(window.location.search).get("booking");
   let curDate = urlDateParam ? fromIso(urlDateParam) : new Date();
   let boxFilterSet = new Set(); // номера видимых боксов — пересобирается в buildBoxFilter()
-  let boxFilterAuto = true;     // true = следовать за «на смене сегодня» при смене даты; false = ручной выбор пользователя
   let statusFilterSet = new Set(STATUS_ORDER); // видимые статусы визитов — по умолчанию все
 
-  // Phase 4b — фильтры боксов/статусов переживают полную перезагрузку
-  // страницы (переход и обратно, F5). boxFilterSet при boxFilterAuto=true
-  // всё равно пересчитывается в buildBoxFilter() от актуальных «на смене» —
-  // сохранённый набор здесь нужен только для ручного режима.
+  // Phase 4b — фильтр боксов переживает полную перезагрузку страницы
+  // (переход и обратно, F5). GAP-BOX1 (хвост): бокс больше не связан с
+  // сотрудником/сменой (on_duty не существует), поэтому автоматический
+  // режим «на смене сегодня» убран — фильтр всегда ручной, по умолчанию
+  // выбраны все боксы филиала.
   const savedBookingFilters = CW.loadFilterState("booking");
   if (savedBookingFilters) {
-    if (typeof savedBookingFilters.boxFilterAuto === "boolean") boxFilterAuto = savedBookingFilters.boxFilterAuto;
     if (Array.isArray(savedBookingFilters.boxFilterSet)) boxFilterSet = new Set(savedBookingFilters.boxFilterSet);
     if (Array.isArray(savedBookingFilters.statusFilterSet) && savedBookingFilters.statusFilterSet.length) {
       statusFilterSet = new Set(savedBookingFilters.statusFilterSet.filter(s => STATUS_ORDER.includes(s)));
@@ -776,7 +784,6 @@ if (CW.requireAuth()) {
   }
   function persistBookingFilters() {
     CW.saveFilterState("booking", {
-      boxFilterAuto,
       boxFilterSet: [...boxFilterSet],
       statusFilterSet: [...statusFilterSet],
     });
@@ -827,11 +834,18 @@ if (CW.requireAuth()) {
     const tbAvatar = document.getElementById("tbAvatar");
     tbAvatar.textContent = CW.initials(CW.getName());
     tbAvatar.title = `${CW.getName() || "—"} · ${CW.roleLabel(CW.getRole()) || ""}`;
+    // GAP-BOX1 (хвост): управление боксами на сайте — только для владельца
+    // и админа филиала (тот же уровень доступа, что require_branch_admin
+    // на бэке для POST/PATCH/DELETE /api/boxes).
+    if (["владелец", "админ"].includes(CW.getRole())) {
+      document.getElementById("boxManageWrap").style.display = "";
+    }
     try {
       cfg = await CW.authFetch("/api/config");
       (cfg.services || []).forEach(s => { serviceNames[s.key] = s.name; });
     } catch (e) { /* не критично для сетки — просто покажем сырые ключи, если конфиг недоступен */ }
     buildModalStaticParts();
+    await loadWorkersList();
     await loadBookings();
     if (urlBookingParam) {
       const bk = bookings.find(b => String(b.id) === urlBookingParam);
@@ -848,6 +862,7 @@ if (CW.requireAuth()) {
       boxes = data.boxes || [];
       bookings = data.bookings || [];
       buildBoxFilter();
+      renderBoxManagePanel();
       renderGrid();
       loadDaySummary();
     } catch (e) {
@@ -856,33 +871,23 @@ if (CW.requireAuth()) {
   }
 
   // ---------- фильтр боксов: попап с чекбоксами вместо одиночного select ----------
-  // По умолчанию (boxFilterAuto=true) показываются боксы сотрудников, у которых
-  // сегодня (на выбранную дату) смена по графику (on_duty из /api/bookings).
-  // Как только пользователь вручную снял/поставил галочку или нажал «Все боксы»,
-  // включается ручной режим — выбор больше не меняется сам при смене даты, пока
-  // пользователь явно не вернётся в режим «На смене сегодня».
+  // GAP-BOX1 (хвост): боксы больше не привязаны к сотрудникам/сменам —
+  // фильтр чисто ручной, по умолчанию (и когда сохранённый набор пуст или
+  // ссылается на уже удалённые боксы) показываются все боксы филиала.
   function buildBoxFilter() {
-    if (boxFilterAuto) {
-      const onDuty = boxes.filter(b => b.on_duty).map(b => b.box);
-      boxFilterSet = new Set(onDuty.length ? onDuty : boxes.map(b => b.box));
-    } else {
-      // ручной режим: сохраняем прежний выбор, но выбрасываем боксы, которых
-      // больше нет (состав сотрудников филиала мог измениться)
-      const stillValid = boxes.map(b => b.box);
-      boxFilterSet = new Set([...boxFilterSet].filter(n => stillValid.includes(n)));
-      if (!boxFilterSet.size) boxFilterSet = new Set(stillValid); // не оставляем пользователя с пустой сеткой
-    }
+    const stillValid = boxes.map(b => b.box);
+    boxFilterSet = new Set([...boxFilterSet].filter(n => stillValid.includes(n)));
+    if (!boxFilterSet.size) boxFilterSet = new Set(stillValid);
     renderBoxFilterPanel();
   }
 
   function renderBoxFilterPanel() {
     const btn = document.getElementById("boxFilterBtn");
     const list = document.getElementById("bfList");
-    document.getElementById("bfAllBtn").classList.toggle("active", !boxFilterAuto && boxFilterSet.size === boxes.length);
-    document.getElementById("bfDutyBtn").classList.toggle("active", boxFilterAuto);
+    document.getElementById("bfAllBtn").classList.toggle("active", boxFilterSet.size === boxes.length);
 
     if (!boxes.length) {
-      list.innerHTML = `<div class="empty-note-sm">Нет сотрудников на филиале</div>`;
+      list.innerHTML = `<div class="empty-note-sm">На филиале ещё нет ни одного бокса</div>`;
     } else {
       list.innerHTML = boxes.map(b => {
         const checked = boxFilterSet.has(b.box);
@@ -891,15 +896,13 @@ if (CW.requireAuth()) {
           <label class="bf-item ${checked ? "checked" : ""}" data-box="${b.box}">
             <input type="checkbox" ${checked ? "checked" : ""}>
             <span class="bf-dot" style="background:${col.c}"></span>
-            <span class="bf-name">Бокс ${b.box}${b.employee ? " — " + escapeHtml(b.employee) : ""}</span>
-            ${b.on_duty ? "" : `<span class="bf-off">не на смене</span>`}
+            <span class="bf-name">${escapeHtml(b.name || ("Бокс " + b.box))}</span>
           </label>`;
       }).join("");
       list.querySelectorAll(".bf-item").forEach(item => {
         item.addEventListener("click", (e) => {
           e.preventDefault();
           const box = Number(item.dataset.box);
-          boxFilterAuto = false;
           if (boxFilterSet.has(box)) {
             if (boxFilterSet.size > 1) boxFilterSet.delete(box); // не даём снять последний бокс — сетка не может быть пустой
           } else {
@@ -922,7 +925,6 @@ if (CW.requireAuth()) {
   }
 
   document.getElementById("bfAllBtn").addEventListener("click", () => {
-    boxFilterAuto = false;
     boxFilterSet = new Set(boxes.map(b => b.box));
     renderBoxFilterPanel();
     renderGrid();
@@ -940,11 +942,88 @@ if (CW.requireAuth()) {
     CW.go("/static/workers.html");
   });
 
-  document.getElementById("bfDutyBtn").addEventListener("click", () => {
-    boxFilterAuto = true;
-    buildBoxFilter();
-    renderGrid();
-    persistBookingFilters();
+  // ---------- управление боксами (GAP-BOX1, хвост) ----------
+  // На сайте раньше не было вообще никакого UI для добавления/переименования/
+  // удаления боксов — только фильтр для просмотра. В Mini App это есть
+  // (uiBoxesMenu/uiAddBox/uiBoxRow) — здесь тот же набор действий, тот же
+  // паттерн диалога (см. cash.html::stockDialog), только с одним текстовым
+  // полем вместо двух числовых.
+  function boxNameDialog(title, curName) {
+    return new Promise((resolve) => {
+      const bg = document.createElement("div");
+      bg.className = "modal-bg";
+      bg.innerHTML = `
+        <div class="modal" style="width:380px">
+          <h2>${escapeHtml(title)}</h2>
+          <div class="field">
+            <label>Название</label>
+            <input type="text" id="bnName" value="${escapeHtml(curName || "")}">
+          </div>
+          <div class="err-banner" id="bnErr" style="display:none;margin-top:10px"></div>
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="bnCancel">Отмена</button>
+            <button type="button" class="btn accent" id="bnSave">Сохранить</button>
+          </div>
+        </div>`;
+      document.body.appendChild(bg);
+      let resolved = false;
+      const entry = UI.Modal.register(bg, {
+        onClose: () => { if (!resolved) { resolved = true; resolve(null); } setTimeout(() => bg.remove(), 220); },
+      });
+      function finish(result) { resolved = true; resolve(result); entry.close(); }
+      bg.querySelector("#bnCancel").addEventListener("click", () => finish(null));
+      bg.querySelector("#bnSave").addEventListener("click", () => {
+        const name = bg.querySelector("#bnName").value.trim();
+        if (!name) { const err = bg.querySelector("#bnErr"); err.textContent = "Введите название"; err.style.display = "block"; return; }
+        finish(name);
+      });
+      entry.open();
+      requestAnimationFrame(() => bg.querySelector("#bnName").focus());
+    });
+  }
+
+  function renderBoxManagePanel() {
+    const list = document.getElementById("bmList");
+    if (!list) return;
+    list.innerHTML = boxes.length ? boxes.map(b => `
+      <div class="bm-item" data-box="${b.box}">
+        <span class="bf-dot" style="background:${boxColor(b.box).c}"></span>
+        <span class="bf-name">${escapeHtml(b.name || ("Бокс " + b.box))}</span>
+        <button type="button" class="bm-icon-btn" data-act="rename" title="Переименовать"><i class="ti ti-pencil"></i></button>
+        <button type="button" class="bm-icon-btn danger" data-act="remove" title="Удалить"><i class="ti ti-trash"></i></button>
+      </div>`).join("") : `<div class="empty-note-sm">Боксов ещё нет</div>`;
+    list.querySelectorAll(".bm-item").forEach(item => {
+      const boxId = Number(item.dataset.box);
+      item.querySelector('[data-act="rename"]').addEventListener("click", async () => {
+        const box = boxes.find(b => b.box === boxId); if (!box) return;
+        const name = await boxNameDialog("Переименовать бокс", box.name);
+        if (!name) return;
+        try {
+          await CW.authFetch(`/api/boxes/${encodeURIComponent(branch)}/${boxId}`, { method: "PATCH", body: JSON.stringify({ name }) });
+          await loadBookings();
+        } catch (e) { showErr(e.message); }
+      });
+      item.querySelector('[data-act="remove"]').addEventListener("click", async () => {
+        const box = boxes.find(b => b.box === boxId); if (!box) return;
+        const ok = await UI.Confirm.show({
+          title: "Удалить бокс?", message: `«${box.name}» — действие необратимо.`,
+          confirmText: "Удалить", danger: true,
+        });
+        if (!ok) return;
+        try {
+          await CW.authFetch(`/api/boxes/${encodeURIComponent(branch)}/${boxId}`, { method: "DELETE" });
+          await loadBookings();
+        } catch (e) { showErr(e.message); }
+      });
+    });
+  }
+  document.getElementById("bmAddBtn").addEventListener("click", async () => {
+    const name = await boxNameDialog("Новый бокс", "Бокс " + (boxes.length + 1));
+    if (!name) return;
+    try {
+      await CW.authFetch("/api/boxes", { method: "POST", body: JSON.stringify({ branch, name }) });
+      await loadBookings();
+    } catch (e) { showErr(e.message); }
   });
 
   // ---------- фильтр по статусам визита — тот же паттерн попапа-чеклиста, что у боксов.
@@ -1029,6 +1108,7 @@ if (CW.requireAuth()) {
   }
   document.addEventListener("click", () => document.querySelectorAll(".popover-panel.open").forEach(p => p.classList.remove("open")));
   setupPopover("boxFilterBtn", "boxFilterPanel");
+  setupPopover("boxManageBtn", "boxManagePanel");
   setupPopover("statusFilterBtn", "statusFilterPanel");
   setupPopover("zoomBtn", "zoomPanel");
   setupPopover("clientSearchBtn", "clientSearchPanel", () => { document.getElementById("gcsInput").focus(); });
@@ -1064,8 +1144,8 @@ if (CW.requireAuth()) {
   });
   // клик по найденному клиенту — сразу открываем новую запись, предзаполненную его данными
   function startBookingForClient(client) {
-    if (!boxes.length) { showErr("Сначала добавьте сотрудников на странице «Сотрудники» — иначе нет боксов."); return; }
-    const duty = boxes.find(b => b.on_duty) || boxes[0];
+    if (!boxes.length) { showErr("Сначала добавьте бокс — используйте меню «Боксы» в панели инструментов."); return; }
+    const duty = boxes[0];
     const now = new Date();
     let minutes = Math.max(START_HOUR * 60, Math.min((END_HOUR - 1) * 60 + 30, Math.round((now.getHours() * 60 + now.getMinutes()) / 30) * 30));
     openCreateModal(duty.box, minutes);
@@ -1151,12 +1231,11 @@ if (CW.requireAuth()) {
     let html = `<div class="gh-corner"></div>`;
     visibleBoxes.forEach(b => {
       const col = boxColor(b.box);
-      const initials = b.employee ? initialsOf(b.employee) : "?";
       const boxBookingCount = bookings.filter(bk => String(bk.box) === String(b.box)).length;
       html += `
-        <div class="gh-col${b.on_duty ? "" : " off-duty"}">
-          <div class="gh-avatar" style="background:${col.t};color:${col.c}">${initials}</div>
-          <div><div class="gh-name">Бокс ${b.box}</div><div class="gh-role">${b.employee ? "Автомойщик — " + b.employee : "Сотрудник не назначен"}</div></div>
+        <div class="gh-col">
+          <div class="gh-avatar" style="background:${col.t};color:${col.c}"><i class="ti ti-door"></i></div>
+          <div><div class="gh-name">${escapeHtml(b.name || ("Бокс " + b.box))}</div></div>
           <div class="gh-count">${boxBookingCount}</div>
         </div>`;
     });
@@ -1174,7 +1253,7 @@ if (CW.requireAuth()) {
     }
 
     visibleBoxes.forEach(b => {
-      html += `<div class="gb-col${b.on_duty ? "" : " off-duty"}" data-box="${b.box}">${slotsHtml}<div class="empty-slot-hint"><i class="ti ti-plus"></i></div></div>`;
+      html += `<div class="gb-col" data-box="${b.box}">${slotsHtml}<div class="empty-slot-hint"><i class="ti ti-plus"></i></div></div>`;
     });
 
     grid.innerHTML = html;
@@ -1183,7 +1262,6 @@ if (CW.requireAuth()) {
     grid.querySelectorAll(".gb-col").forEach(col => {
       col.addEventListener("click", (e) => {
         if (e.target.closest(".appt")) return;
-        if (col.classList.contains("off-duty")) return;
         const rect = col.getBoundingClientRect();
         const offsetY = e.clientY - rect.top;
         let minutes = START_HOUR * 60 + Math.round((offsetY / PX_PER_MIN) / 30) * 30;
@@ -1330,7 +1408,6 @@ if (CW.requireAuth()) {
 
   function updateApptGhost(state) {
     const col = boxColor(state.newBox);
-    const boxInfo = boxes.find(b => b.box === state.newBox);
     const endMin = state.newStartMin + state.durationMin;
     state.ghost.style.width = state.el.offsetWidth + "px";
     state.ghost.style.height = state.el.offsetHeight + "px";
@@ -1340,7 +1417,9 @@ if (CW.requireAuth()) {
       state.ghost.style.background = col.t;
     }
     const warn = state.conflict ? ` · <i class="ti ti-alert-triangle"></i> занято` : "";
-    state.ghost.innerHTML = `<div class="appt-time">${minutesToTime(state.newStartMin)}–${minutesToTime(endMin)} · Бокс ${state.newBox}${boxInfo && boxInfo.employee ? " (" + escapeHtml(boxInfo.employee) + ")" : ""}${warn}</div>`;
+    // GAP-BOX1 (хвост): сотрудник — свойство самой записи (state.bk.employee),
+    // а не бокса, в который её перетаскивают.
+    state.ghost.innerHTML = `<div class="appt-time">${minutesToTime(state.newStartMin)}–${minutesToTime(endMin)} · Бокс ${state.newBox}${state.bk.employee ? " (" + escapeHtml(state.bk.employee) + ")" : ""}${warn}</div>`;
   }
 
   // Обработка перетаскивания вынесена из обработчика события и вызывается
@@ -1600,8 +1679,24 @@ if (CW.requireAuth()) {
 
   function buildBoxSelect(selected) {
     const sel = document.getElementById("fBox");
-    sel.innerHTML = boxes.map(b => `<option value="${b.box}">Бокс ${b.box}${b.employee ? " — " + b.employee : ""}</option>`).join("");
+    sel.innerHTML = boxes.map(b => `<option value="${b.box}">${b.name || ("Бокс " + b.box)}</option>`).join("");
     if (selected) sel.value = selected;
+  }
+
+  // GAP-BOX1 (хвост): список сотрудников филиала для поля «Сотрудник» —
+  // отдельно от боксов (у бокса больше нет employee), тот же источник
+  // (/api/workers), что и в Mini App (bk-f-employee, index.html).
+  let workersList = [];
+  async function loadWorkersList() {
+    if (!branch) return;
+    try { workersList = (await CW.authFetch(`/api/workers?branch=${encodeURIComponent(branch)}`)).workers || []; }
+    catch (e) { workersList = []; }
+  }
+  function buildEmployeeSelect(selected) {
+    const sel = document.getElementById("fEmployee");
+    sel.innerHTML = `<option value="">— не выбран —</option>` +
+      workersList.map(w => `<option value="${escapeHtml(w)}">${escapeHtml(w)}</option>`).join("");
+    sel.value = selected || "";
   }
 
   function setStatusTab(status) {
@@ -1847,7 +1942,7 @@ if (CW.requireAuth()) {
   }
 
   function openCreateModal(box, startMinutes) {
-    if (!boxes.length) { showErr("Сначала добавьте сотрудников на странице «Сотрудники» — иначе нет боксов."); return; }
+    if (!boxes.length) { showErr("Сначала добавьте бокс — используйте меню «Боксы» в панели инструментов."); return; }
     editingId = null;
     editingBookingSnapshot = null;
     selectedClient = null;
@@ -1862,6 +1957,7 @@ if (CW.requireAuth()) {
     resetClientSelection();
     loadPrevClients();
     buildBoxSelect(box || (boxes[0] && boxes[0].box));
+    buildEmployeeSelect("");
     document.getElementById("fDate").value = isoDate(curDate);
     setStatusTab("waiting");
     const start = startMinutes != null ? startMinutes : START_HOUR * 60;
@@ -1879,8 +1975,8 @@ if (CW.requireAuth()) {
   // но открываем её уже настроенной на «сейчас», короткую и сразу оплаченную —
   // администратору остаётся только отметить услуги/товары и способ оплаты.
   function openQuickSaleModal() {
-    if (!boxes.length) { showErr("Сначала добавьте сотрудников на странице «Сотрудники» — иначе нет боксов."); return; }
-    const duty = boxes.find(b => b.on_duty) || boxes[0];
+    if (!boxes.length) { showErr("Сначала добавьте бокс — используйте меню «Боксы» в панели инструментов."); return; }
+    const duty = boxes[0];
     const now = new Date();
     let minutes = now.getHours() * 60 + now.getMinutes();
     minutes = Math.max(START_HOUR * 60, Math.min((END_HOUR - 1) * 60 + 30, Math.round(minutes / 10) * 10));
@@ -1915,6 +2011,7 @@ if (CW.requireAuth()) {
     document.getElementById("fClientName").value = bk.client_name || bk.car || "";
     document.getElementById("fComment").value = bk.comment || "";
     buildBoxSelect(bk.box);
+    buildEmployeeSelect(bk.employee || "");
     document.getElementById("fDate").value = isoDate(parseDateKey(bk.date));
     setStatusTab(bk.status || "waiting");
     document.getElementById("fStart").value = bk.start_time || "";
@@ -2266,12 +2363,11 @@ if (CW.requireAuth()) {
       }
     }
 
-    const boxInfo = boxes.find(b => b.box === box);
     const clientCarValue = document.getElementById("fClientName").value.trim();
     const payload = {
       branch, date: dateKey(fromIso(dateVal)), box,
       start_time: start, end_time: end,
-      employee: (boxInfo && boxInfo.employee) || "",
+      employee: document.getElementById("fEmployee").value,
       body_type: document.getElementById("fBodyType").value,
       service_keys: selectedServiceKeys(), custom_services: customServices,
       product_keys: selectedProductKeys(),
@@ -2402,7 +2498,6 @@ if (CW.requireAuth()) {
 
   function renderBookingPreview(bk) {
     const status = bk.status || "waiting";
-    const boxInfo = boxes.find(b => b.box === bk.box);
     const svcList = [
       ...(bk.service_keys || []).map(k => serviceNames[k] || k),
       ...(bk.custom_services || []).map(s => s.name),
@@ -2418,7 +2513,7 @@ if (CW.requireAuth()) {
       <div class="bpv-row bpv-row-lg"><i class="ti ti-user"></i><div><div class="bpv-name">${escapeHtml(bk.client_name || bk.car || "Без имени")}</div>${bk.phone ? `<div class="bpv-sub">${escapeHtml(bk.phone)}</div>` : ""}</div></div>
       ${(bk.car || bk.car_num) ? `<div class="bpv-row"><i class="ti ti-car"></i><div>${escapeHtml(bk.car || "")}${bk.car_num ? ` · №${escapeHtml(bk.car_num)}` : ""}</div></div>` : ""}
       <div class="bpv-row"><i class="ti ti-calendar"></i><div>${escapeHtml(bk.date || "")} · ${bk.start_time}–${bk.end_time}</div></div>
-      <div class="bpv-row"><i class="ti ti-tools"></i><div>Бокс ${bk.box}${boxInfo && boxInfo.employee ? " · " + escapeHtml(boxInfo.employee) : ""}</div></div>
+      <div class="bpv-row"><i class="ti ti-tools"></i><div>Бокс ${bk.box}${bk.employee ? " · " + escapeHtml(bk.employee) : ""}</div></div>
       ${svcList.length ? `<div class="bpv-row"><i class="ti ti-list-check"></i><div>${svcList.map(escapeHtml).join(", ")}</div></div>` : ""}
       ${priceVal != null ? `<div class="bpv-row"><i class="ti ti-cash"></i><div>${CW.money(priceVal)} · ${escapeHtml(payLabel)}</div></div>` : ""}
       ${prepaidNote ? `<div class="bpv-row"><i class="ti ti-circle-check"></i><div>${prepaidNote}</div></div>` : ""}
